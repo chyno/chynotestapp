@@ -1,7 +1,38 @@
 // we want font-awesome to load as soon as possible to show the fa-spinner
-import '../styles/styles.css';
-import 'font-awesome/css/font-awesome.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap';
+import environment from './environment';
+//import Gun from './node_modules/gun/gun.js';
+
+
+
+//Configure Bluebird Promises.
+//Note: You may want to use environment-specific configuration.
+
+Promise.config({
+  warnings: {
+    wForgottenReturn: false
+  }
+});
+
+export function configure(aurelia) {
+  aurelia.use
+    .standardConfiguration()
+    .feature('resources');
+
+  if (environment.debug) {
+    aurelia.use.developmentLogging();
+  }
+
+  if (environment.testing) {
+    aurelia.use.plugin('aurelia-testing');
+  }
+
+  aurelia.start().then(() => aurelia.setRoot());
+}
+
+
+
+/*
 
 //import Gun from  '../lib/lib/file.js';
 
@@ -24,10 +55,6 @@ export async function configure(aurelia) {
   await aurelia.start();
   aurelia.setRoot('app');
 
-  // if you would like your website to work offline (Service Worker),
-  // install and enable the @easy-webpack/config-offline package in webpack.config.js and uncomment the following code:
-  /*
-  const offline = await System.import('offline-plugin/runtime');
-  offline.install();
-  */
+
 }
+*/
