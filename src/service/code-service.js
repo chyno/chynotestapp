@@ -2,7 +2,7 @@
 //import 'codemirror/addon/selection/active-line.js';
 //import 'codemirror/addon/edit/matchbrackets.js';
 
-//import CodeMirror from 'codemirror/lib/codemirror.js';
+import CodeMirror from 'codemirror';
 
 //import 'codemirror/lib/codemirror.css';
 //import 'codemirror/theme/blackboard.css';
@@ -18,7 +18,7 @@ export class CodeService {
 //Method needs to be called after view model can get reference to DOM object
     setControls(cntls) {
 
-  //var cm = new CodeMirror();
+         //var cm = new CodeMirror();
 
         this.codeeditor = CodeMirror.fromTextArea(cntls[0], {
             lineNumbers: true,

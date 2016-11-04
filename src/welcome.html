@@ -1,4 +1,6 @@
 <template>
+<require from="codemirror/lib/codemirror.css"></require>
+<require from="codemirror/theme/blackboard.css"></require>
 <select value.bind="kataChosen" class="selectpicker">
       <option model.bind="null">Choose...</option>
       <option repeat.for="kata of katas"
