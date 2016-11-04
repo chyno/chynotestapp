@@ -1,3 +1,17 @@
 <template>
-  <h1>${message}</h1>
+  <require from="./nav-bar.html"></require>
+  <nav-bar router.bind="router"></nav-bar>
+
+<div class="container">
+ <!-- Main component for a primary marketing message or call to action -->
+     <router-view></router-view>
+      </div>
+
+
+
+  <!--
+  <div class="page-host">
+    <router-view></router-view>
+  </div>
+  -->
 </template>
