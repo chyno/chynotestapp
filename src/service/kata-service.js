@@ -10,7 +10,7 @@ export class KataService {
 
 
        this.setData();
-        this.key = 'kata';
+       this.key = 'kata';
         this.path = 'path';
 
      //   this.gun = new Gun(location.origin + '/gun');
