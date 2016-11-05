@@ -3,11 +3,7 @@
 //import 'codemirror/addon/edit/matchbrackets.js';
 
 import CodeMirror from 'codemirror';
-
-//import 'codemirror/lib/codemirror.css';
-//import 'codemirror/theme/blackboard.css';
-
-
+ 
 export class CodeService {
 
     constructor() {

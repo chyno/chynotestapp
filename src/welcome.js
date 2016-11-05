@@ -1,8 +1,15 @@
-
-import { inject } from "aurelia-framework";
-import { KataService } from "./service/kata-service";
-import { CodeService } from './service/code-service';
-import { ObserverLocator } from 'aurelia-binding';  // or 'aurelia-framework'
+import {
+    inject
+} from "aurelia-framework";
+import {
+    KataService
+} from "./service/kata-service";
+import {
+    CodeService
+} from './service/code-service';
+import {
+    ObserverLocator
+} from 'aurelia-binding'; // or 'aurelia-framework'
 
 @inject(KataService, CodeService, ObserverLocator)
 export class Welcome {
@@ -20,20 +27,17 @@ export class Welcome {
     }
 
     activate() {
-         //this.kataService.getKatasCallBack(this.setKatas);
+        //this.kataService.getKatasCallBack(this.setKatas);
         this.katas = this.kataService.getKatas();
         this.kataChosen = null;
         //
     }
 
-
-
     attached() {
 
-        this.codeservice.setControls([this.codeArea, this.testsArea] );
+        this.codeservice.setControls([this.codeArea, this.testsArea]);
 
-        if (this.kataChosen)
-        {
+        if (this.kataChosen) {
             this.codeservice.setCodeValue(this.kataChosen.code);
             this.codeservice.setTestValue(this.kataChosen.assertion);
         }
@@ -46,7 +50,7 @@ export class Welcome {
     onChange(newValue, oldValue) {
         if (newValue) {
             this.codeservice.setCodeValue(newValue.code);
-          this.codeservice.setTestValue(this.kataChosen.assertion);
+            this.codeservice.setTestValue(this.kataChosen.assertion);
         }
     }
 

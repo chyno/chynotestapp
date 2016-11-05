@@ -1,7 +1,7 @@
 // we want font-awesome to load as soon as possible to show the fa-spinner
 import 'bootstrap';
 import environment from './environment';
-//import Gun from './node_modules/gun/gun.js';
+import Gun from './node_modules/gun/gun.js';
 
 
 
