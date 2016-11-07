@@ -158,7 +158,12 @@
               "lib/codemirror.css",
               "theme/blackboard.css"
             ]
-          }
+          },
+          {
+            "name": "gun",
+            "path": "../node_modules/gun",
+            "main": "gun"
+            }
         ]
       }
     ]

@@ -1,17 +1,13 @@
 <template>
-   <require from="bootstrap/css/bootstrap.css"></require>
-  <require from="./styles/styles.css"></require>
-
-  <require from="./nav-bar.html"></require>
-
- <nav-bar router.bind="router"></nav-bar>
-
-<hr style="clear:both; padding-top:2em" />
-<div class="container">
-   <loading-indicator loading.bind="router.isNavigating || api.isRequesting"></loading-indicator>
- <!-- Main component for a primary marketing message or call to action -->
-   <div> Hello world</div>
-     <router-view></router-view>
- </div>
-
+    <require from="bootstrap/css/bootstrap.css"></require>
+    <require from="./styles/styles.css"></require>
+    <require from="./nav-bar.html"></require>
+    <nav-bar router.bind="router"></nav-bar>
+    <hr style="clear:both; padding-top:2em" />
+    <div class="container">
+        <loading-indicator loading.bind="router.isNavigating || api.isRequesting"></loading-indicator>
+        <!-- Main component for a primary marketing message or call to action -->
+        <div> Hello world</div>
+        <router-view></router-view>
+    </div>
 </template>

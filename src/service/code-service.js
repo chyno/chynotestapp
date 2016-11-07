@@ -1,7 +1,4 @@
-//import 'codemirror/mode/javascript/javascript.js';
-//import 'codemirror/addon/selection/active-line.js';
-//import 'codemirror/addon/edit/matchbrackets.js';
-
+ 
 import CodeMirror from 'codemirror';
  
 export class CodeService {

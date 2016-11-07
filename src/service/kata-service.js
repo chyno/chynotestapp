@@ -7,20 +7,20 @@ export class KataService {
     constructor() {
         this.kataKey = "chynotestapp/kata/3";
         this.gunKey = location.origin + '/gun';
-        this.gun = new Gun(this.gunKey);
+        this.gun = new Gun();
         this.gkatas = this.gun.put(this.katas).key(this.kataKey);
         this.setData(); 
     }
 
 
     getKatas() {
-      // return this.gkatas.get(this.kataKey).val();
-      return [];
+      return this.gkatas.get(this.kataKey).val();
+     // return [];
     }
 
 
     setData() {
-/*
+
         let katas = [];
         //Make sure add dataq only once
         if (this.gkatas.get(this.kataKey).val())
@@ -43,7 +43,7 @@ export class KataService {
         });
 
         this.gkatas.put(katas).key(this.kataKey);
-        */
+        
     }
 
     
