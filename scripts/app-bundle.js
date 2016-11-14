@@ -315,25 +315,41 @@ define('service/kata-service',["exports", "aurelia-framework"], function (export
         function KataService() {
             _classCallCheck(this, KataService);
 
-            this.kataKey = "chynotestapp/kata/3";
-            this.gunKey = location.origin + '/gun';
-            this.gun = new Gun();
-            this.gkatas = this.gun.put(this.katas).key(this.kataKey);
-            this.setData();
+            this.gunKey = "http://gunjs.herokuapp.com/gun";
+            this.collectionKey = 'chynotestapp/katas/data';
+            this.katas = null;
+
+            this.ref = new Gun(this.gunKey).get(this.collectionKey).not(function () {
+                return this.put({
+                    1: this.item1
+                }).key(this.collectionKey);
+            });
+
+            this.setTestData();
         }
 
         KataService.prototype.getKatas = function getKatas() {
+<<<<<<< HEAD
             return [];
         };
+=======
+            var d = [];
+>>>>>>> f7cbe7c51751d429d7597ac073855cdf137a9d74
 
-        KataService.prototype.setData = function setData() {
+            this.ref.map().val(function (data, k) {
+                d.push(data);
+            });
 
+<<<<<<< HEAD
             var kata = void 0;
+=======
+            return d;
+        };
+>>>>>>> f7cbe7c51751d429d7597ac073855cdf137a9d74
 
-            if (this.gkatas.get(this.kataKey).val()) {
-                return;
-            }
+        KataService.prototype.setTestData = function setTestData() {
 
+<<<<<<< HEAD
             katas = {
                 id: 1,
                 tests: []
@@ -347,13 +363,24 @@ define('service/kata-service',["exports", "aurelia-framework"], function (export
             });
 
             katas.tests.push({
+=======
+            var item1 = {
+                name: "first",
+                description: "Just write to console. This is the most basic example you need to write the code from scratch",
+                code: "console.writeline('2')",
+                assertion: 'Assert(foo  != null);'
+            };
+
+            var item2 = {
+>>>>>>> f7cbe7c51751d429d7597ac073855cdf137a9d74
                 name: "second",
                 description: "Just write to console. This is the most basic example you need to write the code from scratch",
                 code: "console.writeline('2')",
-                assertion: 'Assert(foo  == nulll);'
-            });
+                assertion: 'Assert(foo  == null);'
+            };
 
-            this.gkatas.put(katas).key(this.kataKey);
+            this.ref.path(item1.name).put(item1);
+            this.ref.path(item2.name).put(item2);
         };
 
         return KataService;
