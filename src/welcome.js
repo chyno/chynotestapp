@@ -27,11 +27,10 @@ export class Welcome {
     }
 
     activate() {
-        //this.kataService.getKatasCallBack(this.setKatas);
-        this.katas = this.kataService.getKatas();
-        this.kataChosen = null;
-        //
+       this.katas = this.kataService.getKatas();
+        this.kataChosen = null;       
     }
+   
 
     attached() {
 

@@ -315,40 +315,47 @@ define('service/kata-service',["exports", "aurelia-framework"], function (export
         function KataService() {
             _classCallCheck(this, KataService);
 
-            this.kataKey = "chynotestapp/kata/3";
-            this.gunKey = location.origin + '/gun';
-            this.gun = new Gun();
-            this.gkatas = this.gun.put(this.katas).key(this.kataKey);
-            this.setData();
+            this.gunKey = "http://gunjs.herokuapp.com/gun";
+            this.collectionKey = 'chynotestapp/katas/data';
+            this.katas = null;
+
+            this.ref = new Gun(this.gunKey).get(this.collectionKey).not(function () {
+                return this.put({
+                    1: this.item1
+                }).key(this.collectionKey);
+            });
+
+            this.setTestData();
         }
 
         KataService.prototype.getKatas = function getKatas() {
-            return this.gkatas.get(this.kataKey).val();
-        };
+            var d = [];
 
-        KataService.prototype.setData = function setData() {
-
-            var katas = [];
-
-            if (this.gkatas.get(this.kataKey).val()) {
-                return;
-            }
-
-            katas.push({
-                name: "first Javascript kata ",
-                description: "Sampple Java script. The strings were taken out and need to be placed back into the application",
-                code: "function findSequence(goal) { \n function find(start, history) { \n if (start == goal) \n return history; \n else if (start > goal) \n return null; \n else \n return find(start + 5, ( + history +  + 5)) || \n find(start * 3, ( + history +  * 3)); \n } \n  return find(1, 1); \n } \n ",
-                assertion: 'Assert(true == true);'
+            this.ref.map().val(function (data, k) {
+                d.push(data);
             });
 
-            katas.push({
+            return d;
+        };
+
+        KataService.prototype.setTestData = function setTestData() {
+
+            var item1 = {
+                name: "first",
+                description: "Just write to console. This is the most basic example you need to write the code from scratch",
+                code: "console.writeline('2')",
+                assertion: 'Assert(foo  != null);'
+            };
+
+            var item2 = {
                 name: "second",
                 description: "Just write to console. This is the most basic example you need to write the code from scratch",
                 code: "console.writeline('2')",
-                assertion: 'Assert(foo  == nulll);'
-            });
+                assertion: 'Assert(foo  == null);'
+            };
 
-            this.gkatas.put(katas).key(this.kataKey);
+            this.ref.path(item1.name).put(item1);
+            this.ref.path(item2.name).put(item2);
         };
 
         return KataService;
