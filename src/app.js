@@ -1,4 +1,23 @@
+import {
+    inject
+} from "aurelia-framework";
+
+import {
+    KataService
+} from "./service/kata-service";
+
+
+@inject(KataService)
 export class App {
+
+  constructor(kataService) {
+    this.kataService = KataService;
+  }
+
+  activate() {
+    this.kataService.addDefaultData();
+  }
+
   configureRouter(config, router) {
     config.title = 'Project Chyno';
     config.map([{
@@ -19,5 +38,7 @@ export class App {
     ]);
 
     this.router = router;
+
+
   }
 }
