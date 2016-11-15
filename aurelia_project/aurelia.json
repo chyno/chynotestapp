@@ -97,6 +97,12 @@
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",
+
+          {
+            "name": "aurelia-dialog",
+            "path": "../node_modules/aurelia-dialog/dist/amd"
+
+          },
           "aurelia-event-aggregator",
           "aurelia-framework",
           "aurelia-history",

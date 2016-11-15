@@ -22,22 +22,8 @@ export class KataService {
 
 
     addDefaultData() {
-        var item1 = {
-            name: "first",
-            description: "Just write to console. This is the most basic example you need to write the code from scratch",
-            code: "console.writeline('2')",
-            assertion: 'Assert(foo  != null);'
-        };
 
-        var item2 = {
-            name: "second",
-            description: "Just write to console. This is the most basic example you need to write the code from scratch",
-            code: "console.writeline('2')",
-            assertion: 'Assert(foo  == null);'
-        };
-
-        this.ref.path(item1.name).put(item1);
-        this.ref.path(item2.name).put(item2);
+        alert('HW');
     }
 
     addKata(name, description, tests) {
