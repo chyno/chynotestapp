@@ -1,3 +1,29 @@
 <template>
+<ai-dialog>
+		<ai-dialog-body>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-offset-5 col-md-3">
+						<div class="form-login">
+							<h4>Welcome back to Project Chyno.</h4>
+							<input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username" value.bind="userName" />
+							</br>
+							<input type="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" value.bind="password"
+							/>
+							</br>
 
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</ai-dialog-body>
+
+		<ai-dialog-footer>
+			<button click.trigger="controller.ok(userName)">Login</button>
+			<button click.trigger="controller.cancel()">Cancel</button>
+
+		</ai-dialog-footer>
+	</ai-dialog>
 </template>

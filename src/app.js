@@ -56,8 +56,8 @@ export class App {
     },
     {
       route: ['login'],
-      name: 'kata',
-      moduleId: './kata',
+      name: 'login',
+      moduleId: './login',
       nav: false,
       title: 'Login'
     }
