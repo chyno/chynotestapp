@@ -14,6 +14,7 @@ export class App {
 
  
   constructor(KataService, DialogService) {
+    this.userName = null;
      this.kataService = KataService;
     this.dialogService = DialogService;
   }
@@ -59,7 +60,19 @@ export class App {
     }
 
     ]);
- 
+   
+    var self = this;
+     router.userName = "Not Logged in";
+     router.login = () => {
+       this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
+          if (!response.wasCancelled) {
+            self.router.userName = response.output;
+          }
+          console.log(response.output);
+        });
+    }
+
     this.router = router;
+    
   }
 }

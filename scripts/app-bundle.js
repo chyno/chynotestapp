@@ -18,6 +18,7 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia
     function App(KataService, DialogService) {
       _classCallCheck(this, App);
 
+      this.userName = null;
       this.kataService = KataService;
       this.dialogService = DialogService;
     }
@@ -25,6 +26,8 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia
     App.prototype.activate = function activate() {};
 
     App.prototype.configureRouter = function configureRouter(config, router) {
+      var _this = this;
+
       config.title = 'Project Chyno';
       config.map([{
         route: ['', 'welcome'],
@@ -45,6 +48,17 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia
         nav: false,
         title: 'Login'
       }]);
+
+      var self = this;
+      router.userName = "Not Logged in";
+      router.login = function () {
+        _this.dialogService.open({ viewModel: _login.Login, model: _this.userName }).then(function (response) {
+          if (!response.wasCancelled) {
+            self.router.userName = response.output;
+          }
+          console.log(response.output);
+        });
+      };
 
       this.router = router;
     };
@@ -125,8 +139,8 @@ define('kata',["exports", "aurelia-framework", "./service/kata-service", "aureli
         return Kata;
     }()) || _class);
 });
-define('login',['exports', 'aurelia-dialog'], function (exports, _aureliaDialog) {
-    'use strict';
+define('login',["exports", "aurelia-framework", "aurelia-dialog"], function (exports, _aureliaFramework, _aureliaDialog) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -139,12 +153,13 @@ define('login',['exports', 'aurelia-dialog'], function (exports, _aureliaDialog)
         }
     }
 
-    var _class, _temp;
+    var _dec, _class;
 
-    var Login = exports.Login = (_temp = _class = function () {
-        function Login() {
+    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_aureliaDialog.DialogController), _dec(_class = function () {
+        function Login(DialogController) {
             _classCallCheck(this, Login);
 
+            this.controller = DialogController;
             this.userName = null;
             this.password = null;
         }
@@ -154,7 +169,7 @@ define('login',['exports', 'aurelia-dialog'], function (exports, _aureliaDialog)
         };
 
         return Login;
-    }(), _class.inject = [_aureliaDialog.DialogController], _temp);
+    }()) || _class);
 });
 define('main',['exports', './environment', 'bootstrap', 'gun'], function (exports, _environment) {
   'use strict';
@@ -233,6 +248,35 @@ define('main_org',['exports', './environment', './node_modules/gun/gun.js'], fun
       return aurelia.setRoot();
     });
   }
+});
+define('nav-bar',['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var NavBar = exports.NavBar = function () {
+        function NavBar() {
+            _classCallCheck(this, NavBar);
+
+            this.router = null;
+        }
+
+        NavBar.prototype.active = function active() {};
+
+        NavBar.prototype.login = function login() {
+            alert('hello from navbar');
+        };
+
+        return NavBar;
+    }();
 });
 define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./service/code-service", "aurelia-binding"], function (exports, _aureliaFramework, _kataService, _codeService, _aureliaBinding) {
     "use strict";
@@ -1113,6 +1157,6 @@ define('text!styles/styles.css', ['module'], function(module) { module.exports =
 define('text!app_orig.html', ['module'], function(module) { module.exports = "<template>\r\n  <h1>${message}</h1>\r\n</template>\r\n"; });
 define('text!kata.html', ['module'], function(module) { module.exports = "<template>\r\n   <div class=\"form-group\">\r\n  <label for=\"name\">Name:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"name\" value.bind=\"name\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"desc\">Descrition:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"desc\" value.bind=\"description\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"tsts\">Sample Tests:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"tsts\" value.bind=\"tests\">\r\n</div>\r\n\r\n<div class=\"container\">\r\n\t\t<button class=\"btn btn-primary\" click.trigger=\"add()\"  >Add</button>\r\n\t</div>\r\n</template>"; });
 define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-5 col-md-3\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(userName)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
-define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\r\n  <!-- Fixed navbar -->\r\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\r\n    <div class=\"container\">\r\n      <div class=\"navbar-header\">\r\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\r\n          aria-controls=\"navbar\">\r\n            <span class=\"sr-only\">Toggle navigation</span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n          </button>\r\n        <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\r\n      </div>\r\n      <div id=\"navbar\" class=\"navbar-collapse collapse\">\r\n        <ul class=\"nav navbar-nav\">\r\n             <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\r\n        </ul>\r\n\r\n      </div>\r\n      <!--/.nav-collapse -->\r\n    </div>\r\n    <div>\r\n      <button click-trgger=\"login()\">Login</button>\r\n      <span>${userName}</span>\r\n    </div>\r\n  </nav>\r\n</template>"; });
-define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\r\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\r\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\">\r\n      <option model.bind=\"null\">Choose...</option>\r\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\r\n</select>\r\n\t<hr/>\r\n\t<div class=\"container\">\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-12\">\r\n\t\t\t\t<p>${kataChosen.description}</p>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\" style=\"padding-top:1em\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Save Code</button>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\r\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n</template>"; });
+define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\r\n  <!-- Fixed navbar -->\r\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\r\n    <div class=\"container\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-6\">\r\n          <div class=\"navbar-header\">\r\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\r\n              aria-controls=\"navbar\">\r\n            <span class=\"sr-only\">Toggle navigation</span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n          </button>\r\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\r\n          </div>\r\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\r\n            <ul class=\"nav navbar-nav\">\r\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\r\n            </ul>\r\n          </div>\r\n          <!--/.nav-collapse -->\r\n        </div>\r\n        <div class=\"col-md-3\">\r\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link\" click.trigger=\"router.login()\">Login</button>\r\n        </div>\r\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\r\n          <span> ${router.userName}</span>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </nav>\r\n</template>"; });
+define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\r\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\r\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\">\r\n      <option model.bind=\"null\">Choose...</option>\r\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\r\n</select>\r\n\t<hr/>\r\n\t<div class=\"container\" show.bind=\"kataChosen\">\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-12\">\r\n\t\t\t\t<p>${kataChosen.description}</p>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\" style=\"padding-top:1em\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Save Code</button>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\r\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

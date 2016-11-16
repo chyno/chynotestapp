@@ -1,11 +1,15 @@
+import {
+    inject
+} from "aurelia-framework";
+
 import {DialogController} from 'aurelia-dialog';
 
-
+@inject(DialogController)
 export class Login {
-  static inject = [DialogController];
+ 
 
-    constructor() {
-
+    constructor(DialogController) {
+        this.controller = DialogController
         this.userName = null;
         this.password = null;
     }
