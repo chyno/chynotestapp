@@ -1,41 +1,71 @@
 import {
-    inject
+  inject
 } from "aurelia-framework";
 
 import {
-    KataService
+  KataService
 } from "./service/kata-service";
+import { DialogService } from 'aurelia-dialog';
 
+import { Login } from './login';
 
-@inject(KataService)
+@inject(KataService, DialogService)
 export class App {
 
-  constructor(KataService) {
-    this.ks = KataService;  
+ 
+  constructor(KataService, DialogService) {
+    this.router = null
+
+    this.kataService = KataService;
+    this.dialogService = DialogService;
   }
 
   activate() {
-    this.ks.addDefaultData();
+    this.kataService.addDefaultData();
+
+    if (this.router) {
+      this.router.userName = null;
+
+      this.router.login = () => {
+
+
+        this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
+          if (!response.wasCancelled) {
+            this.userName = esponse.output;
+          }
+          console.log(response.output);
+        });
+      };
+    }
+
+ 
   }
 
   configureRouter(config, router) {
     config.title = 'Project Chyno';
     config.map([{
-        route: ['', 'welcome'],
-        name: 'welcome',
-        moduleId: './welcome',
-        nav: true,
-        title: 'Welcome'
-      }, {
-        route: ['kata', 'kata'],
-        name: 'kata',
-        moduleId: './kata',
-        nav: true,
-        title: 'Profile'
-      }
-
+      route: ['', 'welcome'],
+      name: 'welcome',
+      moduleId: './welcome',
+      nav: true,
+      title: 'Welcome'
+    }, {
+      route: ['kata'],
+      name: 'kata',
+      moduleId: './kata',
+      nav: true,
+      title: 'Profile'
+    },
+    {
+      route: ['login'],
+      name: 'login',
+      moduleId: './login',
+      nav: false,
+      title: 'Login'
+    }
 
     ]);
+ 
     this.router = router;
   }
 }
