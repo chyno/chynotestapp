@@ -6,8 +6,8 @@ export class KataService {
         this.gunKey = "http://gunjs.herokuapp.com/gun";
         this.collectionKey = 'chynotestapp/katas/data';
         this.katas = null;
-        //this.ref = new Gun(this.gunKey).get(this.collectionKey);
-        this.ref = new Gun().get(this.collectionKey);
+        this.ref = new Gun(this.gunKey).get(this.collectionKey);
+       // this.ref = new Gun().get(this.collectionKey);
     }
 
     getKatas() {
@@ -47,7 +47,8 @@ export class KataService {
             code: " ",
             assertion: tests
         };
-
+        
+        
         this.ref.path(item.name).put(item);
     }
 

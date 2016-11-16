@@ -10,12 +10,12 @@ import {
 @inject(KataService)
 export class App {
 
-  constructor(kataService) {
-    this.kataService = KataService;
+  constructor(KataService) {
+    this.ks = KataService;  
   }
 
   activate() {
-    this.kataService.addDefaultData();
+    this.ks.addDefaultData();
   }
 
   configureRouter(config, router) {
@@ -36,9 +36,6 @@ export class App {
 
 
     ]);
-
     this.router = router;
-
-
   }
 }
