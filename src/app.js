@@ -14,31 +14,25 @@ export class App {
 
  
   constructor(KataService, DialogService) {
-    this.router = null
-
-    this.kataService = KataService;
+     this.kataService = KataService;
     this.dialogService = DialogService;
   }
 
   activate() {
-    this.kataService.addDefaultData();
+   // this.kataService.addDefaultData();
 
-    if (this.router) {
-      this.router.userName = null;
-
-      this.router.login = () => {
-
-
-        this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
+   /*
+    this.routerVm.userName = null;
+    this.routerVm.login = () => {
+       this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
           if (!response.wasCancelled) {
             this.userName = esponse.output;
           }
           console.log(response.output);
         });
-      };
-    }
-
- 
+    };
+  }
+*/
   }
 
   configureRouter(config, router) {

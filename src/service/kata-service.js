@@ -23,7 +23,7 @@ export class KataService {
 
     addDefaultData() {
 
-        alert('HW');
+       
     }
 
     addKata(name, description, tests) {
