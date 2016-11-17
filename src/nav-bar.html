@@ -2,27 +2,32 @@
   <!-- Fixed navbar -->
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-          aria-controls="navbar">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+              aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-        <a class="navbar-brand" href="#">Project Chyno</a>
+            <a class="navbar-brand" href="#">Project Chyno</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}"><a href.bind="row.href">${row.title}</a></li>
+            </ul>
+          </div>
+          <!--/.nav-collapse -->
+        </div>
+        <div class="col-md-3">
+          <button style="padding-top:1em" class="pull-right btn-link" click.trigger="router.login()">Login</button>
+        </div>
+        <div class="col-md-3" style="padding-top:1.2em">
+          <span> ${router.userName}</span>
+        </div>
       </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-             <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}"><a href.bind="row.href">${row.title}</a></li>
-        </ul>
-
-      </div>
-      <!--/.nav-collapse -->
-    </div>
-    <div>
-      <button click-trgger="login()">Login</button>
-      <span>${userName}</span>
     </div>
   </nav>
 </template>

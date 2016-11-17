@@ -12,31 +12,28 @@ import { Login } from './login';
 @inject(KataService, DialogService)
 export class App {
 
-  constructor(kataService, DialogService) {
-    this.router = null
-
-    this.kataService = KataService;
+ 
+  constructor(KataService, DialogService) {
+    this.userName = null;
+     this.kataService = KataService;
     this.dialogService = DialogService;
   }
 
   activate() {
-    this.kataService.addDefaultData();
+   // this.kataService.addDefaultData();
 
-    if (this.router) {
-      this.router.userName = null;
-
-      this.router.login = () => {
-
-
-        this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
+   /*
+    this.routerVm.userName = null;
+    this.routerVm.login = () => {
+       this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
           if (!response.wasCancelled) {
             this.userName = esponse.output;
           }
           console.log(response.output);
         });
-      };
-    }
-
+    };
+  }
+*/
   }
 
   configureRouter(config, router) {
@@ -63,11 +60,19 @@ export class App {
     }
 
     ]);
-
-
+   
+    var self = this;
+     router.userName = "Not Logged in";
+     router.login = () => {
+       this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
+          if (!response.wasCancelled) {
+            self.router.userName = response.output;
+          }
+          console.log(response.output);
+        });
+    }
 
     this.router = router;
-
-
+    
   }
 }

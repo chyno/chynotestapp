@@ -97,6 +97,7 @@
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",
+          
 
           {
             "name": "aurelia-dialog",

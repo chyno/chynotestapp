@@ -6,17 +6,20 @@ import {
     KataService
 } from "./service/kata-service";
 
+import { Router } from 'aurelia-router';
 
 
 
-@inject(KataService)
+
+@inject(KataService, Router)
 export class Kata {
 
-    constructor(kataService) {
+    constructor(kataService, Router) {
         this.kataService = kataService;
         this.name = null;
         this.description = null;
-        this.tests = null
+        this.tests = null;
+        this.router = Router
     }
 
     activate() {
@@ -26,7 +29,9 @@ export class Kata {
     add() {
         if (this.name && this.description && this.tests)
         {
+            
             this.kataService.addKata(this.name, this.description, this.tests);
+            this.router.navigateToRoute('welcome');
        }
 
 
