@@ -1,4 +1,4 @@
-define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia-dialog", "./login"], function (exports, _aureliaFramework, _kataService, _aureliaDialog, _login) {
+define('app',["exports", "aurelia-framework", "./service/kata-service"], function (exports, _aureliaFramework, _kataService) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -14,48 +14,17 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia
 
   var _dec, _class;
 
-  var App = exports.App = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService, _aureliaDialog.DialogService), _dec(_class = function () {
-    function App(KataService, DialogService) {
+  var App = exports.App = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService), _dec(_class = function () {
+    function App(KataService) {
       _classCallCheck(this, App);
 
-<<<<<<< HEAD
-      this.router = null;
-
-      this.ks = _kataService.KataService;
-      this.dialogService = DialogService;
-    }
-
-    App.prototype.activate = function activate() {
-      var _this = this;
-
-      this.ks.addDefaultData();
-
-      if (this.router) {
-        this.router.userName = null;
-
-        this.router.login = function () {
-
-          _this.dialogService.open({ viewModel: _login.Login, model: _this.userName }).then(function (response) {
-            if (!response.wasCancelled) {
-              _this.userName = esponse.output;
-            }
-            console.log(response.output);
-          });
-        };
-      }
-    };
-=======
       this.userName = null;
       this.kataService = KataService;
-      this.dialogService = DialogService;
     }
 
     App.prototype.activate = function activate() {};
->>>>>>> c5871ebf26affaafd6d10ba0a60023358ffad551
 
     App.prototype.configureRouter = function configureRouter(config, router) {
-      var _this = this;
-
       config.title = 'Project Chyno';
       config.map([{
         route: ['', 'welcome'],
@@ -76,17 +45,6 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia
         nav: false,
         title: 'Login'
       }]);
-
-      var self = this;
-      router.userName = "Not Logged in";
-      router.login = function () {
-        _this.dialogService.open({ viewModel: _login.Login, model: _this.userName }).then(function (response) {
-          if (!response.wasCancelled) {
-            self.router.userName = response.output;
-          }
-          console.log(response.output);
-        });
-      };
 
       this.router = router;
     };
@@ -124,7 +82,7 @@ define('environment',["exports"], function (exports) {
   });
   exports.default = {
     debug: true,
-    testing: true
+    testing: false
   };
 });
 define('kata',["exports", "aurelia-framework", "./service/kata-service", "aurelia-router"], function (exports, _aureliaFramework, _kataService, _aureliaRouter) {
@@ -188,12 +146,10 @@ define('login',["exports", "aurelia-framework", "aurelia-dialog"], function (exp
             _classCallCheck(this, Login);
 
             this.controller = DialogController;
-            this.userName = null;
-            this.password = null;
         }
 
         Login.prototype.activate = function activate(data) {
-            this.userName = data;
+            this.data = { userName: data.userName, password: data.password };
         };
 
         return Login;
@@ -277,12 +233,13 @@ define('main_org',['exports', './environment', './node_modules/gun/gun.js'], fun
     });
   }
 });
-define('nav-bar',['exports'], function (exports) {
+define('nav-header',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
+    exports.NavHeader = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -290,23 +247,21 @@ define('nav-bar',['exports'], function (exports) {
         }
     }
 
-    var NavBar = exports.NavBar = function () {
-        function NavBar() {
-            _classCallCheck(this, NavBar);
+    var NavHeader = exports.NavHeader = function () {
+        function NavHeader() {
+            _classCallCheck(this, NavHeader);
 
-            this.router = null;
+            this.buttonName = "Login";
         }
 
-        NavBar.prototype.active = function active() {};
-
-        NavBar.prototype.login = function login() {
-            alert('hello from navbar');
+        NavHeader.metadata = function metadata() {
+            return _aureliaFramework.Behavior.withProperty('router');
         };
 
-        return NavBar;
+        return NavHeader;
     }();
 });
-define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./service/code-service", "aurelia-binding"], function (exports, _aureliaFramework, _kataService, _codeService, _aureliaBinding) {
+define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./service/code-service", "aurelia-binding", "./user"], function (exports, _aureliaFramework, _kataService, _codeService, _aureliaBinding, _user) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -322,8 +277,8 @@ define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./s
 
     var _dec, _class;
 
-    var Welcome = exports.Welcome = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService, _codeService.CodeService, _aureliaBinding.ObserverLocator), _dec(_class = function () {
-        function Welcome(kataService, codeservice, observerlocator) {
+    var Welcome = exports.Welcome = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService, _codeService.CodeService, _aureliaBinding.ObserverLocator, _user.User), _dec(_class = function () {
+        function Welcome(kataService, codeservice, observerlocator, User) {
             _classCallCheck(this, Welcome);
 
             this.kataService = kataService;
@@ -332,7 +287,7 @@ define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./s
             this.cntl = null;
             this.kataChosen = null;
             this.observerlocator = observerlocator;
-            this.bar = '';
+            this.user = User;
         }
 
         Welcome.prototype.activate = function activate() {
@@ -350,6 +305,12 @@ define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./s
             }
 
             var subscription = this.observerlocator.getObserver(this, 'kataChosen').subscribe(this.onChange.bind(this));
+        };
+
+        Welcome.prototype.saveCode = function saveCode() {
+            var cd = this.codeservice.getCodeValue();
+
+            this.kataService.saveCode(this.kataChosen.name, this.user.userName, cd);
         };
 
         Welcome.prototype.onChange = function onChange(newValue, oldValue) {
@@ -404,7 +365,7 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
         CodeService.prototype.setControls = function setControls(cntls) {
 
             this.codeeditor = _codemirror2.default.fromTextArea(cntls[0], {
-                lineNumbers: true,
+                lineNumbers: false,
                 styleActiveLine: true,
                 matchBrackets: true,
                 theme: 'blackboard',
@@ -426,6 +387,16 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
 
         CodeService.prototype.setTestValue = function setTestValue(tcode) {
             this.testeditor.getDoc().setValue(tcode);
+        };
+
+        CodeService.prototype.getCodeValue = function getCodeValue() {
+            var doc = this.codeeditor.getDoc();
+            return doc.getValue();
+        };
+
+        CodeService.prototype.getTestValue = function getTestValue(tcode) {
+            var doc = this.testeditor.getDoc();
+            return doc.getValue();
         };
 
         return CodeService;
@@ -451,7 +422,8 @@ define('service/kata-service',["exports"], function (exports) {
             this.gunKey = "http://gunjs.herokuapp.com/gun";
             this.collectionKey = 'chynotestapp/katas/data';
             this.katas = null;
-            this.ref = new Gun(this.gunKey).get(this.collectionKey);
+
+            this.ref = new Gun().get(this.collectionKey);
         }
 
         KataService.prototype.getKatas = function getKatas() {
@@ -475,6 +447,10 @@ define('service/kata-service',["exports"], function (exports) {
             };
 
             this.ref.path(item.name).put(item);
+        };
+
+        KataService.prototype.saveCode = function saveCode(name, user, code) {
+            this.ref.path(name + '/' + user).put({ code: code });
         };
 
         return KataService;
@@ -1180,11 +1156,130 @@ define('aurelia-dialog/dialog-service',['exports', 'aurelia-metadata', 'aurelia-
     }
   }
 });
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n    <require from=\"bootstrap/css/bootstrap.css\"></require>\r\n    <require from=\"./styles/styles.css\"></require>\r\n    <require from=\"./nav-bar.html\"></require>\r\n    <nav-bar router.bind=\"router\"></nav-bar>\r\n    <hr style=\"clear:both; padding-top:2em\" />\r\n    <div class=\"container\">\r\n        <loading-indicator loading.bind=\"router.isNavigating || api.isRequesting\"></loading-indicator>\r\n        <!-- Main component for a primary marketing message or call to action -->\r\n        \r\n        <router-view></router-view>\r\n    </div>\r\n</template>"; });
+define('nav-bar',['exports', 'aurelia-framework', 'aurelia-dialog', './login', './user'], function (exports, _aureliaFramework, _aureliaDialog, _login, _user) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.NavBar = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var NavBar = exports.NavBar = (_dec = (0, _aureliaFramework.inject)(_aureliaDialog.DialogService, _user.User), _dec(_class = (_class2 = function () {
+        function NavBar(DialogService, User) {
+            _classCallCheck(this, NavBar);
+
+            _initDefineProp(this, 'router', _descriptor, this);
+
+            this.LoginText = "Log In";
+            this.dialogService = DialogService;
+            this.buttonName = this.LoginText;
+
+            this.user = User;
+        }
+
+        NavBar.prototype.login = function login() {
+            var _this = this;
+
+            var self = this;
+
+            if (this.user.userName) {
+                this.user.userName = null;
+                this.user.password = null;
+                this.buttonName = this.LoginText;
+            } else {
+                this.dialogService.open({ viewModel: _login.Login, model: self.user }).then(function (response) {
+                    if (!response.wasCancelled && response.output.userName) {
+                        self.user.userName = response.output.userName;
+                        self.user.password = response.output.password;
+                        _this.buttonName = "Log Out";
+                    }
+                    console.log(response.output);
+                });
+            }
+        };
+
+        return NavBar;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'router', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
+});
+define('user',["exports"], function (exports) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var User = exports.User = function User() {
+        _classCallCheck(this, User);
+
+        this.userName = null;
+        this.password = null;
+    };
+});
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\n    <require from=\"bootstrap/css/bootstrap.css\"></require>\n    <require from=\"./styles/styles.css\"></require>\n    <require from=\"./nav-bar\"></require>\n    <nav-bar router.bind=\"router\"></nav-bar>\n    <hr style=\"clear:both; padding-top:2em\" />\n    <div class=\"container\">\n        <loading-indicator loading.bind=\"router.isNavigating || api.isRequesting\"></loading-indicator>\n        <!-- Main component for a primary marketing message or call to action -->\n\n        <router-view></router-view>\n    </div>\n</template>"; });
 define('text!styles/styles.css', ['module'], function(module) { module.exports = "\r\n.funkyradio div {\r\n  clear: both;\r\n  overflow: hidden;\r\n}\r\n\r\n.funkyradio label {\r\n  width: 100%;\r\n  border-radius: 3px;\r\n  border: 1px solid #D1D3D4;\r\n  font-weight: normal;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty,\r\n.funkyradio input[type=\"checkbox\"]:empty {\r\n  display: none;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty ~ label,\r\n.funkyradio input[type=\"checkbox\"]:empty ~ label {\r\n  position: relative;\r\n  line-height: 2.5em;\r\n  text-indent: 3.25em;\r\n  margin-top: 2em;\r\n  cursor: pointer;\r\n  -webkit-user-select: none;\r\n     -moz-user-select: none;\r\n      -ms-user-select: none;\r\n          user-select: none;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:empty ~ label:before {\r\n  position: absolute;\r\n  display: block;\r\n  top: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  content: '';\r\n  width: 2.5em;\r\n  background: #D1D3D4;\r\n  border-radius: 3px 0 0 3px;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:hover:not(:checked) ~ label,\r\n.funkyradio input[type=\"checkbox\"]:hover:not(:checked) ~ label {\r\n  color: #888;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:hover:not(:checked) ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:hover:not(:checked) ~ label:before {\r\n  content: '\\2714';\r\n  text-indent: .9em;\r\n  color: #C2C2C2;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:checked ~ label,\r\n.funkyradio input[type=\"checkbox\"]:checked ~ label {\r\n  color: #777;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:checked ~ label:before {\r\n  content: '\\2714';\r\n  text-indent: .9em;\r\n  color: #333;\r\n  background-color: #ccc;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:focus ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:focus ~ label:before {\r\n  box-shadow: 0 0 0 3px #999;\r\n}\r\n\r\n.funkyradio-default input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-default input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #333;\r\n  background-color: #ccc;\r\n}\r\n\r\n.funkyradio-primary input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-primary input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #337ab7;\r\n}\r\n\r\n.funkyradio-success input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-success input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #5cb85c;\r\n}\r\n\r\n.funkyradio-danger input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-danger input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #d9534f;\r\n}\r\n\r\n.funkyradio-warning input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-warning input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #f0ad4e;\r\n}\r\n\r\n.funkyradio-info input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-info input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #5bc0de;\r\n}\r\n\r\n/* SCSS STYLES */\r\n/*\r\n.funkyradio {\r\n\r\n    div {\r\n        clear: both;\r\n        overflow: hidden;\r\n    }\r\n\r\n    label {\r\n        width: 100%;\r\n        border-radius: 3px;\r\n        border: 1px solid #D1D3D4;\r\n        font-weight: normal;\r\n    }\r\n\r\n    input[type=\"radio\"],\r\n    input[type=\"checkbox\"] {\r\n\r\n        &:empty {\r\n            display: none;\r\n\r\n            ~ label {\r\n                position: relative;\r\n                line-height: 2.5em;\r\n                text-indent: 3.25em;\r\n                margin-top: 2em;\r\n                cursor: pointer;\r\n                user-select: none;\r\n\r\n                &:before {\r\n                    position: absolute;\r\n                    display: block;\r\n                    top: 0;\r\n                    bottom: 0;\r\n                    left: 0;\r\n                    content: '';\r\n                    width: 2.5em;\r\n                    background: #D1D3D4;\r\n                    border-radius: 3px 0 0 3px;\r\n                }\r\n            }\r\n        }\r\n\r\n        &:hover:not(:checked) ~ label {\r\n            color: #888;\r\n\r\n            &:before {\r\n                content: '\\2714';\r\n                text-indent: .9em;\r\n                color: #C2C2C2;\r\n            }\r\n        }\r\n\r\n        &:checked ~ label {\r\n            color: #777;\r\n\r\n            &:before {\r\n                content: '\\2714';\r\n                text-indent: .9em;\r\n                color: #333;\r\n                background-color: #ccc;\r\n            }\r\n        }\r\n\r\n        &:focus ~ label:before {\r\n            box-shadow: 0 0 0 3px #999;\r\n        }\r\n    }\r\n\r\n    &-default {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #333;\r\n                background-color: #ccc;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-primary {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #337ab7;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-success {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #5cb85c;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-danger {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #d9534f;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-warning {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #f0ad4e;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-info {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #5bc0de;\r\n            }\r\n        }\r\n    }\r\n}\r\n*/\r\n"; });
-define('text!app_orig.html', ['module'], function(module) { module.exports = "<template>\r\n  <h1>${message}</h1>\r\n</template>\r\n"; });
+define('text!app_orig.html', ['module'], function(module) { module.exports = "<template>\n  <h1>${message}</h1>\n</template>\n"; });
 define('text!kata.html', ['module'], function(module) { module.exports = "<template>\r\n   <div class=\"form-group\">\r\n  <label for=\"name\">Name:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"name\" value.bind=\"name\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"desc\">Descrition:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"desc\" value.bind=\"description\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"tsts\">Sample Tests:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"tsts\" value.bind=\"tests\">\r\n</div>\r\n\r\n<div class=\"container\">\r\n\t\t<button class=\"btn btn-primary\" click.trigger=\"add()\"  >Add</button>\r\n\t</div>\r\n</template>"; });
-define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-5 col-md-3\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(userName)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
-define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\r\n  <!-- Fixed navbar -->\r\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\r\n    <div class=\"container\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-6\">\r\n          <div class=\"navbar-header\">\r\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\r\n              aria-controls=\"navbar\">\r\n            <span class=\"sr-only\">Toggle navigation</span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n          </button>\r\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\r\n          </div>\r\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\r\n            <ul class=\"nav navbar-nav\">\r\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\r\n            </ul>\r\n          </div>\r\n          <!--/.nav-collapse -->\r\n        </div>\r\n        <div class=\"col-md-3\">\r\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link\" click.trigger=\"router.login()\">Login</button>\r\n        </div>\r\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\r\n          <span> ${router.userName}</span>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </nav>\r\n</template>"; });
-define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\r\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\r\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\">\r\n      <option model.bind=\"null\">Choose...</option>\r\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\r\n</select>\r\n\t<hr/>\r\n\t<div class=\"container\" show.bind=\"kataChosen\">\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-12\">\r\n\t\t\t\t<p>${kataChosen.description}</p>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\" style=\"padding-top:1em\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Save Code</button>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\r\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n</template>"; });
+define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-5 col-md-3\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
+define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\n  <!-- Fixed navbar -->\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <div class=\"col-md-6\">\n          <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\n              aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\n          </div>\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\n            <ul class=\"nav navbar-nav\">\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\n            </ul>\n          </div>\n          <!--/.nav-collapse -->\n        </div>\n        <div class=\"col-md-3\">\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link\" click.trigger=\"login()\"> ${buttonName}</button>\n        </div>\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\n          <span> ${user.userName}</span>\n        </div>\n      </div>\n    </div>\n  </nav>\n</template>"; });
+define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\r\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\r\n\t<label for=\"availKatas\">Available Katas: </label>\r\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\r\n      <option model.bind=\"null\">Choose...</option>\r\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\r\n</select>\r\n\t<hr/>\r\n\t<div class=\"container\" show.bind=\"kataChosen\">\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-12\">\r\n\t\t\t\t<p>${kataChosen.description}</p>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\" style=\"padding-top:1em\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Code</button>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\r\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

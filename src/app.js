@@ -5,35 +5,20 @@ import {
 import {
   KataService
 } from "./service/kata-service";
-import { DialogService } from 'aurelia-dialog';
 
-import { Login } from './login';
 
-@inject(KataService, DialogService)
+@inject(KataService)
 export class App {
 
- 
-  constructor(KataService, DialogService) {
+
+  constructor(KataService) {
     this.userName = null;
      this.kataService = KataService;
-    this.dialogService = DialogService;
+
   }
 
   activate() {
-   // this.kataService.addDefaultData();
 
-   /*
-    this.routerVm.userName = null;
-    this.routerVm.login = () => {
-       this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
-          if (!response.wasCancelled) {
-            this.userName = esponse.output;
-          }
-          console.log(response.output);
-        });
-    };
-  }
-*/
   }
 
   configureRouter(config, router) {
@@ -60,19 +45,8 @@ export class App {
     }
 
     ]);
-   
-    var self = this;
-     router.userName = "Not Logged in";
-     router.login = () => {
-       this.dialogService.open({ viewModel: Login, model: this.userName }).then(response => {
-          if (!response.wasCancelled) {
-            self.router.userName = response.output;
-          }
-          console.log(response.output);
-        });
-    }
 
     this.router = router;
-    
+
   }
 }

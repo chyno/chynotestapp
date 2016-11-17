@@ -1,6 +1,6 @@
- 
+
 import CodeMirror from 'codemirror';
- 
+
 export class CodeService {
 
     constructor() {
@@ -14,7 +14,7 @@ export class CodeService {
          //var cm = new CodeMirror();
 
         this.codeeditor = CodeMirror.fromTextArea(cntls[0], {
-            lineNumbers: true,
+            lineNumbers: false,
             styleActiveLine: true,
             matchBrackets: true,
             theme: 'blackboard',
@@ -37,5 +37,15 @@ export class CodeService {
 
     setTestValue(tcode) {
         this.testeditor.getDoc().setValue(tcode);
+    }
+
+     getCodeValue() {
+         var doc = this.codeeditor.getDoc();
+         return doc.getValue();
+    }
+
+    getTestValue(tcode) {
+        var doc = this.testeditor.getDoc();
+        return doc.getValue();
     }
 }
