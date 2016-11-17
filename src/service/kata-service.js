@@ -30,7 +30,7 @@ export class KataService {
         var item ={
             name: name,
             description: description,
-            code: " ",
+            code: "kata code",
             assertion: tests
         };
 
@@ -39,7 +39,7 @@ export class KataService {
     }
 
     saveCode(name, user, code) {
-        this.ref.path(name + '/' + user).put({ code: code });
+        this.ref.get(name).path(user).put({ code: code });
     }
 
 }
