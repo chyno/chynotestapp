@@ -20,14 +20,14 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "aurelia
 
       this.router = null;
 
-      this.kataService = _kataService.KataService;
+      this.ks = _kataService.KataService;
       this.dialogService = DialogService;
     }
 
     App.prototype.activate = function activate() {
       var _this = this;
 
-      this.kataService.addDefaultData();
+      this.ks.addDefaultData();
 
       if (this.router) {
         this.router.userName = null;

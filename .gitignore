@@ -7,7 +7,7 @@ dist
 Obj
 bin
 .editorconfig
-
+scripts
 ### VisualStudioCode ###
 .vscode
 
