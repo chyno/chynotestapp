@@ -70,7 +70,7 @@ export class KataService {
     }
 
     saveCode(kataName, user, code) {
-       this.userRef.path(this.userCollectionKey + '.' + name).put(code).key(kataName + '.'  + this.user.userName);
+       this.userRef.path(this.userCollectionKey + '.' + kataName).put(code).key(kataName + '.'  + this.user.userName);
     }
 
 }

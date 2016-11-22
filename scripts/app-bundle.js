@@ -565,7 +565,7 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
         };
 
         KataService.prototype.saveCode = function saveCode(kataName, user, code) {
-            this.userRef.path(this.userCollectionKey + '.' + name).put(code).key(kataName + '.' + this.user.userName);
+            this.userRef.path(this.userCollectionKey + '.' + kataName).put(code).key(kataName + '.' + this.user.userName);
         };
 
         return KataService;
