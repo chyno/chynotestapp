@@ -511,17 +511,27 @@ define('service/kata-service',["exports"], function (exports) {
             _classCallCheck(this, KataService);
 
             this.gunKey = "http://gunjs.herokuapp.com/gun";
-            this.collectionKey = 'chynotestapp/katas/data';
+            this.collectionKey = 'kata2';
             this.katas = null;
 
-            this.ref = new Gun().get(this.collectionKey);
+            this.gun = new Gun();
+
+            this.ref = this.gun.get(this.collectionKey);
+            var self = this;
+            this.gun.get(this.collectionKey).not(function (key) {
+                self.gun.put({
+                    kata: {}
+                }).key(key);
+            });
         }
 
         KataService.prototype.getKatas = function getKatas() {
             var d = [];
 
-            this.ref.map().val(function (data, k) {
-                d.push(data);
+            this.ref.path(this.collectionKey).map().val(function (data) {
+                if (data && data.name) {
+                    d.push(data);
+                }
             });
 
             return d;
@@ -537,12 +547,10 @@ define('service/kata-service',["exports"], function (exports) {
                 assertion: tests
             };
 
-            this.ref.path(item.name).put(item);
+            this.ref.path(this.collectionKey + '.' + name).put(item).key(name);
         };
 
-        KataService.prototype.saveCode = function saveCode(name, user, code) {
-            this.ref.get(name).path(user).put({ code: code });
-        };
+        KataService.prototype.saveCode = function saveCode(name, user, code) {};
 
         return KataService;
     }();

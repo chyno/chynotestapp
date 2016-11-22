@@ -29,11 +29,10 @@ export class Kata {
     add() {
         if (this.name && this.description && this.tests)
         {
-            
+
             this.kataService.addKata(this.name, this.description, this.tests);
             this.router.navigateToRoute('welcome');
        }
-
 
     }
 
