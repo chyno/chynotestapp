@@ -1,7 +1,17 @@
+import {
+    inject
+} from "aurelia-framework";
 
+import { User } from '../user';
+
+
+@inject(User)
 export class KataService {
 
-    constructor() {
+    constructor(User) {
+
+        this.user = User;
+
 
         this.gunKey = "http://gunjs.herokuapp.com/gun";
         this.collectionKey = 'kata';
@@ -23,7 +33,7 @@ export class KataService {
             // put in an object and key it
             self.gun.put({
                 user: {}
-            }).key(key)
+            }).key(self.userCollectionKey)
         });
 
 
@@ -31,9 +41,14 @@ export class KataService {
 
     getKatas() {
         var d = [];
+        var self = this;
 
         this.ref.path(this.collectionKey).map().val(function (data) {
             if (data && data.name) {
+
+                self.userRef.get(data.userName + '.' + self.user.userName).val(x => {
+                    data.code = x;
+                });
                 d.push(data);
             }
         });
@@ -41,9 +56,7 @@ export class KataService {
         return d;
     }
 
-    addDefaultData() {
 
-    }
 
     addKata(name, description, tests) {
         var item ={

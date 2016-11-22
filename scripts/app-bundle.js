@@ -493,12 +493,13 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
         return CodeService;
     }();
 });
-define('service/kata-service',['exports'], function (exports) {
-    'use strict';
+define('service/kata-service',["exports", "aurelia-framework", "../user"], function (exports, _aureliaFramework, _user) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
+    exports.KataService = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -506,9 +507,13 @@ define('service/kata-service',['exports'], function (exports) {
         }
     }
 
-    var KataService = exports.KataService = function () {
-        function KataService() {
+    var _dec, _class;
+
+    var KataService = exports.KataService = (_dec = (0, _aureliaFramework.inject)(_user.User), _dec(_class = function () {
+        function KataService(User) {
             _classCallCheck(this, KataService);
+
+            this.user = User;
 
             this.gunKey = "http://gunjs.herokuapp.com/gun";
             this.collectionKey = 'kata';
@@ -527,23 +532,26 @@ define('service/kata-service',['exports'], function (exports) {
             this.userRef = this.gun.get(this.userCollectionKey).not(function (key) {
                 self.gun.put({
                     user: {}
-                }).key(key);
+                }).key(self.userCollectionKey);
             });
         }
 
         KataService.prototype.getKatas = function getKatas() {
             var d = [];
+            var self = this;
 
             this.ref.path(this.collectionKey).map().val(function (data) {
                 if (data && data.name) {
+
+                    self.userRef.get(data.userName + '.' + self.user.userName).val(function (x) {
+                        data.code = x;
+                    });
                     d.push(data);
                 }
             });
 
             return d;
         };
-
-        KataService.prototype.addDefaultData = function addDefaultData() {};
 
         KataService.prototype.addKata = function addKata(name, description, tests) {
             var item = {
@@ -561,7 +569,7 @@ define('service/kata-service',['exports'], function (exports) {
         };
 
         return KataService;
-    }();
+    }()) || _class);
 });
 define('aurelia-dialog/ai-dialog-header',['exports', 'aurelia-templating', './dialog-controller'], function (exports, _aureliaTemplating, _dialogController) {
   'use strict';
