@@ -493,8 +493,8 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
         return CodeService;
     }();
 });
-define('service/kata-service',["exports"], function (exports) {
-    "use strict";
+define('service/kata-service',['exports'], function (exports) {
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -511,16 +511,22 @@ define('service/kata-service',["exports"], function (exports) {
             _classCallCheck(this, KataService);
 
             this.gunKey = "http://gunjs.herokuapp.com/gun";
-            this.collectionKey = 'kata2';
+            this.collectionKey = 'kata';
+            this.userCollectionKey = 'user';
             this.katas = null;
 
             this.gun = new Gun();
 
-            this.ref = this.gun.get(this.collectionKey);
             var self = this;
-            this.gun.get(this.collectionKey).not(function (key) {
+            this.ref = this.gun.get(this.collectionKey).not(function (key) {
                 self.gun.put({
                     kata: {}
+                }).key(self.collectionKey);
+            });
+
+            this.userRef = this.gun.get(this.userCollectionKey).not(function (key) {
+                self.gun.put({
+                    user: {}
                 }).key(key);
             });
         }
@@ -550,7 +556,9 @@ define('service/kata-service',["exports"], function (exports) {
             this.ref.path(this.collectionKey + '.' + name).put(item).key(name);
         };
 
-        KataService.prototype.saveCode = function saveCode(name, user, code) {};
+        KataService.prototype.saveCode = function saveCode(kataName, user, code) {
+            this.userRef.path(this.userCollectionKey + '.' + name).put(code).key(kataName + '.' + this.user.userName);
+        };
 
         return KataService;
     }();

@@ -4,17 +4,25 @@ export class KataService {
     constructor() {
 
         this.gunKey = "http://gunjs.herokuapp.com/gun";
-        this.collectionKey = 'kata2';
+        this.collectionKey = 'kata';
+        this.userCollectionKey = 'user';
         this.katas = null;
      //   this.ref = new Gun(this.gunKey).get(this.collectionKey);
         this.gun = new Gun();
 
-        this.ref = this.gun.get(this.collectionKey);
+
         var self = this;
-        this.gun.get(this.collectionKey).not(function (key) {
+        this.ref = this.gun.get(this.collectionKey).not(function (key) {
             // put in an object and key it
             self.gun.put({
                 kata: {}
+            }).key(self.collectionKey);
+        });
+
+        this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) {
+            // put in an object and key it
+            self.gun.put({
+                user: {}
             }).key(key)
         });
 
@@ -48,8 +56,8 @@ export class KataService {
         this.ref.path(this.collectionKey + '.' + name).put(item).key(name);
     }
 
-    saveCode(name, user, code) {
-        //this.ref.get(name).put({ code: code });
+    saveCode(kataName, user, code) {
+       this.userRef.path(this.userCollectionKey + '.' + name).put(code).key(kataName + '.'  + this.user.userName);
     }
 
 }
