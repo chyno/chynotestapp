@@ -16,8 +16,7 @@ import { User } from './user';
 @inject(KataService, CodeService, ObserverLocator, User)
 export class Welcome {
 
-
-    constructor(kataService, codeservice, observerlocator, User) {
+ constructor(kataService, codeservice, observerlocator, User) {
         this.kataService = kataService;
         this.katas = [];
         this.codeservice = codeservice;
@@ -50,8 +49,8 @@ export class Welcome {
 
     saveCode() {
         var cd = this.codeservice.getCodeValue();
-
-        this.kataService.saveCode(this.kataChosen.name, this.user.userName, cd);
+        // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
+       this.kataService.saveCode(this.kataChosen.name, cd);
     }
 
     onChange(newValue, oldValue) {

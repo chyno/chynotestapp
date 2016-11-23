@@ -33,8 +33,10 @@ export class Kata {
             this.kataService.addKata(this.name, this.description, this.tests);
             this.router.navigateToRoute('welcome');
        }
+    }
 
-
+    clearAll() {
+        this.kataService.clearAll();
     }
 
 }

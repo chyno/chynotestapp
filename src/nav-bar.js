@@ -43,6 +43,5 @@ export class NavBar {
              console.log(response.output);
         });
         }
-
     }
 }

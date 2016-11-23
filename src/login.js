@@ -1,6 +1,4 @@
-import {
-    inject
-} from "aurelia-framework";
+import {  inject } from "aurelia-framework";
 
 import {DialogController} from 'aurelia-dialog';
 
