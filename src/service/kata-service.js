@@ -1,10 +1,7 @@
-import {
-    inject
-} from "aurelia-framework";
 
-import {
-    User
-} from '../user';
+
+import { inject } from "aurelia-framework";
+import { User } from '../user';
 
 @inject(User)
 export class KataService {
@@ -13,48 +10,62 @@ export class KataService {
         this.user = User;
         this.gunKey = "http://gunjs.herokuapp.com/gun";
         this.collectionKey = 'kata';
+ 
+        this.userCollectionKey = 'user';
         this.katas = null;
-        // this.ref = new Gun(this.gunKey).get(this.collectionKey);
+     //   this.ref = new Gun(this.gunKey).get(this.collectionKey);
         this.gun = new Gun(this.gunKey);
 
-        /*
-        var chat = Gun(location.origin + '/gun').get('example/chat/data').not(function(){
-				return this.put({1: {who: 'Welcome', what: "to the chat app!", when: 1}}).key('example/chat/data');
-			});
-        */
-        this.ref = this.gun.put({kata: {}}).key(this.collectionKey);
+
+        var self = this;
+        this.ref = this.gun.get(this.collectionKey).not(function (key) {
+            // put in an object and key it
+            self.gun.put({
+                kata: {}
+            }).key(self.collectionKey);
+        });
+
+        this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) {
+            // put in an object and key it
+            self.gun.put({
+                user: {}
+            }).key(self.userCollectionKey)
+        });
+
     }
 
     getKatas() {
         var d = [];
         var self = this;
+ 
+        this.ref.get(this.collectionKey).path('kata').map().val(function (data) {
+            if (data && data.name) {
 
-        this.ref.path(this.collectionKey).map(function (data, k) {
-            d.push(data);
+                self.userRef.get(data.name + '_' + self.user.userName).val(x => {
+                    data.code = x;
+                });
+                d.push(data);
+            }
+
         });
 
         return d;
     }
-
-
-    addDefaultData() {
-
-    }
-
+   
+    
     addKata(name, description, tests) {
         var item = {
             name: name,
             description: description,
-            code: " ",
+            code: "kata code",
             assertion: tests
         };
-        this.ref.path(this.collectionKey).put(item).key(item.name);
+
+        this.ref.get(this.collectionKey).path('kata' + '.' + name).put(item);
     }
 
-    saveCode(name, user, code) {
-        this.ref.path(name).put({
-            code: code
-        }).key(name + '/' + user.userName);
-    }
+    saveCode(kataName,  code) {
+       this.userRef.get(this.userCollectionKey).path('user' + '.' + kataName + '_'  + this.user.userName).put(code).key(kataName + '_'  + this.user.userName);
+ }
 
 }

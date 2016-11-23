@@ -13,8 +13,7 @@ export class App {
 
   constructor(KataService) {
     this.userName = null;
-     this.kataService = KataService;
-
+    this.kataService = KataService;
   }
 
   activate() {

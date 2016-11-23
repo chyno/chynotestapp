@@ -1,14 +1,6 @@
-
-import {
-    inject
-} from "aurelia-framework";
-import {
-    KataService
-} from "./service/kata-service";
-
+import { inject } from "aurelia-framework";
+import {  KataService } from "./service/kata-service";
 import { Router } from 'aurelia-router';
-
-
 
 
 @inject(KataService, Router)
@@ -29,14 +21,15 @@ export class Kata {
     add() {
         if (this.name && this.description && this.tests)
         {
-            
             this.kataService.addKata(this.name, this.description, this.tests);
-            this.router.navigateToRoute('welcome');
+            return this.router.navigateToRoute('welcome');
        }
     }
 
+ 
     clearAll() {
         this.kataService.clearAll();
+ 
     }
 
 }

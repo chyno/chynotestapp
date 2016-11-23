@@ -116,9 +116,8 @@ define('kata',["exports", "aurelia-framework", "./service/kata-service", "aureli
 
         Kata.prototype.add = function add() {
             if (this.name && this.description && this.tests) {
-
                 this.kataService.addKata(this.name, this.description, this.tests);
-                this.router.navigateToRoute('welcome');
+                return this.router.navigateToRoute('welcome');
             }
         };
 
@@ -386,6 +385,7 @@ define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./s
         }
 
         Welcome.prototype.activate = function activate() {
+
             this.katas = this.kataService.getKatas();
             this.kataChosen = null;
         };
@@ -520,40 +520,56 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             this.user = User;
             this.gunKey = "http://gunjs.herokuapp.com/gun";
             this.collectionKey = 'kata';
+
+            this.userCollectionKey = 'user';
             this.katas = null;
 
             this.gun = new Gun(this.gunKey);
 
-            this.ref = this.gun.put({ kata: {} }).key(this.collectionKey);
+            var self = this;
+            this.ref = this.gun.get(this.collectionKey).not(function (key) {
+                self.gun.put({
+                    kata: {}
+                }).key(self.collectionKey);
+            });
+
+            this.userRef = this.gun.get(this.userCollectionKey).not(function (key) {
+                self.gun.put({
+                    user: {}
+                }).key(self.userCollectionKey);
+            });
         }
 
         KataService.prototype.getKatas = function getKatas() {
             var d = [];
             var self = this;
 
-            this.ref.path(this.collectionKey).map(function (data, k) {
-                d.push(data);
+            this.ref.get(this.collectionKey).path('kata').map().val(function (data) {
+                if (data && data.name) {
+
+                    self.userRef.get(data.name + '_' + self.user.userName).val(function (x) {
+                        data.code = x;
+                    });
+                    d.push(data);
+                }
             });
 
             return d;
         };
 
-        KataService.prototype.addDefaultData = function addDefaultData() {};
-
         KataService.prototype.addKata = function addKata(name, description, tests) {
             var item = {
                 name: name,
                 description: description,
-                code: " ",
+                code: "kata code",
                 assertion: tests
             };
-            this.ref.path(this.collectionKey).put(item).key(item.name);
+
+            this.ref.get(this.collectionKey).path('kata' + '.' + name).put(item);
         };
 
-        KataService.prototype.saveCode = function saveCode(name, user, code) {
-            this.ref.path(name).put({
-                code: code
-            }).key(name + '/' + user.userName);
+        KataService.prototype.saveCode = function saveCode(kataName, code) {
+            this.userRef.get(this.userCollectionKey).path('user' + '.' + kataName + '_' + this.user.userName).put(code).key(kataName + '_' + this.user.userName);
         };
 
         return KataService;

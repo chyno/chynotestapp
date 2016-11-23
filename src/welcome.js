@@ -1,6 +1,7 @@
 import {
     inject
 } from "aurelia-framework";
+
 import {
     KataService
 } from "./service/kata-service";
@@ -28,8 +29,9 @@ export class Welcome {
     }
 
     activate() {
+         
         this.katas = this.kataService.getKatas();
-        this.kataChosen = null;
+         this.kataChosen = null;
     }
 
 
