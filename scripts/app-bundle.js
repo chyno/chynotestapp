@@ -1,4 +1,4 @@
-define('app',["exports", "aurelia-framework", "./service/kata-service"], function (exports, _aureliaFramework, _kataService) {
+define('app',["exports", "aurelia-framework", "./service/kata-service", "./user", "aurelia-router", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _kataService, _user, _aureliaRouter, _aureliaEventAggregator) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -12,7 +12,7 @@ define('app',["exports", "aurelia-framework", "./service/kata-service"], functio
     }
   }
 
-  var _dec, _class;
+  var _dec, _class, _dec2, _class2;
 
   var App = exports.App = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService), _dec(_class = function () {
     function App(KataService) {
@@ -26,24 +26,36 @@ define('app',["exports", "aurelia-framework", "./service/kata-service"], functio
 
     App.prototype.configureRouter = function configureRouter(config, router) {
       config.title = 'Project Chyno';
+      config.user = this.user;
+      config.addPipelineStep('authorize', AuthorizeStep);
       config.map([{
         route: ['', 'welcome'],
         name: 'welcome',
         moduleId: './welcome',
         nav: true,
-        title: 'Welcome'
+        title: 'Welcome',
+        requireLogin: false
+      }, {
+        route: ['runner'],
+        name: 'runner',
+        moduleId: './runner',
+        nav: true,
+        title: 'Run Katas',
+        requireLogin: true
       }, {
         route: ['kata'],
         name: 'kata',
         moduleId: './kata',
         nav: true,
-        title: 'Profile'
+        title: 'Profile',
+        requireLogin: true
       }, {
         route: ['login'],
         name: 'login',
         moduleId: './login',
         nav: false,
-        title: 'Login'
+        title: 'Login',
+        requireLogin: true
       }]);
 
       this.router = router;
@@ -51,6 +63,36 @@ define('app',["exports", "aurelia-framework", "./service/kata-service"], functio
 
     return App;
   }()) || _class);
+  var AuthorizeStep = (_dec2 = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _aureliaRouter.Router), _dec2(_class2 = function () {
+    function AuthorizeStep(EventAggregator, Router) {
+      var _this = this;
+
+      _classCallCheck(this, AuthorizeStep);
+
+      this.router = Router;
+      this.user = {};
+      this.eventAggregator = EventAggregator;
+
+      this.eventAggregator.subscribe('Login', function (usr) {
+        if (usr) {
+          _this.user = usr;
+        } else {
+          return _this.router.navigateToRoute('welcome');
+        }
+      });
+    }
+
+    AuthorizeStep.prototype.run = function run(navigationInstruction, next) {
+
+      if (navigationInstruction.config.requireLogin && !this.user.userName) {
+        return next.cancel(new _aureliaRouter.RedirectToRoute('welcome'));
+      }
+
+      return next();
+    };
+
+    return AuthorizeStep;
+  }()) || _class2);
 });
 define('app_orig',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
   "use strict";
@@ -152,7 +194,10 @@ define('login',["exports", "aurelia-framework", "aurelia-dialog"], function (exp
         }
 
         Login.prototype.activate = function activate(data) {
-            this.data = { userName: data.userName, password: data.password };
+            this.data = {
+                userName: data.userName,
+                password: data.password
+            };
         };
 
         return Login;
@@ -236,7 +281,7 @@ define('main_org',['exports', './environment', './node_modules/gun/gun.js'], fun
     });
   }
 });
-define('nav-bar',['exports', 'aurelia-framework', 'aurelia-dialog', './login', './user'], function (exports, _aureliaFramework, _aureliaDialog, _login, _user) {
+define('nav-bar',['exports', 'aurelia-framework', 'aurelia-dialog', 'aurelia-event-aggregator', './login', './user'], function (exports, _aureliaFramework, _aureliaDialog, _aureliaEventAggregator, _login, _user) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -295,16 +340,17 @@ define('nav-bar',['exports', 'aurelia-framework', 'aurelia-dialog', './login', '
 
     var _dec, _class, _desc, _value, _class2, _descriptor;
 
-    var NavBar = exports.NavBar = (_dec = (0, _aureliaFramework.inject)(_aureliaDialog.DialogService, _user.User), _dec(_class = (_class2 = function () {
-        function NavBar(DialogService, User) {
+    var NavBar = exports.NavBar = (_dec = (0, _aureliaFramework.inject)(_aureliaDialog.DialogService, _user.User, _aureliaEventAggregator.EventAggregator), _dec(_class = (_class2 = function () {
+        function NavBar(DialogService, User, EventAggregator) {
             _classCallCheck(this, NavBar);
 
             _initDefineProp(this, 'router', _descriptor, this);
 
             this.LoginText = "Log In";
+            this.LogoutText = "Log Out";
             this.dialogService = DialogService;
             this.buttonName = this.LoginText;
-
+            this.eventAggregator = EventAggregator;
             this.user = User;
         }
 
@@ -317,12 +363,14 @@ define('nav-bar',['exports', 'aurelia-framework', 'aurelia-dialog', './login', '
                 this.user.userName = null;
                 this.user.password = null;
                 this.buttonName = this.LoginText;
+                self.eventAggregator.publish('Login', null);
             } else {
                 this.dialogService.open({ viewModel: _login.Login, model: self.user }).then(function (response) {
                     if (!response.wasCancelled && response.output.userName) {
                         self.user.userName = response.output.userName;
                         self.user.password = response.output.password;
-                        _this.buttonName = "Log Out";
+                        self.eventAggregator.publish('Login', self.user);
+                        _this.buttonName = _this.LogoutText;
                     }
                     console.log(response.output);
                 });
@@ -334,6 +382,69 @@ define('nav-bar',['exports', 'aurelia-framework', 'aurelia-dialog', './login', '
         enumerable: true,
         initializer: null
     })), _class2)) || _class);
+});
+define('runner',["exports", "aurelia-framework", "./service/kata-service", "./service/code-service", "aurelia-binding", "./user"], function (exports, _aureliaFramework, _kataService, _codeService, _aureliaBinding, _user) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Runner = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var Runner = exports.Runner = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService, _codeService.CodeService, _aureliaBinding.ObserverLocator, _user.User), _dec(_class = function () {
+        function Runner(kataService, codeservice, observerlocator, User) {
+            _classCallCheck(this, Runner);
+
+            this.kataService = kataService;
+            this.katas = [];
+            this.codeservice = codeservice;
+            this.cntl = null;
+            this.kataChosen = null;
+            this.observerlocator = observerlocator;
+            this.user = User;
+        }
+
+        Runner.prototype.activate = function activate() {
+
+            this.katas = this.kataService.getKatas();
+            this.kataChosen = null;
+        };
+
+        Runner.prototype.attached = function attached() {
+
+            this.codeservice.setControls([this.codeArea, this.testsArea]);
+
+            if (this.kataChosen) {
+                this.codeservice.setCodeValue(this.kataChosen.code);
+                this.codeservice.setTestValue(this.kataChosen.assertion);
+            }
+
+            var subscription = this.observerlocator.getObserver(this, 'kataChosen').subscribe(this.onChange.bind(this));
+        };
+
+        Runner.prototype.saveCode = function saveCode() {
+            var cd = this.codeservice.getCodeValue();
+
+            this.kataService.saveCode(this.kataChosen.name, cd);
+        };
+
+        Runner.prototype.onChange = function onChange(newValue, oldValue) {
+            if (newValue) {
+                this.codeservice.setCodeValue(newValue.code);
+                this.codeservice.setTestValue(this.kataChosen.assertion);
+            }
+        };
+
+        return Runner;
+    }()) || _class);
 });
 define('user',["exports"], function (exports) {
     "use strict";
@@ -355,7 +466,7 @@ define('user',["exports"], function (exports) {
         this.password = null;
     };
 });
-define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./service/code-service", "aurelia-binding", "./user"], function (exports, _aureliaFramework, _kataService, _codeService, _aureliaBinding, _user) {
+define('welcome',["exports", "aurelia-framework", "./user"], function (exports, _aureliaFramework, _user) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -371,52 +482,11 @@ define('welcome',["exports", "aurelia-framework", "./service/kata-service", "./s
 
     var _dec, _class;
 
-    var Welcome = exports.Welcome = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService, _codeService.CodeService, _aureliaBinding.ObserverLocator, _user.User), _dec(_class = function () {
-        function Welcome(kataService, codeservice, observerlocator, User) {
-            _classCallCheck(this, Welcome);
+    var Welcome = exports.Welcome = (_dec = (0, _aureliaFramework.inject)(_user.User), _dec(_class = function Welcome(User) {
+        _classCallCheck(this, Welcome);
 
-            this.kataService = kataService;
-            this.katas = [];
-            this.codeservice = codeservice;
-            this.cntl = null;
-            this.kataChosen = null;
-            this.observerlocator = observerlocator;
-            this.user = User;
-        }
-
-        Welcome.prototype.activate = function activate() {
-
-            this.katas = this.kataService.getKatas();
-            this.kataChosen = null;
-        };
-
-        Welcome.prototype.attached = function attached() {
-
-            this.codeservice.setControls([this.codeArea, this.testsArea]);
-
-            if (this.kataChosen) {
-                this.codeservice.setCodeValue(this.kataChosen.code);
-                this.codeservice.setTestValue(this.kataChosen.assertion);
-            }
-
-            var subscription = this.observerlocator.getObserver(this, 'kataChosen').subscribe(this.onChange.bind(this));
-        };
-
-        Welcome.prototype.saveCode = function saveCode() {
-            var cd = this.codeservice.getCodeValue();
-
-            this.kataService.saveCode(this.kataChosen.name, cd);
-        };
-
-        Welcome.prototype.onChange = function onChange(newValue, oldValue) {
-            if (newValue) {
-                this.codeservice.setCodeValue(newValue.code);
-                this.codeservice.setTestValue(this.kataChosen.assertion);
-            }
-        };
-
-        return Welcome;
-    }()) || _class);
+        this.user = User;
+    }) || _class);
 });
 define('resources/index',["exports"], function (exports) {
   "use strict";
@@ -1280,6 +1350,7 @@ define('text!styles/styles.css', ['module'], function(module) { module.exports =
 define('text!app_orig.html', ['module'], function(module) { module.exports = "<template>\r\n  <h1>${message}</h1>\r\n</template>\r\n"; });
 define('text!kata.html', ['module'], function(module) { module.exports = "<template>\r\n  \r\n   <div class=\"form-group\">\r\n  <label for=\"name\">Name:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"name\" value.bind=\"name\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"desc\">Descrition:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"desc\" value.bind=\"description\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"tsts\">Sample Tests:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"tsts\" value.bind=\"tests\">\r\n</div>\r\n\r\n<div class=\"container\">\r\n\t\t<button class=\"btn btn-primary\" click.trigger=\"add()\"  >Add</button>\r\n\t</div>\r\n</template>"; });
 define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-5 col-md-3\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
-define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\r\n  <!-- Fixed navbar -->\r\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\r\n    <div class=\"container\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-6\">\r\n          <div class=\"navbar-header\">\r\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\r\n              aria-controls=\"navbar\">\r\n            <span class=\"sr-only\">Toggle navigation</span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n          </button>\r\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\r\n          </div>\r\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\r\n            <ul class=\"nav navbar-nav\">\r\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\r\n            </ul>\r\n          </div>\r\n          <!--/.nav-collapse -->\r\n        </div>\r\n        <div class=\"col-md-3\">\r\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link\" click.trigger=\"login()\"> ${buttonName}</button>\r\n        </div>\r\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\r\n          <span> ${user.userName}</span>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </nav>\r\n</template>"; });
-define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\r\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\r\n\t<label for=\"availKatas\">Available Katas: </label>\r\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\r\n      <option model.bind=\"null\">Choose...</option>\r\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\r\n</select>\r\n\t<hr/>\r\n\t<div class=\"container\" show.bind=\"kataChosen\">\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-12\">\r\n\t\t\t\t<p>${kataChosen.description}</p>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\" style=\"padding-top:1em\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Code</button>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\r\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n</template>"; });
+define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\r\n  <!-- Fixed navbar -->\r\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\r\n    <div class=\"container\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-6\">\r\n          <div class=\"navbar-header\">\r\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\r\n              aria-controls=\"navbar\">\r\n            <span class=\"sr-only\">Toggle navigation</span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n            <span class=\"icon-bar\"></span>\r\n          </button>\r\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\r\n          </div>\r\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\r\n            <ul class=\"nav navbar-nav\">\r\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\r\n            </ul>\r\n          </div>\r\n          <!--/.nav-collapse -->\r\n        </div>\r\n        <div class=\"col-md-3\">\r\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link text-warning\" click.trigger=\"login()\"> ${buttonName}</button>\r\n        </div>\r\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\r\n          <span> ${user.userName}</span>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </nav>\r\n</template>"; });
+define('text!runner.html', ['module'], function(module) { module.exports = "<template>\r\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\r\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\r\n\t<label for=\"availKatas\">Available Katas: </label>\r\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\r\n      <option model.bind=\"null\">Choose...</option>\r\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\r\n</select>\r\n\t<hr/>\r\n\t<div class=\"container\" show.bind=\"kataChosen\">\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-12\">\r\n\t\t\t\t<p>${kataChosen.description}</p>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div class=\"row\" style=\"padding-top:1em\">\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Code</button>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-md-6\">\r\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\r\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n</template>"; });
+define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site. </a>. Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

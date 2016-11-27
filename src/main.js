@@ -3,6 +3,7 @@ import 'bootstrap';
 import environment from './environment';
 import 'gun';
 
+
 Promise.config({
   warnings: {
     wForgottenReturn: false
