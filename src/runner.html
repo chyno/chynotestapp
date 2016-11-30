@@ -1,0 +1,35 @@
+<template>
+	<require from="codemirror/lib/codemirror.css"></require>
+	<require from="codemirror/theme/blackboard.css"></require>
+	<label for="availKatas">Available Katas: </label>
+	<select value.bind="kataChosen" class="selectpicker" id="availKatas">
+      <option model.bind="null">Choose...</option>
+      <option repeat.for="kata of katas" model.bind="kata">  ${kata.name} </option>
+</select>
+	<hr/>
+	<div class="container" show.bind="kataChosen">
+		<div class="row">
+			<div class="col-md-12">
+				<p>${kataChosen.description}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<form><textarea id="code" name="code" ref="codeArea"></textarea></form>
+			</div>
+			<div class="col-md-6">
+				<form><textarea id="tests" name="tests" ref="testsArea"></textarea></form>
+			</div>
+		</div>
+		<div class="row" style="padding-top:1em">
+			<div class="col-md-6">
+				<button class="btn btn-primary" click.trigger="saveCode()">Save Code</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-primary">Run Tests</button>
+				<button class="btn btn-secondary">Save Tests</button>
+			</div>
+		</div>
+	</div>
+
+</template>

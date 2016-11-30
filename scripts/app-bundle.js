@@ -626,7 +626,7 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             var item = {
                 name: name,
                 description: description,
-                code: "",
+                code: "code",
                 assertion: tests
             };
 

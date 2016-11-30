@@ -46,7 +46,7 @@ export class KataService {
         var item = {
             name: name,
             description: description,
-            code: "",
+            code: "code",
             assertion: tests
         };
 //ref.path('item88').put({name : 'name 88'});
