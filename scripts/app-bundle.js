@@ -588,25 +588,20 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             _classCallCheck(this, KataService);
 
             this.user = User;
-            this.gunKey = "http://gunjs.herokuapp.com/gun";
-            this.collectionKey = 'kata';
+            this.gunKey = "http://gunjs.herokuapp.com/gun/projectchynoapp";
+            this.collectionKey = 'chynokata';
 
             this.userCollectionKey = 'user';
             this.katas = null;
 
-            this.gun = new Gun(this.gunKey);
+            this.gun = new Gun();
 
             var self = this;
             this.ref = this.gun.get(this.collectionKey).not(function (key) {
-                self.gun.put({
-                    kata: {}
-                }).key(self.collectionKey);
+                self.gun.put({}).key(self.collectionKey);
             });
-
             this.userRef = this.gun.get(this.userCollectionKey).not(function (key) {
-                self.gun.put({
-                    user: {}
-                }).key(self.userCollectionKey);
+                self.gun.put({}).key(self.userCollectionKey);
             });
         }
 
@@ -614,12 +609,12 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             var d = [];
             var self = this;
 
-            this.ref.get(this.collectionKey).path('kata').map().val(function (data) {
+            this.ref.get(this.collectionKey).map(function (data) {
                 if (data && data.name) {
-
-                    self.userRef.get(data.name + '_' + self.user.userName).val(function (x) {
-                        data.code = x;
+                    self.userRef.get(data.name + '_' + self.user.userName, function (cd) {
+                        data.code = cd;
                     });
+
                     d.push(data);
                 }
             });
@@ -631,15 +626,15 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             var item = {
                 name: name,
                 description: description,
-                code: "kata code",
+                code: "",
                 assertion: tests
             };
 
-            this.ref.get(this.collectionKey).path('kata' + '.' + name).put(item);
+            this.ref.path(item.name).put(item);
         };
 
         KataService.prototype.saveCode = function saveCode(kataName, code) {
-            this.userRef.get(this.userCollectionKey).path('user' + '.' + kataName + '_' + this.user.userName).put(code).key(kataName + '_' + this.user.userName);
+            this.userRef.put(code).key(kataName + '_' + this.user.userName);
         };
 
         return KataService;

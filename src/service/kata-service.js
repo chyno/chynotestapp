@@ -8,45 +8,34 @@ export class KataService {
 
     constructor(User) {
         this.user = User;
-        this.gunKey = "http://gunjs.herokuapp.com/gun";
-        this.collectionKey = 'kata';
+        this.gunKey = "http://gunjs.herokuapp.com/gun/projectchynoapp";
+        this.collectionKey = 'chynokata';
  
         this.userCollectionKey = 'user';
         this.katas = null;
      //   this.ref = new Gun(this.gunKey).get(this.collectionKey);
-        this.gun = new Gun(this.gunKey);
+        this.gun = new Gun();//this.gunKey);
 
 
         var self = this;
-        this.ref = this.gun.get(this.collectionKey).not(function (key) {
-            // put in an object and key it
-            self.gun.put({
-                kata: {}
-            }).key(self.collectionKey);
-        });
-
-        this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) {
-            // put in an object and key it
-            self.gun.put({
-                user: {}
-            }).key(self.userCollectionKey)
-        });
+        this.ref = this.gun.get(this.collectionKey).not(function (key) { self.gun.put({}).key(self.collectionKey); });
+        this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) { self.gun.put({}).key(self.userCollectionKey) });
 
     }
 
     getKatas() {
         var d = [];
         var self = this;
- 
-        this.ref.get(this.collectionKey).path('kata').map().val(function (data) {
+        //ref.get('chynokata').map(f);
+        this.ref.get(this.collectionKey).map(function (data) {
             if (data && data.name) {
-
-                self.userRef.get(data.name + '_' + self.user.userName).val(x => {
-                    data.code = x;
+                //      this.userRef.put(code).key(kataName + '_'  + this.user.userName);
+                self.userRef.get(data.name + '_' + self.user.userName, cd => {
+                    data.code = cd;
                 });
-                d.push(data);
-            }
 
+               d.push(data);
+            }
         });
 
         return d;
@@ -57,15 +46,15 @@ export class KataService {
         var item = {
             name: name,
             description: description,
-            code: "kata code",
+            code: "",
             assertion: tests
         };
-
-        this.ref.get(this.collectionKey).path('kata' + '.' + name).put(item);
+//ref.path('item88').put({name : 'name 88'});
+        this.ref.path(item.name).put(item);
     }
 
     saveCode(kataName,  code) {
-       this.userRef.get(this.userCollectionKey).path('user' + '.' + kataName + '_'  + this.user.userName).put(code).key(kataName + '_'  + this.user.userName);
+       this.userRef.put(code).key(kataName + '_'  + this.user.userName);
  }
 
 }
