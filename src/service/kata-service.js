@@ -19,7 +19,7 @@ export class KataService {
 
         var self = this;
         this.ref = this.gun.get(this.collectionKey).not(function (key) { self.gun.put({}).key(self.collectionKey); });
-       // this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) { self.gun.put({}).key(self.userCollectionKey) });
+        this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) { self.gun.put({}).key(self.userCollectionKey) });
 
     }
 
@@ -29,8 +29,7 @@ export class KataService {
         //ref.get('chynokata').map(f);
         this.ref.get(this.collectionKey).map(function (data) {
             if (data && data.name) {
-              d.code = 
-              d.push(data);
+            d.push(data);
             }
         });
 
@@ -42,7 +41,7 @@ export class KataService {
         var item = {
             name: name,
             description: description,
-            code: "not set",
+            code: "default code",
             assertion: tests,
             users : {}
         };
@@ -50,10 +49,21 @@ export class KataService {
         this.ref.path(item.name).put(item);
     }
 
-    saveCode(kataName,  code) {
-        //this.ref.
+    saveCode(kataName,  code) { 
+         this.ref.path(kataName).path('users')
+         .path(this.user.userName)
+         .put({code: code});
+    }
 
-       //this.userRef.put(code).key(kataName + '_'  + this.user.userName);
- }
+    getUserCode(kataName) {
+       var code = '';
+        this.gun.get(this.collectionKey)
+        .path(kataName).path('users')
+        .path(this.user.userName)
+         .path('code')
+        .val(d => {code = d});
+
+        return code
+    }
 
 }

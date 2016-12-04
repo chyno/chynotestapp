@@ -47,6 +47,12 @@ export class Runner {
 
     onChange(newValue, oldValue) {
         if (newValue) {
+
+            //Get user kata
+            let userCode = this.kataService.getUserCode(this.kataChosen.name);
+            if (userCode) {
+                this.kataChosen.code = userCode;
+            }
             this.codeservice.setCodeValue(newValue.code);
             this.codeservice.setTestValue(this.kataChosen.assertion);
         }

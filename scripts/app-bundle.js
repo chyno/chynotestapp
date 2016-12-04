@@ -438,6 +438,10 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
 
         Runner.prototype.onChange = function onChange(newValue, oldValue) {
             if (newValue) {
+                var userCode = this.kataService.getUserCode(this.kataChosen.name);
+                if (userCode) {
+                    this.kataChosen.code = userCode;
+                }
                 this.codeservice.setCodeValue(newValue.code);
                 this.codeservice.setTestValue(this.kataChosen.assertion);
             }
@@ -600,6 +604,9 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             this.ref = this.gun.get(this.collectionKey).not(function (key) {
                 self.gun.put({}).key(self.collectionKey);
             });
+            this.userRef = this.gun.get(this.userCollectionKey).not(function (key) {
+                self.gun.put({}).key(self.userCollectionKey);
+            });
         }
 
         KataService.prototype.getKatas = function getKatas() {
@@ -608,7 +615,7 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
 
             this.ref.get(this.collectionKey).map(function (data) {
                 if (data && data.name) {
-                    d.code = d.push(data);
+                    d.push(data);
                 }
             });
 
@@ -619,7 +626,7 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             var item = {
                 name: name,
                 description: description,
-                code: "not set",
+                code: "default code",
                 assertion: tests,
                 users: {}
             };
@@ -627,7 +634,18 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             this.ref.path(item.name).put(item);
         };
 
-        KataService.prototype.saveCode = function saveCode(kataName, code) {};
+        KataService.prototype.saveCode = function saveCode(kataName, code) {
+            this.ref.path(kataName).path('users').path(this.user.userName).put({ code: code });
+        };
+
+        KataService.prototype.getUserCode = function getUserCode(kataName) {
+            var code = '';
+            this.gun.get(this.collectionKey).path(kataName).path('users').path(this.user.userName).path('code').val(function (d) {
+                code = d;
+            });
+
+            return code;
+        };
 
         return KataService;
     }()) || _class);
