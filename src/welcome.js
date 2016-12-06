@@ -8,9 +8,5 @@ export class Welcome {
 
     constructor(User) {
         this.user = User;
-
     }
-
-  
-
 }

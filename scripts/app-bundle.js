@@ -438,6 +438,10 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
 
         Runner.prototype.onChange = function onChange(newValue, oldValue) {
             if (newValue) {
+                var userCode = this.kataService.getUserCode(this.kataChosen.name);
+                if (userCode) {
+                    this.kataChosen.code = userCode;
+                }
                 this.codeservice.setCodeValue(newValue.code);
                 this.codeservice.setTestValue(this.kataChosen.assertion);
             }
@@ -600,21 +604,14 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             this.ref = this.gun.get(this.collectionKey).not(function (key) {
                 self.gun.put({}).key(self.collectionKey);
             });
-            this.userRef = this.gun.get(this.userCollectionKey).not(function (key) {
-                self.gun.put({}).key(self.userCollectionKey);
-            });
         }
 
         KataService.prototype.getKatas = function getKatas() {
             var d = [];
             var self = this;
 
-            this.ref.get(this.collectionKey).map(function (data) {
+            this.ref.map(function (data) {
                 if (data && data.name) {
-                    self.userRef.get(data.name + '_' + self.user.userName, function (cd) {
-                        data.code = cd;
-                    });
-
                     d.push(data);
                 }
             });
@@ -626,15 +623,25 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             var item = {
                 name: name,
                 description: description,
-                code: "code",
-                assertion: tests
+                code: "default code",
+                assertion: tests,
+                users: {}
             };
 
             this.ref.path(item.name).put(item);
         };
 
         KataService.prototype.saveCode = function saveCode(kataName, code) {
-            this.userRef.put(code).key(kataName + '_' + this.user.userName);
+            this.ref.path(kataName).path('users').path(this.user.userName).put({ code: code });
+        };
+
+        KataService.prototype.getUserCode = function getUserCode(kataName) {
+            var code = '';
+            this.ref.path(kataName).path('users').path(this.user.userName).path('code').val(function (d) {
+                code = d;
+            });
+
+            return code;
         };
 
         return KataService;
@@ -1347,5 +1354,5 @@ define('text!kata.html', ['module'], function(module) { module.exports = "<templ
 define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-5 col-md-3\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
 define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\n  <!-- Fixed navbar -->\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <div class=\"col-md-6\">\n          <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\n              aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\n          </div>\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\n            <ul class=\"nav navbar-nav\">\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\n            </ul>\n          </div>\n          <!--/.nav-collapse -->\n        </div>\n        <div class=\"col-md-3\">\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link text-warning\" click.trigger=\"login()\"> ${buttonName}</button>\n        </div>\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\n          <span> ${user.userName}</span>\n        </div>\n      </div>\n    </div>\n  </nav>\n</template>"; });
 define('text!runner.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\n\t<label for=\"availKatas\">Available Katas: </label>\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\n      <option model.bind=\"null\">Choose...</option>\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\n</select>\n\t<hr/>\n\t<div class=\"container\" show.bind=\"kataChosen\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-12\">\n\t\t\t\t<p>${kataChosen.description}</p>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\" style=\"padding-top:1em\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Code</button>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n</template>"; });
-define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site. </a>. Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
+define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site.  This is for simple tests and to make it collaborative. </a>.\r\n\t\t <p>Please login and sart coding.</p>\r\n\t\t Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

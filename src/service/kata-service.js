@@ -10,7 +10,7 @@ export class KataService {
         this.user = User;
         this.gunKey = "http://gunjs.herokuapp.com/gun/projectchynoapp";
         this.collectionKey = 'chynokata';
- 
+
         this.userCollectionKey = 'user';
         this.katas = null;
      //   this.ref = new Gun(this.gunKey).get(this.collectionKey);
@@ -19,7 +19,7 @@ export class KataService {
 
         var self = this;
         this.ref = this.gun.get(this.collectionKey).not(function (key) { self.gun.put({}).key(self.collectionKey); });
-        this.userRef  = this.gun.get(this.userCollectionKey).not(function (key) { self.gun.put({}).key(self.userCollectionKey) });
+
 
     }
 
@@ -27,34 +27,43 @@ export class KataService {
         var d = [];
         var self = this;
         //ref.get('chynokata').map(f);
-        this.ref.get(this.collectionKey).map(function (data) {
+        this.ref.map(function (data) {
             if (data && data.name) {
-                //      this.userRef.put(code).key(kataName + '_'  + this.user.userName);
-                self.userRef.get(data.name + '_' + self.user.userName, cd => {
-                    data.code = cd;
-                });
-
-               d.push(data);
+            d.push(data);
             }
         });
 
         return d;
     }
-   
-    
+
+
     addKata(name, description, tests) {
         var item = {
             name: name,
             description: description,
-            code: "code",
-            assertion: tests
+            code: "default code",
+            assertion: tests,
+            users : {}
         };
 //ref.path('item88').put({name : 'name 88'});
         this.ref.path(item.name).put(item);
     }
 
     saveCode(kataName,  code) {
-       this.userRef.put(code).key(kataName + '_'  + this.user.userName);
- }
+         this.ref.path(kataName).path('users')
+         .path(this.user.userName)
+         .put({code: code});
+    }
+
+    getUserCode(kataName) {
+       var code = '';
+        this.ref
+        .path(kataName).path('users')
+        .path(this.user.userName)
+         .path('code')
+        .val(d => {code = d});
+
+        return code
+    }
 
 }
