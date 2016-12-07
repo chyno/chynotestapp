@@ -85,7 +85,7 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "./user"
     AuthorizeStep.prototype.run = function run(navigationInstruction, next) {
 
       if (navigationInstruction.config.requireLogin && !this.user.userName) {
-        return next.cancel(new _aureliaRouter.RedirectToRoute('welcome'));
+        this.user.userName = 'chyno';
       }
 
       return next();
@@ -534,7 +534,7 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
         CodeService.prototype.setControls = function setControls(cntls) {
 
             this.codeeditor = _codemirror2.default.fromTextArea(cntls[0], {
-                lineNumbers: false,
+                lineNumbers: true,
                 styleActiveLine: true,
                 matchBrackets: true,
                 theme: 'blackboard',
@@ -594,8 +594,6 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             this.user = User;
             this.gunKey = "http://gunjs.herokuapp.com/gun/projectchynoapp";
             this.collectionKey = 'chynokata';
-
-            this.userCollectionKey = 'user';
             this.katas = null;
 
             this.gun = new Gun();
@@ -604,6 +602,7 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             this.ref = this.gun.get(this.collectionKey).not(function (key) {
                 self.gun.put({}).key(self.collectionKey);
             });
+            this.userref = null;
         }
 
         KataService.prototype.getKatas = function getKatas() {
@@ -611,7 +610,9 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
             var self = this;
 
             this.ref.map(function (data) {
-                if (data && data.name) {
+                if (data && data.name && !d.some(function (x) {
+                    return x.name === data.name;
+                })) {
                     d.push(data);
                 }
             });
@@ -624,24 +625,34 @@ define('service/kata-service',["exports", "aurelia-framework", "../user"], funct
                 name: name,
                 description: description,
                 code: "default code",
-                assertion: tests,
-                users: {}
+                assertion: tests
+
             };
 
             this.ref.path(item.name).put(item);
         };
 
         KataService.prototype.saveCode = function saveCode(kataName, code) {
-            this.ref.path(kataName).path('users').path(this.user.userName).put({ code: code });
+            this.setUserRef();
+            this.userref.path(kataName).put({ code: code });
         };
 
         KataService.prototype.getUserCode = function getUserCode(kataName) {
+            this.setUserRef();
             var code = '';
-            this.ref.path(kataName).path('users').path(this.user.userName).path('code').val(function (d) {
-                code = d;
+            this.userref.path(kataName + '.code').val(function (x) {
+                return code = x;
             });
 
             return code;
+        };
+
+        KataService.prototype.setUserRef = function setUserRef() {
+            if (!this.userref) {
+                this.userref = this.gun.get(this.user.userName).not(function (key) {
+                    self.gun.put({}).key(self.user.userName);
+                });
+            }
         };
 
         return KataService;
@@ -1351,8 +1362,8 @@ define('text!app.html', ['module'], function(module) { module.exports = "<templa
 define('text!styles/styles.css', ['module'], function(module) { module.exports = "\r\n.funkyradio div {\r\n  clear: both;\r\n  overflow: hidden;\r\n}\r\n\r\n.funkyradio label {\r\n  width: 100%;\r\n  border-radius: 3px;\r\n  border: 1px solid #D1D3D4;\r\n  font-weight: normal;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty,\r\n.funkyradio input[type=\"checkbox\"]:empty {\r\n  display: none;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty ~ label,\r\n.funkyradio input[type=\"checkbox\"]:empty ~ label {\r\n  position: relative;\r\n  line-height: 2.5em;\r\n  text-indent: 3.25em;\r\n  margin-top: 2em;\r\n  cursor: pointer;\r\n  -webkit-user-select: none;\r\n     -moz-user-select: none;\r\n      -ms-user-select: none;\r\n          user-select: none;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:empty ~ label:before {\r\n  position: absolute;\r\n  display: block;\r\n  top: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  content: '';\r\n  width: 2.5em;\r\n  background: #D1D3D4;\r\n  border-radius: 3px 0 0 3px;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:hover:not(:checked) ~ label,\r\n.funkyradio input[type=\"checkbox\"]:hover:not(:checked) ~ label {\r\n  color: #888;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:hover:not(:checked) ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:hover:not(:checked) ~ label:before {\r\n  content: '\\2714';\r\n  text-indent: .9em;\r\n  color: #C2C2C2;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:checked ~ label,\r\n.funkyradio input[type=\"checkbox\"]:checked ~ label {\r\n  color: #777;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:checked ~ label:before {\r\n  content: '\\2714';\r\n  text-indent: .9em;\r\n  color: #333;\r\n  background-color: #ccc;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:focus ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:focus ~ label:before {\r\n  box-shadow: 0 0 0 3px #999;\r\n}\r\n\r\n.funkyradio-default input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-default input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #333;\r\n  background-color: #ccc;\r\n}\r\n\r\n.funkyradio-primary input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-primary input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #337ab7;\r\n}\r\n\r\n.funkyradio-success input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-success input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #5cb85c;\r\n}\r\n\r\n.funkyradio-danger input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-danger input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #d9534f;\r\n}\r\n\r\n.funkyradio-warning input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-warning input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #f0ad4e;\r\n}\r\n\r\n.funkyradio-info input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-info input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #5bc0de;\r\n}\r\n\r\n/* SCSS STYLES */\r\n/*\r\n.funkyradio {\r\n\r\n    div {\r\n        clear: both;\r\n        overflow: hidden;\r\n    }\r\n\r\n    label {\r\n        width: 100%;\r\n        border-radius: 3px;\r\n        border: 1px solid #D1D3D4;\r\n        font-weight: normal;\r\n    }\r\n\r\n    input[type=\"radio\"],\r\n    input[type=\"checkbox\"] {\r\n\r\n        &:empty {\r\n            display: none;\r\n\r\n            ~ label {\r\n                position: relative;\r\n                line-height: 2.5em;\r\n                text-indent: 3.25em;\r\n                margin-top: 2em;\r\n                cursor: pointer;\r\n                user-select: none;\r\n\r\n                &:before {\r\n                    position: absolute;\r\n                    display: block;\r\n                    top: 0;\r\n                    bottom: 0;\r\n                    left: 0;\r\n                    content: '';\r\n                    width: 2.5em;\r\n                    background: #D1D3D4;\r\n                    border-radius: 3px 0 0 3px;\r\n                }\r\n            }\r\n        }\r\n\r\n        &:hover:not(:checked) ~ label {\r\n            color: #888;\r\n\r\n            &:before {\r\n                content: '\\2714';\r\n                text-indent: .9em;\r\n                color: #C2C2C2;\r\n            }\r\n        }\r\n\r\n        &:checked ~ label {\r\n            color: #777;\r\n\r\n            &:before {\r\n                content: '\\2714';\r\n                text-indent: .9em;\r\n                color: #333;\r\n                background-color: #ccc;\r\n            }\r\n        }\r\n\r\n        &:focus ~ label:before {\r\n            box-shadow: 0 0 0 3px #999;\r\n        }\r\n    }\r\n\r\n    &-default {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #333;\r\n                background-color: #ccc;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-primary {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #337ab7;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-success {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #5cb85c;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-danger {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #d9534f;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-warning {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #f0ad4e;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-info {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #5bc0de;\r\n            }\r\n        }\r\n    }\r\n}\r\n*/\r\n"; });
 define('text!app_orig.html', ['module'], function(module) { module.exports = "<template>\n  <h1>${message}</h1>\n</template>\n"; });
 define('text!kata.html', ['module'], function(module) { module.exports = "<template>\r\n  \r\n   <div class=\"form-group\">\r\n  <label for=\"name\">Name:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"name\" value.bind=\"name\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"desc\">Descrition:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"desc\" value.bind=\"description\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"tsts\">Sample Tests:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"tsts\" value.bind=\"tests\">\r\n</div>\r\n\r\n<div class=\"container\">\r\n\t\t<button class=\"btn btn-primary\" click.trigger=\"add()\"  >Add</button>\r\n\t</div>\r\n</template>"; });
-define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-5 col-md-3\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
+define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-4 col-md-4\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
 define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\n  <!-- Fixed navbar -->\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <div class=\"col-md-6\">\n          <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\n              aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\n          </div>\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\n            <ul class=\"nav navbar-nav\">\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\n            </ul>\n          </div>\n          <!--/.nav-collapse -->\n        </div>\n        <div class=\"col-md-3\">\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link text-warning\" click.trigger=\"login()\"> ${buttonName}</button>\n        </div>\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\n          <span> ${user.userName}</span>\n        </div>\n      </div>\n    </div>\n  </nav>\n</template>"; });
 define('text!runner.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\n\t<label for=\"availKatas\">Available Katas: </label>\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\n      <option model.bind=\"null\">Choose...</option>\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\n</select>\n\t<hr/>\n\t<div class=\"container\" show.bind=\"kataChosen\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-12\">\n\t\t\t\t<p>${kataChosen.description}</p>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\" style=\"padding-top:1em\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Code</button>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\">Run Tests</button>\n\t\t\t\t<button class=\"btn btn-secondary\">Save Tests</button>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n</template>"; });
-define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site.  This is for simple tests and to make it collaborative. </a>.\r\n\t\t <p>Please login and sart coding.</p>\r\n\t\t Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
+define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site.</a>  This is for simple tests and to make it collaborative. .\r\n\t\t <p>\r\n\t\t Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

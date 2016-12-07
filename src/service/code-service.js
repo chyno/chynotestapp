@@ -14,7 +14,7 @@ export class CodeService {
          //var cm = new CodeMirror();
 
         this.codeeditor = CodeMirror.fromTextArea(cntls[0], {
-            lineNumbers: false,
+            lineNumbers: true,
             styleActiveLine: true,
             matchBrackets: true,
             theme: 'blackboard',
