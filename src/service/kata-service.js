@@ -67,6 +67,11 @@ export class KataService {
     }
 
     setUserRef() {
+
+        if(!this.user.userName) {
+            this.user.userName = 'unknown';
+        }
+        
         if (!this.userref) {
             this.userref = this.gun.get(this.user.userName).not(function (key) { self.gun.put({}).key(self.user.userName); });
         }

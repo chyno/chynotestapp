@@ -1,6 +1,6 @@
 scripts/app-bundle.js
 scripts/app-bundle.js.map
-scripts/vendor-bundle.j
+scripts/vendor-bundle.js
 node_modules
 jspm_packages
 bower_components

@@ -15,5 +15,9 @@
     "path": "^0.12.7",
     "requestify": "^0.2.5",
     "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.2",
+    "connect-browser-sync": "^2.0.1"
   }
 }
