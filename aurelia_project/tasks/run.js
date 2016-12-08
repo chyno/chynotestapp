@@ -5,6 +5,7 @@ import project from '../aurelia.json';
 import build from './build';
 import {CLIOptions} from 'aurelia-cli';
 
+
 function log(message) {
   console.log(message); //eslint-disable-line no-console
 }
@@ -18,6 +19,7 @@ function reload(done) {
   done();
 }
 
+
 let serve = gulp.series(
   build,
   done => {
@@ -30,8 +32,8 @@ let serve = gulp.series(
         baseDir: ['.'],
         middleware: [historyApiFallback(), function(req, res, next) {
           res.setHeader('Access-Control-Allow-Origin', '*');
-          next();
-        }]
+         next();
+       }] 
       }
     }, function(err, bs) {
       let urls = bs.options.get('urls').toJS();
@@ -57,11 +59,13 @@ let run;
 
 if (CLIOptions.hasFlag('watch')) {
   run = gulp.series(
-    serve,
+    build,
+   // serve,
     watch
   );
 } else {
-  run = serve;
+  run = build
+  //run = serve;
 }
 
 export default run;
