@@ -1,12 +1,13 @@
 "use strict";
 var express = require('express');
+var expressws = require('express-ws');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swig = require('swig');
 var api = require('./api');
-
 var app = express();
+
 /*
 if (app.get('env') == 'development') {
   var browserSync = require('browser-sync');
@@ -29,6 +30,7 @@ app.use(function (req, res, next) {
 app.use(cookieParser());
 
 
+
 app.use(express.static(path.join(__dirname, '../')));
 app.set('port', process.env.PORT || 9002);
 app.use('/', api);
@@ -45,6 +47,12 @@ console.log(' Environment: '  + app.get('env'));
   }
    console.log('Express server listening on port ' + server.address().port);
 
-});
+  });
 
-module.exports = app;
+expressws.target = {};
+ var ws = expressws(app, server);
+
+
+
+
+ module.exports = app;

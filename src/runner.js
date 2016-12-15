@@ -4,7 +4,9 @@ import {  CodeService } from './service/code-service';
 import { ObserverLocator } from 'aurelia-binding';
 import { User } from './user';
 
-@inject(KataService, CodeService, ObserverLocator, User)
+
+
+@inject(KataService, CodeService, ObserverLocator, User )
 export class Runner {
 
  constructor(kataService, codeservice, observerlocator, User) {
@@ -16,14 +18,19 @@ export class Runner {
         this.observerlocator = observerlocator;
         this.user = User;
 
+
+
     }
 
     activate() {
 
-        this.katas = this.kataService.getKatas();
+       this.kataService.getKatas(showKata);
         this.kataChosen = null;
     }
 
+    showKata(data) {
+        this.katas = data;
+    }
 
     attached() {
 
@@ -44,6 +51,15 @@ export class Runner {
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
        this.kataService.saveCode(this.kataChosen.name, cd);
     }
+
+    runTests() {
+
+
+
+    }
+
+
+
 
     onChange(newValue, oldValue) {
         if (newValue) {

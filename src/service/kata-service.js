@@ -1,7 +1,7 @@
 
-
 import { inject } from "aurelia-framework";
 import { User } from '../user';
+var PouchDB = require('pouchdb-browser');
 
 @inject(User)
 export class KataService {
@@ -11,69 +11,55 @@ export class KataService {
         this.gunKey = "http://gunjs.herokuapp.com/gun/projectchynoapp";
         this.collectionKey = 'chynokata';
         this.katas = null;
+
+        this.db = new PouchDB('chynokata');
+
      //   this.ref = new Gun(this.gunKey).get(this.collectionKey);
-        this.gun = new Gun();//this.gunKey);
 
 
-        var self = this;
-        this.ref = this.gun.get(this.collectionKey).not(function (key) { self.gun.put({}).key(self.collectionKey); });
-        this.userref = null;
-
+       // this.db = new this.PouchDB('katadb');
 
     }
 
-    getKatas() {
-        var d = [];
-        var self = this;
-
-
-        //ref.get('chynokata').map(f);
-        this.ref.map(function (data) {
-            if (data &&
-                data.name &&
-               ! d.some(x => { return x.name === data.name })) {
-              d.push(data);
-            }
-        });
-
-        return d;
+    getKatas(f) {
+        /*
+        db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+                f(doc.rows);
+      });
+*/
     }
 
 
     addKata(name, description, tests) {
-        var item = {
-            name: name,
-            description: description,
-            code: "default code",
-            assertion: tests
 
+        var kata = {
+             _id: new Date().toISOString(),
+               name: name,
+               description: description,
+              tests : tests
         };
-//ref.path('item88').put({name : 'name 88'});
-        this.ref.path(item.name).put(item);
+
+/*
+        this.db.put(todo, function callback(err, result) {
+            if (!err) {
+                console.log('Successfully posted a kata!');
+            }
+        });
+*/
     }
 
     saveCode(kataName, code) {
-        this.setUserRef();
-        this.userref.path(kataName).put({code: code});
-        //this.ref.path(put({code: code}).key(kataName  + '_' + this.user.userName);
+
     }
 
     getUserCode(kataName) {
-        this.setUserRef();
-        var code = '';
-        this.userref.path(kataName + '.code').val(x => code = x);
-      //  this.ref.get(kataName + '_' + this.user.userName, cd => { code = 'cd.code' });
-        return code
+
     }
 
     setUserRef() {
 
         if(!this.user.userName) {
             this.user.userName = 'unknown';
-        }
-        
-        if (!this.userref) {
-            this.userref = this.gun.get(this.user.userName).not(function (key) { self.gun.put({}).key(self.user.userName); });
         }
     }
 

@@ -98,7 +98,7 @@
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",
-          
+
 
           {
             "name": "aurelia-dialog",
@@ -175,9 +175,9 @@
             ]
           },
           {
-            "name": "gun",
-            "path": "../node_modules/gun",
-            "main": "gun"
+            "name": "pouchdb-browser",
+            "path": "../node_modules/pouchdb-browser"
+
             }
         ]
       }

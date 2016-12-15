@@ -8,10 +8,9 @@
   },
   "scripts": {
     "predevserver": "au run",
-    "devserver" : "nodemon ./server/index.js -watch ./server",
+    "devserver": "nodemon ./server/index.js -watch ./server",
     "devclient": "au run -w",
-    "xxxdevclient" : "node ./server/index.js"
-    
+    "xxxdevclient": "node ./server/index.js"
   },
   "license": "MIT",
   "dependencies": {
@@ -23,7 +22,8 @@
     "bootstrap": "^3.3.7",
     "codemirror": "^5.20.2",
     "gun": "^0.3.999",
-    "jquery": "^3.1.1"
+    "jquery": "^3.1.1",
+    "pouchdb-browser": "^6.1.0"
   },
   "peerDependencies": {},
   "devDependencies": {

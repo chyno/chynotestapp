@@ -33,7 +33,7 @@ let serve = gulp.series(
         middleware: [historyApiFallback(), function(req, res, next) {
           res.setHeader('Access-Control-Allow-Origin', '*');
          next();
-       }] 
+       }]
       }
     }, function(err, bs) {
       let urls = bs.options.get('urls').toJS();
@@ -60,12 +60,12 @@ let run;
 if (CLIOptions.hasFlag('watch')) {
   run = gulp.series(
     build,
-   // serve,
+    serve,
     watch
   );
 } else {
-  run = build
-  //run = serve;
+ // run = build
+  run = serve;
 }
 
 export default run;
