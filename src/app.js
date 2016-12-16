@@ -35,13 +35,13 @@ export class App {
         moduleId: './runner',
         nav: true,
         title: 'Run Katas',
-        requireLogin : true
+        requireLogin : false
       }, {
         route: ['kata'],
         name: 'kata',
         moduleId: './kata',
         nav: true,
-        title: 'Profile',
+        title: 'Manage Tests',
         requireLogin : true
       }, {
         route: ['login'],

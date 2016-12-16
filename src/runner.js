@@ -10,6 +10,7 @@ import { User } from './user';
 export class Runner {
 
  constructor(kataService, codeservice, observerlocator, User) {
+       console.log('Runner constructor');
         this.kataService = kataService;
         this.katas = [];
         this.codeservice = codeservice;
@@ -17,15 +18,16 @@ export class Runner {
         this.kataChosen = null;
         this.observerlocator = observerlocator;
         this.user = User;
-
-
-
     }
 
     activate() {
 
-       this.kataService.getKatas(showKata);
-        this.kataChosen = null;
+    console.log('Runner activate');
+    this.kataService.getKatas().then((doc, error) => {
+         this.katas =  doc.rows.map(x => {return x.doc});
+    });
+      
+    this.kataChosen = null;
     }
 
     showKata(data) {

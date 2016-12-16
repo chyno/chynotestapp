@@ -1,7 +1,7 @@
 
 import { inject } from "aurelia-framework";
 import { User } from '../user';
-var PouchDB = require('pouchdb-browser');
+var PouchDB = require('pouchdb');
 
 @inject(User)
 export class KataService {
@@ -14,19 +14,11 @@ export class KataService {
 
         this.db = new PouchDB('chynokata');
 
-     //   this.ref = new Gun(this.gunKey).get(this.collectionKey);
-
-
-       // this.db = new this.PouchDB('katadb');
-
+      
     }
 
-    getKatas(f) {
-        /*
-        db.allDocs({include_docs: true, descending: true}, function(err, doc) {
-                f(doc.rows);
-      });
-*/
+    getKatas() {
+       return  this.db.allDocs({include_docs: true, descending: true});
     }
 
 
@@ -39,13 +31,13 @@ export class KataService {
               tests : tests
         };
 
-/*
-        this.db.put(todo, function callback(err, result) {
+
+        this.db.put(kata, function callback(err, result) {
             if (!err) {
                 console.log('Successfully posted a kata!');
             }
         });
-*/
+
     }
 
     saveCode(kataName, code) {

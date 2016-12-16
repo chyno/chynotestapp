@@ -175,9 +175,8 @@
             ]
           },
           {
-            "name": "pouchdb-browser",
-            "path": "../node_modules/pouchdb-browser"
-
+            "name": "pouchdb",
+            "path": "../node_modules/pouchdb/dist/pouchdb.min"
             }
         ]
       }
