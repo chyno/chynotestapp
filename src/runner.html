@@ -1,16 +1,11 @@
 <template>
 	<require from="codemirror/lib/codemirror.css"></require>
 	<require from="codemirror/theme/blackboard.css"></require>
-
-
-  
-
 	<label for="availKatas">Available Katas: </label>
-
 	<select value.bind="kataChosen" class="selectpicker" id="availKatas">
       <option model.bind="null">Choose...</option>
       <option repeat.for="kata of katas" model.bind="kata">  ${kata.name} </option>
-</select>
+    </select>
 	<hr/>
 	<div class="container" show.bind="kataChosen">
 		<div class="row">
@@ -32,9 +27,8 @@
 			</div>
 			<div class="col-md-6">
 				<button class="btn btn-primary" click.trigger="runTests()">Run Tests</button>
-				<button class="btn btn-secondary">Save Tests</button>
+				<button class="btn btn-secondary" click.trigger="saveTest()">Save Tests</button>
 			</div>
 		</div>
 	</div>
-
 </template>

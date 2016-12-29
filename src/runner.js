@@ -1,16 +1,26 @@
-import { inject } from "aurelia-framework";
-import { KataService } from "./service/kata-service";
-import {  CodeService } from './service/code-service';
-import { ObserverLocator } from 'aurelia-binding';
-import { User } from './user';
+import {
+    inject
+} from "aurelia-framework";
+import {
+    KataService
+} from "./service/kata-service";
+import {
+    CodeService
+} from './service/code-service';
+import {
+    ObserverLocator
+} from 'aurelia-binding';
+import {
+    User
+} from './user';
 
 
 
-@inject(KataService, CodeService, ObserverLocator, User )
+@inject(KataService, CodeService, ObserverLocator, User)
 export class Runner {
 
- constructor(kataService, codeservice, observerlocator, User) {
-       console.log('Runner constructor');
+    constructor(kataService, codeservice, observerlocator, User) {
+        console.log('Runner constructor');
         this.kataService = kataService;
         this.katas = [];
         this.codeservice = codeservice;
@@ -22,12 +32,14 @@ export class Runner {
 
     activate() {
 
-    console.log('Runner activate');
-    this.kataService.getKatas().then((doc, error) => {
-         this.katas =  doc.rows.map(x => {return x.doc});
-    });
-      
-    this.kataChosen = null;
+        console.log('Runner activate');
+        this.kataService.getKatas().then((doc, error) => {
+            this.katas = doc.rows.map(x => {
+                return x.doc
+            });
+        });
+
+        this.kataChosen = null;
     }
 
     showKata(data) {
@@ -51,29 +63,35 @@ export class Runner {
     saveCode() {
         var cd = this.codeservice.getCodeValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-       this.kataService.saveCode(this.kataChosen.name, cd);
+        this.kataService.saveCode(this.kataChosen._id, cd);
+    }
+
+    saveTest() {
+        var assertion = 'assertion test'; //this.codeservice.getCodeValue();
+        // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
+        this.kataService.saveTest(this.kataChosen._id, assertion);
     }
 
     runTests() {
 
-
-
     }
 
 
-
-
     onChange(newValue, oldValue) {
+       
         if (newValue) {
 
             //Get user kata
             let userCode = this.kataService.getUserCode(this.kataChosen.name);
-            if (userCode) {
-                this.kataChosen.code = userCode;
-            }
+           // if (userCode) {
+          //      this.kataChosen.code = userCode;
+         //   }
             this.codeservice.setCodeValue(newValue.code);
-            this.codeservice.setTestValue(this.kataChosen.assertion);
+            this.codeservice.setTestValue(newValue.assertion);
         }
+     
+      //  console.log('new value: ' + newValue);
+      //   console.log('old value: ' + oldValue);
     }
 
 }

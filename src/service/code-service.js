@@ -32,10 +32,19 @@ export class CodeService {
     }
 
     setCodeValue(code) {
+        
+        if (typeof code === "undefined") {
+            code = '';
+        }
+
         this.codeeditor.getDoc().setValue(code);
     }
 
     setTestValue(tcode) {
+        if (typeof tcode === "undefined") {
+            tcode = '';
+        }
+
         this.testeditor.getDoc().setValue(tcode);
     }
 
