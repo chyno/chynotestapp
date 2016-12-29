@@ -45,27 +45,28 @@ export class KataService {
     }
 
     saveCode(id, code) {
+        var self = this;
         //Reading the contents of a Document
-        db.get(id, function (err, doc) {
+        this.db.get(id, function (err, doc) {
             if (err) {
                 return console.log(err);
             } else {
                 doc.code = code;
-                db.put(db);
+                self.db.put(doc);
             }
         });
 
     }
 
     saveTest(id, assertion) {
-
+        var self = this;
          //Reading the contents of a Document
         db.get(id, function (err, doc) {
             if (err) {
                 return console.log(err);
             } else {
                 doc.assertion = assertion;
-                db.put(db);
+                self.db.put(doc);
             }
         });
 

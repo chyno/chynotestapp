@@ -423,24 +423,32 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
         Runner.prototype.saveCode = function saveCode() {
             var cd = this.codeservice.getCodeValue();
 
+            this.kataChosen.code = cd;
             this.kataService.saveCode(this.kataChosen._id, cd);
         };
 
         Runner.prototype.saveTest = function saveTest() {
-            var assertion = 'assertion test';
+            var assertion = this.codeservice.getTestValue();
+
+            this.kataChosen.assertion = assertion;
             this.kataService.saveTest(this.kataChosen._id, assertion);
         };
-
-        Runner.prototype.runTests = function runTests() {};
 
         Runner.prototype.onChange = function onChange(newValue, oldValue) {
 
             if (newValue) {
-                var userCode = this.kataService.getUserCode(this.kataChosen.name);
-
                 this.codeservice.setCodeValue(newValue.code);
                 this.codeservice.setTestValue(newValue.assertion);
             }
+        };
+
+        Runner.prototype.runTests = function runTests() {
+            var _this2 = this;
+
+            var cd = this.codeservice.getCodeValue();
+            this.codeservice.getTestResults(cd).then(function (result) {
+                _this2.codeservice.setTestValue(result);
+            });
         };
 
         return Runner;
@@ -573,6 +581,15 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
             return doc.getValue();
         };
 
+        CodeService.prototype.getTestResults = function getTestResults(code) {
+
+            var testResult = 'this is the test results';
+
+            return new Promise(function (resolve, reject) {
+                resolve(testResult);
+            });
+        };
+
         return CodeService;
     }();
 });
@@ -627,23 +644,27 @@ define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouch
         };
 
         KataService.prototype.saveCode = function saveCode(id, code) {
-            db.get(id, function (err, doc) {
+            var self = this;
+
+            this.db.get(id, function (err, doc) {
                 if (err) {
                     return console.log(err);
                 } else {
                     doc.code = code;
-                    db.put(db);
+                    self.db.put(doc);
                 }
             });
         };
 
         KataService.prototype.saveTest = function saveTest(id, assertion) {
+            var self = this;
+
             db.get(id, function (err, doc) {
                 if (err) {
                     return console.log(err);
                 } else {
                     doc.assertion = assertion;
-                    db.put(db);
+                    self.db.put(doc);
                 }
             });
         };

@@ -57,4 +57,13 @@ export class CodeService {
         var doc = this.testeditor.getDoc();
         return doc.getValue();
     }
+
+    getTestResults(code) {
+
+        var testResult = 'this is the test results';
+
+        return new Promise((resolve, reject) => {
+            resolve(testResult);
+        });
+    }
 }

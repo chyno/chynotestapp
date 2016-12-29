@@ -24,8 +24,6 @@ export class NavBar {
     login() {
         var self = this;
          
-        
-
         if (this.user.userName)
         {
             this.user.userName = null;

@@ -63,35 +63,33 @@ export class Runner {
     saveCode() {
         var cd = this.codeservice.getCodeValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
+        this.kataChosen.code = cd;
         this.kataService.saveCode(this.kataChosen._id, cd);
     }
 
     saveTest() {
-        var assertion = 'assertion test'; //this.codeservice.getCodeValue();
+        var assertion = this.codeservice.getTestValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
+        this.kataChosen.assertion = assertion;
         this.kataService.saveTest(this.kataChosen._id, assertion);
     }
 
-    runTests() {
-
-    }
-
+ 
 
     onChange(newValue, oldValue) {
-       
-        if (newValue) {
 
-            //Get user kata
-            let userCode = this.kataService.getUserCode(this.kataChosen.name);
-           // if (userCode) {
-          //      this.kataChosen.code = userCode;
-         //   }
+        if (newValue) {
             this.codeservice.setCodeValue(newValue.code);
             this.codeservice.setTestValue(newValue.assertion);
         }
-     
-      //  console.log('new value: ' + newValue);
-      //   console.log('old value: ' + oldValue);
+
+    }
+
+    runTests() {
+        var cd = this.codeservice.getCodeValue();
+        this.codeservice.getTestResults(cd).then(result => {
+           this.codeservice.setTestValue(result);
+        });
     }
 
 }
