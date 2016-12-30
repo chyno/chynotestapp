@@ -1,20 +1,11 @@
-import {
-    inject
-} from "aurelia-framework";
-import {
-    KataService
-} from "./service/kata-service";
-import {
-    CodeService
-} from './service/code-service';
-import {
-    ObserverLocator
-} from 'aurelia-binding';
-import {
-    User
-} from './user';
+import { inject} from "aurelia-framework";
+import { KataService } from "./service/kata-service";
+import {  CodeService} from './service/code-service';
+import { ObserverLocator } from 'aurelia-binding';
+import { User} from './user';
+import * as child_process from 'child_process'; 
 
-
+//var exec = require('child_process').exec;
 
 @inject(KataService, CodeService, ObserverLocator, User)
 export class Runner {
@@ -28,6 +19,8 @@ export class Runner {
         this.kataChosen = null;
         this.observerlocator = observerlocator;
         this.user = User;
+       // this.exec = require('child_process').exec;
+       // this.exec =  child_process.exec;
     }
 
     activate() {
@@ -86,10 +79,18 @@ export class Runner {
     }
 
     runTests() {
+        var cmd  = 'docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)';
+
+        exec(cmd, function(error, stdout, stderr) {
+             this.codeservice.setTestValue(stdout);
+            // command output is in stdout
+       });
+/*
         var cd = this.codeservice.getCodeValue();
         this.codeservice.getTestResults(cd).then(result => {
            this.codeservice.setTestValue(result);
         });
+        */
     }
 
 }

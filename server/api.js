@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var gun = require('Gun')('http://yourdomain.com/gun');
+var exec = require('child_process').exec;
 
 //var http = require('requestify');
 
@@ -10,9 +10,9 @@ var gun = require('Gun')('http://yourdomain.com/gun');
 
 
  //For testing
-router.get('/api/helloWorld', function (req, res)
+router.get('/api/isAlive', function (req, res)
 {
-    res.send('Hell World!!!!');
+    res.send('I am alive!!!!');
 });
 
 router.get('/api/foo', function (req, res)
@@ -27,19 +27,18 @@ router.get('/api/foo', function (req, res)
 router.post('/api/executeCode', function (req, res)
 {
     var body =  req.body;
+    var result = "not run";
+    var code = 'var a = 1';
+    var test = 'Test.assertEquals(a, 1)';
 
-    var result = [
-        { 'name': 'Testing sequence of 3 numbers', 'Expected': '-14', 'Actual': '-8' },
-        { 'name': 'Testing sequence of 11 numbers', 'Expected': '-89', 'Actual': '-17' },
-        { 'name': 'Testing sequence of 58 numbers', 'Expected': '-122', 'Actual': '2' },
-        {'name': 'Testing sequence of 158 numbers', 'Expected' : '685', 'Actual' : '13'}
-    ];
+    var cmd  = 'docker run --rm codewars/node-runner run -l javascript -c "' + code + '" -t cw -f "' + test + '"';
 
-    console.log(body);
-    res.send(result);
+        exec(cmd, function(error, stdout, stderr) {
+             
+             console.log(stdout);
+             res.send(stdout);
+       });
 });
 
 
-
 module.exports = router;
-module.gun = gun;

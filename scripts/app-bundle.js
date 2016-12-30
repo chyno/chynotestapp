@@ -443,11 +443,10 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
         };
 
         Runner.prototype.runTests = function runTests() {
-            var _this2 = this;
+            var cmd = 'docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)';
 
-            var cd = this.codeservice.getCodeValue();
-            this.codeservice.getTestResults(cd).then(function (result) {
-                _this2.codeservice.setTestValue(result);
+            exec(cmd, function (error, stdout, stderr) {
+                this.codeservice.setTestValue(stdout);
             });
         };
 
