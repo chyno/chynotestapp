@@ -9,13 +9,13 @@
   "author": "John Chynoweth",
   "license": "ISC",
   "dependencies": {
+    "aurelia-fetch-client": "^1.1.0",
     "body-parser": "^1.15.2",
     "child_process": "^1.0.2",
     "cookie-parser": "^1.4.3",
     "dockernode": "^0.1.0",
     "express": "^4.14.0",
     "express-ws": "^2.0.0",
-    "gun": "^0.3.9991",
     "path": "^0.12.7",
     "requestify": "^0.2.5",
     "swig": "^1.4.2"

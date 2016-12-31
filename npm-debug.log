@@ -1,0 +1,46 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'devserver' ]
+2 info using npm@3.10.3
+3 info using node@v6.7.0
+4 verbose run-script [ 'predevserver', 'devserver', 'postdevserver' ]
+5 info lifecycle chynotestapp@0.1.0~predevserver: chynotestapp@0.1.0
+6 verbose lifecycle chynotestapp@0.1.0~predevserver: unsafe-perm in lifecycle true
+7 verbose lifecycle chynotestapp@0.1.0~predevserver: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\dev\chynotestapp\node_modules\.bin;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\Resources\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\dotnet\;C:\Users\soyyo\AppData\Local\Microsoft\WindowsApps;C:\Users\soyyo\AppData\Roaming\npm;C:\Program Files (x86)\Microsoft VS Code\bin;
+8 verbose lifecycle chynotestapp@0.1.0~predevserver: CWD: C:\dev\chynotestapp
+9 silly lifecycle chynotestapp@0.1.0~predevserver: Args: [ '/d /s /c', 'au run' ]
+10 silly lifecycle chynotestapp@0.1.0~predevserver: Returned: code: 1  signal: null
+11 info lifecycle chynotestapp@0.1.0~predevserver: Failed to exec predevserver script
+12 verbose stack Error: chynotestapp@0.1.0 predevserver: `au run`
+12 verbose stack Exit status 1
+12 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:242:16)
+12 verbose stack     at emitTwo (events.js:106:13)
+12 verbose stack     at EventEmitter.emit (events.js:191:7)
+12 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:40:14)
+12 verbose stack     at emitTwo (events.js:106:13)
+12 verbose stack     at ChildProcess.emit (events.js:191:7)
+12 verbose stack     at maybeClose (internal/child_process.js:877:16)
+12 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+13 verbose pkgid chynotestapp@0.1.0
+14 verbose cwd C:\dev\chynotestapp
+15 error Windows_NT 10.0.14986
+16 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "devserver"
+17 error node v6.7.0
+18 error npm  v3.10.3
+19 error code ELIFECYCLE
+20 error chynotestapp@0.1.0 predevserver: `au run`
+20 error Exit status 1
+21 error Failed at the chynotestapp@0.1.0 predevserver script 'au run'.
+21 error Make sure you have the latest version of node.js and npm installed.
+21 error If you do, this is most likely a problem with the chynotestapp package,
+21 error not with npm itself.
+21 error Tell the author that this fails on your system:
+21 error     au run
+21 error You can get information on how to open an issue for this project with:
+21 error     npm bugs chynotestapp
+21 error Or if that isn't available, you can get their info via:
+21 error     npm owner ls chynotestapp
+21 error There is likely additional logging output above.
+22 verbose exit [ 1, true ]

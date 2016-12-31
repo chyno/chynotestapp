@@ -443,10 +443,13 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
         };
 
         Runner.prototype.runTests = function runTests() {
-            var cmd = 'docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)';
+            var _this2 = this;
 
-            exec(cmd, function (error, stdout, stderr) {
-                this.codeservice.setTestValue(stdout);
+            var cd = this.codeservice.getCodeValue();
+            var assertion = this.codeservice.getTestValue();
+
+            this.codeservice.getTestResults(cd, assertion).then(function (result) {
+                _this2.codeservice.setTestValue(result);
             });
         };
 
@@ -504,8 +507,8 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
-define('service/code-service',['exports', 'codemirror'], function (exports, _codemirror) {
-    'use strict';
+define('service/code-service',["exports", "aurelia-framework", "codemirror", "aurelia-fetch-client"], function (exports, _aureliaFramework, _codemirror, _aureliaFetchClient) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -526,10 +529,13 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
         }
     }
 
-    var CodeService = exports.CodeService = function () {
-        function CodeService() {
+    var _dec, _class;
+
+    var CodeService = exports.CodeService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient), _dec(_class = function () {
+        function CodeService(httpClient) {
             _classCallCheck(this, CodeService);
 
+            this.httpClient = httpClient;
             this.codeeditor = null;
             this.testeditor = null;
         }
@@ -580,17 +586,28 @@ define('service/code-service',['exports', 'codemirror'], function (exports, _cod
             return doc.getValue();
         };
 
-        CodeService.prototype.getTestResults = function getTestResults(code) {
+        CodeService.prototype.getTestResults = function getTestResults(code, test) {
 
             var testResult = 'this is the test results';
+            var data = {};
+            data.code = code;
+            data.test = test;
 
-            return new Promise(function (resolve, reject) {
-                resolve(testResult);
+            return this.httpClient.fetch('/api/executeCode', {
+                headers: { 'Content-Type': 'application/json' },
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(data)
+            }).then(function (response) {
+                return response.text();
+            }).then(function (executeResult) {
+                return executeResult;
+            }).catch(function (error) {
+                return 'Executing code! Error :' + error;
             });
         };
 
         return CodeService;
-    }();
+    }()) || _class);
 });
 define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouchdb'], function (exports, _aureliaFramework, _user, PouchDB) {
     'use strict';
@@ -658,7 +675,7 @@ define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouch
         KataService.prototype.saveTest = function saveTest(id, assertion) {
             var self = this;
 
-            db.get(id, function (err, doc) {
+            this.db.get(id, function (err, doc) {
                 if (err) {
                     return console.log(err);
                 } else {

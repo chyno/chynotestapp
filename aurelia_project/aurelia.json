@@ -127,6 +127,7 @@
           "aurelia-polyfills",
           "aurelia-route-recognizer",
           "aurelia-router",
+          "aurelia-fetch-client",
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
