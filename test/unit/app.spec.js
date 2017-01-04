@@ -1,4 +1,4 @@
- 
+
 import {App} from '../../src/app';
 
 class RouterStub {
@@ -9,9 +9,13 @@ class RouterStub {
   map(routes) {
     this.routes = routes;
   }
-  
-  addPipelineStep(stepname, stepClass) {
 
+  addPipelineStep(stepname, stepClass) {
+      this.stepClass = stepClass
+  }
+
+  GetAuthStepClass() {
+    return this.stepClass;
   }
 }
 
@@ -76,4 +80,12 @@ xdescribe('the App module', () => {
         requireLogin : true
       });
   });
+
+
+   it('Authorize step default to no user', () => {
+      
+  });
+
+
+
 });

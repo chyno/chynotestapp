@@ -35,7 +35,7 @@ export class App {
         moduleId: './runner',
         nav: true,
         title: 'Run Katas',
-        requireLogin : false
+        requireLogin : true
       }, {
         route: ['kata'],
         name: 'kata',
@@ -84,8 +84,8 @@ class AuthorizeStep {
   run(navigationInstruction, next) {
 
     if (navigationInstruction.config.requireLogin && !this.user.userName) {
-      this.user.userName = 'chyno';
-     // return next.cancel(new RedirectToRoute('welcome'));
+      //this.user.userName = 'chyno';
+      return next.cancel(new RedirectToRoute('welcome'));
     }
 
     return next();

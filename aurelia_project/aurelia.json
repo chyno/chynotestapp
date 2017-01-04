@@ -95,7 +95,7 @@
           "scripts/require.js"
         ],
         "dependencies": [
-          "pouchdb-browser",
+
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",
@@ -178,7 +178,7 @@
           },
           {
             "name": "pouchdb",
-            "path": "../node_modules/pouchdb",
+            "path": "../node_modules/pouchdb/dist",
             "main" : "pouchdb.min"
             }
         ]

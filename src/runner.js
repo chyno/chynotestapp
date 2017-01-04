@@ -3,7 +3,7 @@ import { KataService } from "./service/kata-service";
 import {  CodeService} from './service/code-service';
 import { ObserverLocator } from 'aurelia-binding';
 import { User} from './user';
- 
+
 
 @inject(KataService, CodeService, ObserverLocator, User)
 export class Runner {
@@ -66,7 +66,6 @@ export class Runner {
     }
 
  
-
     onChange(newValue, oldValue) {
 
         if (newValue) {
@@ -77,7 +76,7 @@ export class Runner {
     }
 
     runTests() {
-        
+
 
         var cd = this.codeservice.getCodeValue();
         var assertion = this.codeservice.getTestValue();
@@ -85,7 +84,7 @@ export class Runner {
         this.codeservice.getTestResults(cd, assertion).then(result => {
            this.codeservice.setTestValue(result);
         });
-        
+
     }
 
 }

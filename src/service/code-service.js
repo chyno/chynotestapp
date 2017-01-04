@@ -69,8 +69,20 @@ export class CodeService {
         var data = {};
         data.code = code;
         data.test = test;
+        return DummyTestResult(data);
 
-       return this.httpClient.fetch('/api/executeCode', {
+    }
+
+    DummyTestResult(data)
+    {
+        var promise = new Promise(function(resolve, reject) {
+           // do a thing, possibly async, then…
+             resolve("2 Of 2 test passed");});
+    }
+
+    ApiTestResult(data) {
+
+        return this.httpClient.fetch('/api/executeCode', {
           headers: {'Content-Type' : 'application/json'},
            method: 'post',
             body: json(data)
@@ -80,11 +92,5 @@ export class CodeService {
         .catch(error => {
             return 'Executing code! Error :' +  error;
         });
-
-        /* 
-         return new Promise((resolve, reject) => {
-             resolve(testResult);
-         });
-         */
     }
 }
