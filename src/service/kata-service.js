@@ -1,16 +1,12 @@
 import { inject } from "aurelia-framework";
-import { User } from '../user';
-
+//import { PouchDB } from "pouchdb-browser";
 var PouchDB = require('pouchdb');
 
-@inject(User)
+@inject()
 export class KataService {
 
-    constructor(User) {
-        this.user = User;
-        this.katas = null;
+    constructor() {
         this.db = new PouchDB('chynokata');
-
     }
 
     getKatas() {
@@ -22,7 +18,6 @@ export class KataService {
 
 
     addKata(name, description, tests) {
-
         var kata = {
             _id: new Date().toISOString(),
             name: name,
@@ -67,17 +62,6 @@ export class KataService {
             }
         });
 
-    }
-
-    getUserCode(kataName) {
-
-    }
-
-    setUserRef() {
-
-        if (!this.user.userName) {
-            this.user.userName = 'unknown';
-        }
     }
 
 }

@@ -1,28 +1,79 @@
+ 
 import {App} from '../../src/app';
 
-class FakeKataService {
+class RouterStub {
+  configure(handler) {
+    handler(this);
+  }
 
-    addDefaultData() {
+  map(routes) {
+    this.routes = routes;
+  }
+  
+  addPipelineStep(stepname, stepClass) {
 
-    }
+  }
 }
 
-describe('the app', () => {
+xdescribe('the App module', () => {
+  var sut;
+  var mockedRouter;
 
- let app;
- let kataService;
-
-beforeEach(function() {
-    kataService = new FakeKataService();
-    app = new App(kataService);
-    spyOn(kataService, 'addDefaultData').and.callThrough();
+  beforeEach(() => {
+    mockedRouter = new RouterStub();
+    sut = new App();
+    sut.configureRouter(mockedRouter, mockedRouter);
   });
 
-  
+  it('contains a router property', () => {
+    expect(sut.router).toBeDefined();
+  });
 
-  it('load default data', () => {
-    app.activate();
-  //  expect(1).toEqual(1);
-    expect(kataService.addDefaultData).toHaveBeenCalled();
+  it('configures the router title', () => {
+    expect(sut.router.title).toEqual('Project Chyno');
+  });
+
+  it('should have a welcome route', () => {
+    expect(sut.router.routes).toContain({
+        route: ['', 'welcome'],
+        name: 'welcome',
+        moduleId: './welcome',
+        nav: true,
+        title: 'Welcome',
+        requireLogin : false
+      });
+  });
+
+  it('should have a runner route', () => {
+    expect(sut.router.routes).toContain( {
+        route: ['runner'],
+        name: 'runner',
+        moduleId: './runner',
+        nav: true,
+        title: 'Run Katas',
+        requireLogin : true
+      });
+  });
+
+  it('should have a manage route',() => {
+   expect(sut.router.routes).toContain({
+        route: ['kata'],
+        name: 'kata',
+        moduleId: './kata',
+        nav: true,
+        title: 'Manage Tests',
+        requireLogin : true
+   });
+  });
+
+  it('should have a login route', () => {
+    expect(sut.router.routes).toContain( {
+        route: ['login'],
+        name: 'login',
+        moduleId: './login',
+        nav: false,
+        title: 'Login',
+        requireLogin : true
+      });
   });
 });

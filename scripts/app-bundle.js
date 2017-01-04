@@ -609,8 +609,8 @@ define('service/code-service',["exports", "aurelia-framework", "codemirror", "au
         return CodeService;
     }()) || _class);
 });
-define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouchdb'], function (exports, _aureliaFramework, _user, PouchDB) {
-    'use strict';
+define('service/kata-service',["exports", "aurelia-framework", "pouchdb-browser"], function (exports, _aureliaFramework, _pouchdbBrowser) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -625,13 +625,11 @@ define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouch
 
     var _dec, _class;
 
-    var KataService = exports.KataService = (_dec = (0, _aureliaFramework.inject)(_user.User), _dec(_class = function () {
-        function KataService(User) {
+    var KataService = exports.KataService = (_dec = (0, _aureliaFramework.inject)(), _dec(_class = function () {
+        function KataService() {
             _classCallCheck(this, KataService);
 
-            this.user = User;
-            this.katas = null;
-            this.db = new PouchDB('chynokata');
+            this.db = new _pouchdbBrowser.PouchDB('chynokata');
         }
 
         KataService.prototype.getKatas = function getKatas() {
@@ -642,7 +640,6 @@ define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouch
         };
 
         KataService.prototype.addKata = function addKata(name, description, tests) {
-
             var kata = {
                 _id: new Date().toISOString(),
                 name: name,
@@ -683,15 +680,6 @@ define('service/kata-service',['exports', 'aurelia-framework', '../user', 'pouch
                     self.db.put(doc);
                 }
             });
-        };
-
-        KataService.prototype.getUserCode = function getUserCode(kataName) {};
-
-        KataService.prototype.setUserRef = function setUserRef() {
-
-            if (!this.user.userName) {
-                this.user.userName = 'unknown';
-            }
         };
 
         return KataService;
