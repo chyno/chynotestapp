@@ -592,13 +592,15 @@ define('service/code-service',["exports", "aurelia-framework", "codemirror", "au
             var data = {};
             data.code = code;
             data.test = test;
-            return DummyTestResult(data);
+            return this.DummyTestResult(data);
         };
 
         CodeService.prototype.DummyTestResult = function DummyTestResult(data) {
             var promise = new Promise(function (resolve, reject) {
                 resolve("2 Of 2 test passed");
             });
+
+            return promise;
         };
 
         CodeService.prototype.ApiTestResult = function ApiTestResult(data) {

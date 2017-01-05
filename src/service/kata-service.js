@@ -1,8 +1,7 @@
-import { inject } from "aurelia-framework";
 //import { PouchDB } from "pouchdb-browser";
 var PouchDB = require('pouchdb');
 
-@inject()
+
 export class KataService {
 
     constructor() {
@@ -17,18 +16,9 @@ export class KataService {
     }
 
 
-    addKata(name, description, tests) {
-        var kata = {
-            _id: new Date().toISOString(),
-            name: name,
-            description: description,
-            tests: tests,
-            code: 'default',
-            assertion: ''
-        };
+    addKata(data) {
 
-
-        this.db.put(kata, function callback(err, result) {
+        this.db.put(data, function callback(err, result) {
             if (!err) {
                 console.log('Successfully posted a kata!');
             }

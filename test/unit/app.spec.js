@@ -1,5 +1,7 @@
 
 import {App} from '../../src/app';
+import {EventAggregator} from 'aurelia-event-aggregator'
+import { Router } from 'aurelia-router';
 
 class RouterStub {
   configure(handler) {
@@ -14,9 +16,7 @@ class RouterStub {
       this.stepClass = stepClass
   }
 
-  GetAuthStepClass() {
-    return this.stepClass;
-  }
+
 }
 
 xdescribe('the App module', () => {
@@ -82,10 +82,16 @@ xdescribe('the App module', () => {
   });
 
 
-   it('Authorize step default to no user', () => {
-      
+  it('Authorize step default to no user', () => {
+    var routr = new EventAggregator();
+    var ea =  new EventAggregator();
+
+    var auth = mockedRouter.stepClass();
+    var sut = new auth(rout, ea);
+
+     expect(sut).toBeDefined();
+    // expect(auth.user).toBeDefined();
+
   });
-
-
 
 });

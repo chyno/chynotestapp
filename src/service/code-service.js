@@ -69,7 +69,7 @@ export class CodeService {
         var data = {};
         data.code = code;
         data.test = test;
-        return DummyTestResult(data);
+        return this.DummyTestResult(data);
 
     }
 
@@ -77,7 +77,10 @@ export class CodeService {
     {
         var promise = new Promise(function(resolve, reject) {
            // do a thing, possibly async, then…
-             resolve("2 Of 2 test passed");});
+            resolve("2 Of 2 test passed");
+        });
+
+        return promise;
     }
 
     ApiTestResult(data) {
