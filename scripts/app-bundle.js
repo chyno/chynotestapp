@@ -127,22 +127,29 @@ define('kata',["exports", "aurelia-framework", "./service/kata-service", "aureli
 
             this.kataService = kataService;
             this.name = null;
-            this.description = null;
+            this.instruction = null;
             this.tests = null;
             this.router = Router;
+            this.errorMessage = null;
         }
 
         Kata.prototype.activate = function activate() {};
 
         Kata.prototype.add = function add() {
-            if (this.name && this.description && this.tests) {
-                this.kataService.addKata(this.name, this.description, this.tests);
-                return this.router.navigateToRoute('welcome');
-            }
-        };
+            this.errorMessage = null;
 
-        Kata.prototype.clearAll = function clearAll() {
-            this.kataService.clearAll();
+            if (this.name && this.instruction && this.tests) {
+                this.kataService.addKata({
+                    _id: new Date().toISOString(),
+                    name: this.name,
+                    instruction: this.instruction,
+                    solution: 'default',
+                    tests: this.tests
+                });
+                return this.router.navigateToRoute('welcome');
+            } else {
+                this.errorMessage = 'Please make sure required fields are entereed';
+            }
         };
 
         return Kata;
@@ -404,27 +411,23 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
             this.kataChosen = null;
         };
 
-        Runner.prototype.showKata = function showKata(data) {
-            this.katas = data;
-        };
-
         Runner.prototype.attached = function attached() {
 
             this.codeservice.setControls([this.codeArea, this.testsArea]);
 
             if (this.kataChosen) {
-                this.codeservice.setCodeValue(this.kataChosen.code);
-                this.codeservice.setTestValue(this.kataChosen.assertion);
+                this.codeservice.setSolutionValue(this.kataChosen.solution);
+                this.codeservice.setTestValue(this.kataChosen.tests);
             }
 
             var subscription = this.observerlocator.getObserver(this, 'kataChosen').subscribe(this.onChange.bind(this));
         };
 
         Runner.prototype.saveCode = function saveCode() {
-            var cd = this.codeservice.getCodeValue();
+            var solution = this.codeservice.getSolutionValue();
 
             this.kataChosen.code = cd;
-            this.kataService.saveCode(this.kataChosen._id, cd);
+            this.kataService.savesolution(this.kataChosen._id, solution);
         };
 
         Runner.prototype.saveTest = function saveTest() {
@@ -445,12 +448,13 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
         Runner.prototype.runTests = function runTests() {
             var _this2 = this;
 
-            var cd = this.codeservice.getCodeValue();
-            var assertion = this.codeservice.getTestValue();
+            var solution = this.codeservice.getSolutionValue();
+            var tests = this.codeservice.getTestValue();
 
-            this.codeservice.getTestResults(cd, assertion).then(function (result) {
+            this.codeservice.getTestResults(solution, tests).then(function (result) {
                 _this2.codeservice.setTestValue(result);
             });
+            s;
         };
 
         return Runner;
@@ -559,13 +563,13 @@ define('service/code-service',["exports", "aurelia-framework", "codemirror", "au
             });
         };
 
-        CodeService.prototype.setCodeValue = function setCodeValue(code) {
+        CodeService.prototype.setSolutionValue = function setSolutionValue(solution) {
 
-            if (typeof code === "undefined") {
+            if (typeof solution === "undefined") {
                 code = '';
             }
 
-            this.codeeditor.getDoc().setValue(code);
+            this.codeeditor.getDoc().setValue(solution);
         };
 
         CodeService.prototype.setTestValue = function setTestValue(tcode) {
@@ -576,7 +580,7 @@ define('service/code-service',["exports", "aurelia-framework", "codemirror", "au
             this.testeditor.getDoc().setValue(tcode);
         };
 
-        CodeService.prototype.getCodeValue = function getCodeValue() {
+        CodeService.prototype.getSolutionValue = function getSolutionValue() {
             var doc = this.codeeditor.getDoc();
             return doc.getValue();
         };
@@ -586,16 +590,17 @@ define('service/code-service',["exports", "aurelia-framework", "codemirror", "au
             return doc.getValue();
         };
 
-        CodeService.prototype.getTestResults = function getTestResults(code, test) {
+        CodeService.prototype.getTestResults = function getTestResults(solution, tests) {
 
             var testResult = 'this is the test results';
             var data = {};
-            data.code = code;
-            data.test = test;
-            return this.DummyTestResult(data);
+            data.solution = solution;
+            data.tests = tests;
+
+            return this.FakeTestResult(data);
         };
 
-        CodeService.prototype.DummyTestResult = function DummyTestResult(data) {
+        CodeService.prototype.FakeTestResult = function FakeTestResult(data) {
             var promise = new Promise(function (resolve, reject) {
                 resolve("2 Of 2 test passed");
             });
@@ -621,13 +626,12 @@ define('service/code-service',["exports", "aurelia-framework", "codemirror", "au
         return CodeService;
     }()) || _class);
 });
-define('service/kata-service',['exports', 'aurelia-framework', 'pouchdb'], function (exports, _aureliaFramework, PouchDB) {
+define('service/kata-service',['exports', 'pouchdb'], function (exports, PouchDB) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.KataService = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -635,9 +639,7 @@ define('service/kata-service',['exports', 'aurelia-framework', 'pouchdb'], funct
         }
     }
 
-    var _dec, _class;
-
-    var KataService = exports.KataService = (_dec = (0, _aureliaFramework.inject)(), _dec(_class = function () {
+    var KataService = exports.KataService = function () {
         function KataService() {
             _classCallCheck(this, KataService);
 
@@ -651,51 +653,42 @@ define('service/kata-service',['exports', 'aurelia-framework', 'pouchdb'], funct
             });
         };
 
-        KataService.prototype.addKata = function addKata(name, description, tests) {
-            var kata = {
-                _id: new Date().toISOString(),
-                name: name,
-                description: description,
-                tests: tests,
-                code: 'default',
-                assertion: ''
-            };
-
-            this.db.put(kata, function callback(err, result) {
+        KataService.prototype.addKata = function addKata(data) {
+            this.db.put(data, function callback(err, result) {
                 if (!err) {
                     console.log('Successfully posted a kata!');
                 }
             });
         };
 
-        KataService.prototype.saveCode = function saveCode(id, code) {
+        KataService.prototype.saveSolution = function saveSolution(id, solution) {
             var self = this;
 
             this.db.get(id, function (err, doc) {
                 if (err) {
                     return console.log(err);
                 } else {
-                    doc.code = code;
+                    doc.solution = solution;
                     self.db.put(doc);
                 }
             });
         };
 
-        KataService.prototype.saveTest = function saveTest(id, assertion) {
+        KataService.prototype.saveTest = function saveTest(id, tests) {
             var self = this;
 
             this.db.get(id, function (err, doc) {
                 if (err) {
                     return console.log(err);
                 } else {
-                    doc.assertion = assertion;
+                    doc.tests = tests;
                     self.db.put(doc);
                 }
             });
         };
 
         return KataService;
-    }()) || _class);
+    }();
 });
 define('Tests/assertions',["exports"], function (exports) {
   "use strict";
@@ -2991,10 +2984,10 @@ define('node_modules/gun/gun.js',['require','exports','module'],function (requir
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\n    <require from=\"bootstrap/css/bootstrap.css\"></require>\n    <require from=\"./styles/styles.css\"></require>\n    <require from=\"./nav-bar\"></require>\n    <nav-bar router.bind=\"router\"></nav-bar>\n    <hr style=\"clear:both; padding-top:2em\" />\n    <div class=\"container\">\n        <loading-indicator loading.bind=\"router.isNavigating || api.isRequesting\"></loading-indicator>\n        <!-- Main component for a primary marketing message or call to action -->\n\n        <router-view></router-view>\n    </div>\n</template>"; });
 define('text!styles/styles.css', ['module'], function(module) { module.exports = "\r\n.funkyradio div {\r\n  clear: both;\r\n  overflow: hidden;\r\n}\r\n\r\n.funkyradio label {\r\n  width: 100%;\r\n  border-radius: 3px;\r\n  border: 1px solid #D1D3D4;\r\n  font-weight: normal;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty,\r\n.funkyradio input[type=\"checkbox\"]:empty {\r\n  display: none;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty ~ label,\r\n.funkyradio input[type=\"checkbox\"]:empty ~ label {\r\n  position: relative;\r\n  line-height: 2.5em;\r\n  text-indent: 3.25em;\r\n  margin-top: 2em;\r\n  cursor: pointer;\r\n  -webkit-user-select: none;\r\n     -moz-user-select: none;\r\n      -ms-user-select: none;\r\n          user-select: none;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:empty ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:empty ~ label:before {\r\n  position: absolute;\r\n  display: block;\r\n  top: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  content: '';\r\n  width: 2.5em;\r\n  background: #D1D3D4;\r\n  border-radius: 3px 0 0 3px;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:hover:not(:checked) ~ label,\r\n.funkyradio input[type=\"checkbox\"]:hover:not(:checked) ~ label {\r\n  color: #888;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:hover:not(:checked) ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:hover:not(:checked) ~ label:before {\r\n  content: '\\2714';\r\n  text-indent: .9em;\r\n  color: #C2C2C2;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:checked ~ label,\r\n.funkyradio input[type=\"checkbox\"]:checked ~ label {\r\n  color: #777;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:checked ~ label:before {\r\n  content: '\\2714';\r\n  text-indent: .9em;\r\n  color: #333;\r\n  background-color: #ccc;\r\n}\r\n\r\n.funkyradio input[type=\"radio\"]:focus ~ label:before,\r\n.funkyradio input[type=\"checkbox\"]:focus ~ label:before {\r\n  box-shadow: 0 0 0 3px #999;\r\n}\r\n\r\n.funkyradio-default input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-default input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #333;\r\n  background-color: #ccc;\r\n}\r\n\r\n.funkyradio-primary input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-primary input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #337ab7;\r\n}\r\n\r\n.funkyradio-success input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-success input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #5cb85c;\r\n}\r\n\r\n.funkyradio-danger input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-danger input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #d9534f;\r\n}\r\n\r\n.funkyradio-warning input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-warning input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #f0ad4e;\r\n}\r\n\r\n.funkyradio-info input[type=\"radio\"]:checked ~ label:before,\r\n.funkyradio-info input[type=\"checkbox\"]:checked ~ label:before {\r\n  color: #fff;\r\n  background-color: #5bc0de;\r\n}\r\n\r\n/* SCSS STYLES */\r\n/*\r\n.funkyradio {\r\n\r\n    div {\r\n        clear: both;\r\n        overflow: hidden;\r\n    }\r\n\r\n    label {\r\n        width: 100%;\r\n        border-radius: 3px;\r\n        border: 1px solid #D1D3D4;\r\n        font-weight: normal;\r\n    }\r\n\r\n    input[type=\"radio\"],\r\n    input[type=\"checkbox\"] {\r\n\r\n        &:empty {\r\n            display: none;\r\n\r\n            ~ label {\r\n                position: relative;\r\n                line-height: 2.5em;\r\n                text-indent: 3.25em;\r\n                margin-top: 2em;\r\n                cursor: pointer;\r\n                user-select: none;\r\n\r\n                &:before {\r\n                    position: absolute;\r\n                    display: block;\r\n                    top: 0;\r\n                    bottom: 0;\r\n                    left: 0;\r\n                    content: '';\r\n                    width: 2.5em;\r\n                    background: #D1D3D4;\r\n                    border-radius: 3px 0 0 3px;\r\n                }\r\n            }\r\n        }\r\n\r\n        &:hover:not(:checked) ~ label {\r\n            color: #888;\r\n\r\n            &:before {\r\n                content: '\\2714';\r\n                text-indent: .9em;\r\n                color: #C2C2C2;\r\n            }\r\n        }\r\n\r\n        &:checked ~ label {\r\n            color: #777;\r\n\r\n            &:before {\r\n                content: '\\2714';\r\n                text-indent: .9em;\r\n                color: #333;\r\n                background-color: #ccc;\r\n            }\r\n        }\r\n\r\n        &:focus ~ label:before {\r\n            box-shadow: 0 0 0 3px #999;\r\n        }\r\n    }\r\n\r\n    &-default {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #333;\r\n                background-color: #ccc;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-primary {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #337ab7;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-success {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #5cb85c;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-danger {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #d9534f;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-warning {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #f0ad4e;\r\n            }\r\n        }\r\n    }\r\n\r\n    &-info {\r\n        input[type=\"radio\"],\r\n        input[type=\"checkbox\"] {\r\n            &:checked ~ label:before {\r\n                color: #fff;\r\n                background-color: #5bc0de;\r\n            }\r\n        }\r\n    }\r\n}\r\n*/\r\n"; });
 define('text!app_orig.html', ['module'], function(module) { module.exports = "<template>\n  <h1>${message}</h1>\n</template>\n"; });
-define('text!kata.html', ['module'], function(module) { module.exports = "<template>\r\n  \r\n   <div class=\"form-group\">\r\n  <label for=\"name\">Name:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"name\" value.bind=\"name\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"desc\">Descrition:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"desc\" value.bind=\"description\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"tsts\">Sample Tests:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"tsts\" value.bind=\"tests\">\r\n</div>\r\n\r\n<div class=\"container\">\r\n\t\t<button class=\"btn btn-primary\" click.trigger=\"add()\"  >Add</button>\r\n\t</div>\r\n</template>"; });
+define('text!kata.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n   <div class=\"form-group\">\r\n  <label for=\"name\">Name:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"name\" value.bind=\"name\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"desc\">Instruction:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"desc\" value.bind=\"instruction\">\r\n</div>\r\n<div class=\"form-group\">\r\n  <label for=\"tsts\">Default Tests:</label>\r\n  <input type=\"text\" class=\"form-control\" id=\"tsts\" value.bind=\"tests\">\r\n</div>\r\n\r\n<div class=\"container\">\r\n\t\t<button class=\"btn btn-primary\" click.trigger=\"add()\"  >Add</button>\r\n\t</div>\r\n</template>"; });
 define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-4 col-md-4\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
 define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\n  <!-- Fixed navbar -->\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <div class=\"col-md-6\">\n          <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\n              aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\n          </div>\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\n            <ul class=\"nav navbar-nav\">\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\n            </ul>\n          </div>\n          <!--/.nav-collapse -->\n        </div>\n        <div class=\"col-md-3\">\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link text-warning\" click.trigger=\"login()\"> ${buttonName}</button>\n        </div>\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\n          <span> ${user.userName}</span>\n        </div>\n      </div>\n    </div>\n  </nav>\n</template>"; });
-define('text!runner.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\n\t<label for=\"availKatas\">Available Katas: </label>\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\n      <option model.bind=\"null\">Choose...</option>\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\n    </select>\n\t<hr/>\n\t<div class=\"container\" show.bind=\"kataChosen\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-12\">\n\t\t\t\t<p>${kataChosen.description}</p>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"code\" name=\"code\" ref=\"codeArea\"></textarea></form>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\" style=\"padding-top:1em\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Code</button>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"runTests()\">Run Tests</button>\n\t\t\t\t<button class=\"btn btn-secondary\" click.trigger=\"saveTest()\">Save Tests</button>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</template>"; });
+define('text!runner.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\n\t<label for=\"availKatas\">Available Katas: </label>\n\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\n      <option model.bind=\"null\">Choose...</option>\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\n    </select>\n\t<hr/>\n\t<div class=\"container\" show.bind=\"kataChosen\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-12\">\n\t\t\t\t<p>${kataChosen.instruction}</p>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"solution\" name=\"solution\" ref=\"solutionArea\"></textarea></form>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<form><textarea id=\"tests\" name=\"tests\" ref=\"testsArea\"></textarea></form>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row\" style=\"padding-top:1em\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"saveCode()\">Save Solution</button>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<button class=\"btn btn-primary\" click.trigger=\"runTests()\">Run Tests</button>\n\t\t\t\t<button class=\"btn btn-secondary\" click.trigger=\"saveTest()\">Save Tests</button>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</template>"; });
 define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site.</a>  This is for simple tests and to make it collaborative. .\r\n\t\t <p>\r\n\t\t Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
 define('text!Tests/assertions.html', ['module'], function(module) { module.exports = "<template>\r\n    <p>these are list of assertions</p>\r\n</template>"; });
 define('text!Tests/run_result.html', ['module'], function(module) { module.exports = "<template>\r\n    <p>run result</p>\r\n</template>"; });

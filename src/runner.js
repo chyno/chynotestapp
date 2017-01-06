@@ -33,17 +33,15 @@ export class Runner {
         this.kataChosen = null;
     }
 
-    showKata(data) {
-        this.katas = data;
-    }
+     
 
     attached() {
 
         this.codeservice.setControls([this.codeArea, this.testsArea]);
 
         if (this.kataChosen) {
-            this.codeservice.setCodeValue(this.kataChosen.code);
-            this.codeservice.setTestValue(this.kataChosen.assertion);
+            this.codeservice.setSolutionValue(this.kataChosen.solution);
+            this.codeservice.setTestValue(this.kataChosen.tests);
         }
 
         var subscription = this.observerlocator
@@ -52,10 +50,10 @@ export class Runner {
     }
 
     saveCode() {
-        var cd = this.codeservice.getCodeValue();
+        var solution = this.codeservice.getSolutionValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
         this.kataChosen.code = cd;
-        this.kataService.saveCode(this.kataChosen._id, cd);
+        this.kataService.savesolution(this.kataChosen._id, solution);
     }
 
     saveTest() {
@@ -65,7 +63,7 @@ export class Runner {
         this.kataService.saveTest(this.kataChosen._id, assertion);
     }
 
- 
+
     onChange(newValue, oldValue) {
 
         if (newValue) {
@@ -75,16 +73,16 @@ export class Runner {
 
     }
 
+// run the tests on code wars docker image
     runTests() {
 
+        var solution = this.codeservice.getSolutionValue();
+        var tests = this.codeservice.getTestValue();
 
-        var cd = this.codeservice.getCodeValue();
-        var assertion = this.codeservice.getTestValue();
-
-        this.codeservice.getTestResults(cd, assertion).then(result => {
+        this.codeservice.getTestResults(solution, tests).then(result => {
            this.codeservice.setTestValue(result);
         });
-
+s
     }
 
 }

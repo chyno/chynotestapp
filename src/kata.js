@@ -9,9 +9,10 @@ export class Kata {
     constructor(kataService, Router) {
         this.kataService = kataService;
         this.name = null;
-        this.description = null;
+        this.instruction = null;
         this.tests = null;
         this.router = Router
+        this.errorMessage = null;
     }
 
     activate() {
@@ -19,17 +20,21 @@ export class Kata {
     }
 
     add() {
-        if (this.name && this.description && this.tests) {
+        this.errorMessage = null;
+
+        if (this.name && this.instruction && this.tests) {
             this.kataService.addKata(
                 {
                     _id: new Date().toISOString(),
                     name: this.name,
-                    description: this.description,
-                    tests: this.tests,
-                    code: 'default',
-                    assertion: '1 == 1'
+                    instruction: this.instruction,
+                    solution : 'default',
+                    tests : this.tests
                 });
             return this.router.navigateToRoute('welcome');
+        }
+        else {
+            this.errorMessage = 'Please make sure required fields are entereed';
         }
     }
 }

@@ -10,12 +10,12 @@
 	<div class="container" show.bind="kataChosen">
 		<div class="row">
 			<div class="col-md-12">
-				<p>${kataChosen.description}</p>
+				<p>${kataChosen.instruction}</p>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-6">
-				<form><textarea id="code" name="code" ref="codeArea"></textarea></form>
+				<form><textarea id="solution" name="solution" ref="solutionArea"></textarea></form>
 			</div>
 			<div class="col-md-6">
 				<form><textarea id="tests" name="tests" ref="testsArea"></textarea></form>
@@ -23,7 +23,7 @@
 		</div>
 		<div class="row" style="padding-top:1em">
 			<div class="col-md-6">
-				<button class="btn btn-primary" click.trigger="saveCode()">Save Code</button>
+				<button class="btn btn-primary" click.trigger="saveCode()">Save Solution</button>
 			</div>
 			<div class="col-md-6">
 				<button class="btn btn-primary" click.trigger="runTests()">Run Tests</button>

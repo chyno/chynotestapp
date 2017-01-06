@@ -19,7 +19,7 @@ class RouterStub {
 }
 
 
-xdescribe('the kata vm', () => {
+describe('the kata vm', () => {
     var sut;
     var router;
     var sut;
@@ -44,47 +44,34 @@ xdescribe('the kata vm', () => {
 
 
     it('adding kata when all required information entered  redirects user  to home page', () => {
+      //Arrange
+        sut.instruction = 'instruction on how to do test';
+        sut.name = 'valid phone number';
+        sut.solution = 'funciton foo(x){}';
+        sut.tests = 'Test.assertEquals(validPhoneNumber("(123) 456-7890"), true);';
 
-        sut.description = 'description';
-        sut.name = 'name';
-        sut.tests = 'tests';
+    //Act
         sut.add();
 
+        //Assert
         expect(router.navigateToRoute).toHaveBeenCalledWith('welcome');
         expect(ks.addKata).toHaveBeenCalled();
+        expect(sut.errorMessage).toBe(null);
     });
 
-    it('adding kata with missing description  data does not redirect', () => {
-        sut.description = '';
-        sut.name = 'name';
-        sut.tests = 'tests';
-        sut.add();
 
-        expect(router.navigateToRoute).not.toHaveBeenCalledWith('welcome');
-        expect(ks.addKata).not.toHaveBeenCalled();
-    });
-
-     it('adding kata with missing name data does not redirect', () => {
-
+     xit('adding kata with missing name data does not redirect', () => {
+     //Arrange
         sut.description = 'description';
         sut.name = '';
         sut.tests = 'tests';
+     //Act
         sut.add();
 
+      //Assert
         expect(router.navigateToRoute).not.toHaveBeenCalledWith('welcome');
         expect(ks.addKata).not.toHaveBeenCalled();
+         expect(sut.errorMessage).not.toBe(null);
     });
-
-    it('adding kata with missing tests data does not redirect', () => {
-
-        sut.description = 'description';
-        sut.name = 'name';
-        sut.tests = null;
-        sut.add();
-
-        expect(router.navigateToRoute).not.toHaveBeenCalledWith('welcome');
-        expect(ks.addKata).not.toHaveBeenCalled();
-    });
-
 
 });

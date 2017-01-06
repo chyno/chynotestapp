@@ -14,7 +14,7 @@ class DatabaseStub {
 }
 
 
-describe('the kata service', () => {
+xdescribe('the kata service', () => {
 
   var sut;
   var db;

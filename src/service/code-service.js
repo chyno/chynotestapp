@@ -36,13 +36,13 @@ export class CodeService {
 
     }
 
-    setCodeValue(code) {
+    setSolutionValue(solution) {
 
-        if (typeof code === "undefined") {
+        if (typeof solution === "undefined") {
             code = '';
         }
 
-        this.codeeditor.getDoc().setValue(code);
+        this.codeeditor.getDoc().setValue(solution);
     }
 
     setTestValue(tcode) {
@@ -53,7 +53,7 @@ export class CodeService {
         this.testeditor.getDoc().setValue(tcode);
     }
 
-    getCodeValue() {
+    getSolutionValue() {
         var doc = this.codeeditor.getDoc();
         return doc.getValue();
     }
@@ -63,17 +63,19 @@ export class CodeService {
         return doc.getValue();
     }
 
-    getTestResults(code, test) {
+    getTestResults(solution, tests) {
 
         var testResult = 'this is the test results';
         var data = {};
-        data.code = code;
-        data.test = test;
-        return this.DummyTestResult(data);
+        data.solution = solution;
+        data.tests = tests;
+
+        //  when not able to ru docker need to call dumm resutls
+        return this.FakeTestResult(data);
 
     }
 
-    DummyTestResult(data)
+    FakeTestResult(data)
     {
         var promise = new Promise(function(resolve, reject) {
            // do a thing, possibly async, then…
