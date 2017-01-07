@@ -7,6 +7,7 @@ class KataServiceStub {
     }
 
 
+
     addKata(data) {
         this.data = data;
     }
