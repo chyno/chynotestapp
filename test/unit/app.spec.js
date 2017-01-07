@@ -19,7 +19,7 @@ class RouterStub {
 
 }
 
-xdescribe('the App module', () => {
+describe('the App module', () => {
   var sut;
   var mockedRouter;
 
@@ -83,7 +83,7 @@ xdescribe('the App module', () => {
 
 
   it('Authorize step default to no user', () => {
-    var routr = new EventAggregator();
+    var rout = new EventAggregator();
     var ea =  new EventAggregator();
 
     var auth = mockedRouter.stepClass();
