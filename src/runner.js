@@ -37,7 +37,7 @@ export class Runner {
 
     attached() {
 
-        this.codeservice.setControls([this.codeArea, this.testsArea]);
+        this.codeservice.setControls([this.solutionArea, this.testsArea]);
 
         if (this.kataChosen) {
             this.codeservice.setSolutionValue(this.kataChosen.solution);
@@ -67,8 +67,8 @@ export class Runner {
     onChange(newValue, oldValue) {
 
         if (newValue) {
-            this.codeservice.setCodeValue(newValue.code);
-            this.codeservice.setTestValue(newValue.assertion);
+            this.codeservice.setSolutionValue(newValue.instruction);
+            this.codeservice.setTestValue(newValue.tests);
         }
 
     }
@@ -82,7 +82,6 @@ export class Runner {
         this.codeservice.getTestResults(solution, tests).then(result => {
            this.codeservice.setTestValue(result);
         });
-s
     }
 
 }

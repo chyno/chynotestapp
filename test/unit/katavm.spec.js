@@ -6,8 +6,6 @@ class KataServiceStub {
         this.data = null;
     }
 
-
-
     addKata(data) {
         this.data = data;
     }
@@ -61,9 +59,9 @@ describe('the kata vm', () => {
     });
 
 
-     xit('adding kata with missing name data does not redirect', () => {
+     it('adding kata with missing name data does not redirect', () => {
      //Arrange
-        sut.description = 'description';
+        sut.instruction = 'description';
         sut.name = '';
         sut.tests = 'tests';
      //Act
@@ -74,5 +72,26 @@ describe('the kata vm', () => {
         expect(ks.addKata).not.toHaveBeenCalled();
          expect(sut.errorMessage).not.toBe(null);
     });
+
+    it('Kata added with correct data', () => {
+       //arrange
+        var data =  {
+                    _id: new Date().toISOString(),
+                    name: 'Name',
+                    instruction: 'Instruction',
+                    solution : 'Solution',
+                    tests : 'test'
+                };
+        sut.instruction = data.instruction;
+        sut.name = data.name;
+        sut.defaultSolution = data.solution;
+        sut.tests = data.tests;
+
+        //Act
+        sut.add();
+
+        //Assert
+         expect(ks.addKata).toHaveBeenCalledWith(data);
+    }); 
 
 });

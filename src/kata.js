@@ -13,6 +13,7 @@ export class Kata {
         this.tests = null;
         this.router = Router
         this.errorMessage = null;
+        this.defaultSolution = null
     }
 
     activate() {
@@ -28,7 +29,7 @@ export class Kata {
                     _id: new Date().toISOString(),
                     name: this.name,
                     instruction: this.instruction,
-                    solution : 'default',
+                    solution : this.defaultSolution,
                     tests : this.tests
                 });
             return this.router.navigateToRoute('welcome');
