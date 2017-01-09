@@ -48,4 +48,25 @@ export class KataService {
             }
         });
     }
+    
+     removeKata(doc) {
+         doc._deleted = true;
+        return this.db.put(doc).then(function (result) {
+             console.log(result);
+            // handle result
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+    }
+
+    editKata(doc) {
+        doc._deleted = false;
+        return db.put(doc).then(function (result) {
+            // handle result
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+    }
 }

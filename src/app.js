@@ -36,13 +36,13 @@ export class App {
         nav: true,
         title: 'Run Katas',
         requireLogin : true
-      }, {
-        route: ['kata'],
-        name: 'kata',
-        moduleId: './kata',
+      }, { 
+        route: ['katas'],
+        name: 'katas',
+        moduleId: './katas',
         nav: true,
-        title: 'Manage Tests',
-        requireLogin : true
+        title: 'Manage',
+        requireLogin : false
       }, {
         route: ['login'],
         name: 'login',
@@ -50,6 +50,14 @@ export class App {
         nav: false,
         title: 'Login',
         requireLogin : true
+      },
+      {  
+        route: ['kata'],
+        name: 'kata',
+        moduleId: './kata',
+        nav: false,
+        title: 'Manage Test',
+        requireLogin : false
       }
 
     ]);
