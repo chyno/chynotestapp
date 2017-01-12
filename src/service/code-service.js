@@ -71,7 +71,8 @@ export class CodeService {
         data.tests = tests;
 
         //  when not able to ru docker need to call dumm resutls
-        return this.FakeTestResult(data);
+       // return this.FakeTestResult(data);
+       return this.ApiTestResult(data)
 
     }
 

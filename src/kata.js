@@ -13,42 +13,60 @@ import {
 export class Kata {
 
     constructor(kataService, Router) {
-        this.id = null;
-        this.rev = null;
+
         this.kataService = kataService;
-        this.name = null;
-        this.instruction = null;
-        this.tests = null;
         this.router = Router
         this.errorMessage = null;
-        this.defaultSolution = null
+         this.doc = null;
+         this.name = null;
+        this.instruction = null;
+        this.tests = null;
+         this.defaultSolution = null;
     }
 
     activate(doc) {
-
-        if (doc) {
-            this.id = doc._id;
-            this.rev = doc._rev;
+       
+        if (doc && doc._id) {
             this.name = doc.name;
             this.instruction = doc.instruction;
             this.tests = doc.tests;
             this.defaultSolution = doc.defaultSolution;
+            this.doc = doc;
+        } else {
+             this.cleearControls();
+            this.doc = {
+                _id : new Date().toISOString(),
+                name : null,
+                instruction : null,
+                tests : null,
+                defaultSolution : null
+            };
+
+
         }
 
     }
 
+   cleearControls() {
+       this.errorMessage = null;
+         this.doc = null;
+         this.name = null;
+        this.instruction = null;
+        this.tests = null;
+         this.defaultSolution = null;
+   }
     save() {
         this.errorMessage = null;
 
         if (this.name && this.instruction && this.tests) {
-            this.kataService.addKata({
-                _id: new Date().toISOString(),
-                name: this.name,
-                instruction: this.instruction,
-                solution: this.defaultSolution,
-                tests: this.tests
+             this.doc.name = this.name;
+            this.doc.instruction = this.instruction;
+            this.doc.tests = this.tests;
+            this.doc.defaultSolution = this.defaultSolution;
+            this.kataService.addKata(this.doc).then(() => {
+                 return this.router.navigateToRoute('katas');
             });
-            return this.router.navigateToRoute('katas');
+           
         } else {
             this.errorMessage = 'Please make sure required fields are entereed';
         }

@@ -16,7 +16,7 @@ export class KataService {
 
 
     addKata(data) {
-        this.db.put(data, function callback(err, result) {
+        return this.db.put(data, function callback(err, result) {
             if (!err) {
                 console.log('Successfully posted a kata!');
             }
@@ -38,8 +38,8 @@ export class KataService {
 
     saveTest(id, tests) {
         var self = this;
-         //Reading the contents of a Document
-       this.db.get(id, function (err, doc) {
+        //Reading the contents of a Document
+        return this.db.get(id, function (err, doc) {
             if (err) {
                 return console.log(err);
             } else {
@@ -48,11 +48,11 @@ export class KataService {
             }
         });
     }
-    
-     removeKata(doc) {
-         doc._deleted = true;
+
+    removeKata(doc) {
+        doc._deleted = true;
         return this.db.put(doc).then(function (result) {
-             console.log(result);
+            // console.log(result);
             // handle result
         }).catch(function (err) {
             console.log(err);

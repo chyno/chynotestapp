@@ -39,12 +39,12 @@ export class Runner {
 
         this.codeservice.setControls([this.solutionArea, this.testsArea]);
 
-        if (this.kataChosen) {
-            this.codeservice.setSolutionValue(this.kataChosen.solution);
-            this.codeservice.setTestValue(this.kataChosen.tests);
-        }
+        //if (this.kataChosen) {
+           // this.codeservice.setSolutionValue(this.kataChosen.defaultSolution);
+           // this.codeservice.setTestValue(this.kataChosen.tests);
+      //  }
 
-        var subscription = this.observerlocator
+       this.subscription = this.observerlocator
             .getObserver(this, 'kataChosen')
             .subscribe(this.onChange.bind(this));
     }
@@ -67,7 +67,7 @@ export class Runner {
     onChange(newValue, oldValue) {
 
         if (newValue) {
-            this.codeservice.setSolutionValue(newValue.instruction);
+            this.codeservice.setSolutionValue(newValue.defaultSolution);
             this.codeservice.setTestValue(newValue.tests);
         }
 

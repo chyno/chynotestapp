@@ -5,14 +5,19 @@
   </div>
   <div class="form-group">
     <label for="desc">Instruction:</label>
-    <textarea class="form-control" rows="3" id="instructions" value.bind="instruction" value.bind="tests"></textarea>
+    <textarea class="form-control" rows="3" id="instructions" value.bind="instruction" ></textarea>
+  </div>
+   <div class="form-group">
+    <label for="tsts">Soltion:</label>
+    <textarea class="form-control" rows="2" id="tsts" value.bind="defaultSolution"></textarea>
   </div>
   <div class="form-group">
     <label for="tsts">Default Tests:</label>
-    <textarea class="form-control" rows="3" id="tsts" value.bind="tests"></textarea>
+    <textarea class="form-control" rows="2" id="tsts" value.bind="tests"></textarea>
   </div>
   <div class="container">
     <button class="btn btn-primary" click.trigger="save()">Save</button>
     <button class="btn btn-secondary" click.trigger="cancel()">Cancel</button>
   </div>
+  <div style="margin-top: 12px" class="alert alert-danger"   show.bind="errorMessage">${errorMessage}</div>
 </template>
