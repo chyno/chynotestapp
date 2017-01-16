@@ -52,7 +52,7 @@ export class Runner {
         this.codeservice.setControls([this.solutionArea, this.testsArea]);
 
         if (this.kataChosen) {
-            this.codeservice.setSolutionValue(this.kataChosen.defaultSolution);
+            this.codeservice.setSolutionValue(this.kataChosen.solution);
             this.codeservice.setTestValue(this.kataChosen.tests);
         }
 
@@ -62,21 +62,19 @@ export class Runner {
     }
 
     saveKata() {
-        var solution = this.codeservice.getSolutionValue();
-         var tests = this.codeservice.getTestValue();
+     if (this.kataChosen) {
+         this.kataChosen.solution = this.codeservice.getSolutionValue();
+         this.kataChosen.tests = this.codeservice.getTestValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-      
-        this.kataService.saveSolution(this.kataChosen._id, solution, tests);
+        this.kataService.addKata(this.kataChosen);
+     }  
     }
-
-    
-
 
     onChange(newValue, oldValue) {
         this.result = null;
          this.resultStyle = 'alert-success';
         if (newValue) {
-            this.codeservice.setSolutionValue(newValue.defaultSolution);
+            this.codeservice.setSolutionValue(newValue.solution);
             this.codeservice.setTestValue(newValue.tests);
         }
 
@@ -98,7 +96,7 @@ export class Runner {
                 this.resultStyle = 'alert-danger';
             }
             else {
-                if (result.includes('<FAILED::>')) {
+                if (this.result.includes('<FAILED::>')) {
                     this.resultStyle = 'alert-warning';
                 }
              }       

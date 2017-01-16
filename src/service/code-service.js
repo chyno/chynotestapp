@@ -24,6 +24,7 @@ export class CodeService {
            theme: 'blackboard',
            
         });
+         this.codeeditor.refresh();
 
         this.testeditor = CodeMirror.fromTextArea(cntls[1], {
             mode: "javascript",
@@ -31,6 +32,9 @@ export class CodeService {
           lineWrapping: true,
            theme: 'blackboard',
         });
+
+         this.testeditor.refresh();
+    
 
     }
 
