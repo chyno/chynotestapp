@@ -35,7 +35,7 @@ export class App {
         moduleId: './runner',
         nav: true,
         title: 'Run Katas',
-        requireLogin : true
+        requireLogin : false
       }, { 
         route: ['katas'],
         name: 'katas',

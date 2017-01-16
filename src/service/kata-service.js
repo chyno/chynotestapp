@@ -14,7 +14,6 @@ export class KataService {
         });
     }
 
-
     addKata(data) {
         return this.db.put(data, function callback(err, result) {
             if (!err) {
@@ -23,31 +22,22 @@ export class KataService {
         });
     }
 
-    saveSolution(id, solution) {
+    saveSolution(id, solution, tests) {
         var self = this;
+         console.log('Id : ' + id);
         //Reading the contents of a Document
         this.db.get(id, function (err, doc) {
             if (err) {
                 return console.log(err);
             } else {
                 doc.solution = solution;
+                doc.tests = tests;
+                console.log('doc : ' + doc);
                 self.db.put(doc);
             }
         });
     }
 
-    saveTest(id, tests) {
-        var self = this;
-        //Reading the contents of a Document
-        return this.db.get(id, function (err, doc) {
-            if (err) {
-                return console.log(err);
-            } else {
-                doc.tests = tests;
-                self.db.put(doc);
-            }
-        });
-    }
 
     removeKata(doc) {
         doc._deleted = true;

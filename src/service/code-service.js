@@ -10,28 +10,26 @@ export class CodeService {
     constructor(httpClient) {
         this.httpClient = httpClient;
         this.codeeditor = null;
-        this.testeditor = null;
+        this.testeditor = null;     
     }
-
-    //Method needs to be called after view model can get reference to DOM object
+ //Method needs to be called after view model can get reference to DOM object
     setControls(cntls) {
 
         //var cm = new CodeMirror();
 
         this.codeeditor = CodeMirror.fromTextArea(cntls[0], {
-            lineNumbers: true,
-            styleActiveLine: true,
-            matchBrackets: true,
-            theme: 'blackboard',
-            autofocus: true
+           mode: "javascript",
+           lineNumbers: true,
+          lineWrapping: true,
+           theme: 'blackboard',
+           
         });
 
         this.testeditor = CodeMirror.fromTextArea(cntls[1], {
-            lineNumbers: true,
-            styleActiveLine: true,
-            matchBrackets: true,
-            theme: 'blackboard',
-            autofocus: true
+            mode: "javascript",
+           lineNumbers: true,
+          lineWrapping: true,
+           theme: 'blackboard',
         });
 
     }
@@ -72,7 +70,7 @@ export class CodeService {
 
         //  when not able to ru docker need to call dumm resutls
        // return this.FakeTestResult(data);
-       return this.ApiTestResult(data)
+      return this.ApiTestResult(data)
 
     }
 
@@ -87,16 +85,22 @@ export class CodeService {
     }
 
     ApiTestResult(data) {
-
+        var hasError = false;
         return this.httpClient.fetch('/api/executeCode', {
           headers: {'Content-Type' : 'application/json'},
            method: 'post',
-            body: json(data)
+           body: json(data)
         })
-        .then(response => response.text())
-        .then(executeResult => executeResult)
-        .catch(error => {
-            return 'Executing code! Error :' +  error;
-        });
+        .then(response => 
+        {
+            if (!response.ok)
+            {
+                hasError = true;
+            }
+            return response.text();
+        }
+        )
+        .then(executeResult => { return  { hasError : hasError, text : executeResult}});
+        
     }
 }

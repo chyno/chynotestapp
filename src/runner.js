@@ -1,13 +1,26 @@
-import { inject} from "aurelia-framework";
-import { KataService } from "./service/kata-service";
-import {  CodeService} from './service/code-service';
-import { ObserverLocator } from 'aurelia-binding';
-import { User} from './user';
+import {
+    inject
+} from "aurelia-framework";
+import {
+    KataService
+} from "./service/kata-service";
+import {
+    CodeService
+} from './service/code-service';
+import {
+    ObserverLocator
+} from 'aurelia-binding';
+import {
+    User
+} from './user';
 
 
 @inject(KataService, CodeService, ObserverLocator, User)
 export class Runner {
 
+/*
+ 'alert-danger' : 'alert-success'
+*/
     constructor(kataService, codeservice, observerlocator, User) {
         console.log('Runner constructor');
         this.kataService = kataService;
@@ -17,8 +30,9 @@ export class Runner {
         this.kataChosen = null;
         this.observerlocator = observerlocator;
         this.user = User;
-       // this.exec = require('child_process').exec;
-       // this.exec =  child_process.exec;
+        this.result = null;
+        this.resultStyle = 'alert-success';
+        
     }
 
     activate() {
@@ -33,39 +47,34 @@ export class Runner {
         this.kataChosen = null;
     }
 
-     
-
     attached() {
 
         this.codeservice.setControls([this.solutionArea, this.testsArea]);
 
-        //if (this.kataChosen) {
-           // this.codeservice.setSolutionValue(this.kataChosen.defaultSolution);
-           // this.codeservice.setTestValue(this.kataChosen.tests);
-      //  }
+        if (this.kataChosen) {
+            this.codeservice.setSolutionValue(this.kataChosen.defaultSolution);
+            this.codeservice.setTestValue(this.kataChosen.tests);
+        }
 
-       this.subscription = this.observerlocator
+        this.subscription = this.observerlocator
             .getObserver(this, 'kataChosen')
             .subscribe(this.onChange.bind(this));
     }
 
-    saveCode() {
+    saveKata() {
         var solution = this.codeservice.getSolutionValue();
+         var tests = this.codeservice.getTestValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-        this.kataChosen.code = cd;
-        this.kataService.savesolution(this.kataChosen._id, solution);
+      
+        this.kataService.saveSolution(this.kataChosen._id, solution, tests);
     }
 
-    saveTest() {
-        var assertion = this.codeservice.getTestValue();
-        // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-        this.kataChosen.assertion = assertion;
-        this.kataService.saveTest(this.kataChosen._id, assertion);
-    }
+    
 
 
     onChange(newValue, oldValue) {
-
+        this.result = null;
+         this.resultStyle = 'alert-success';
         if (newValue) {
             this.codeservice.setSolutionValue(newValue.defaultSolution);
             this.codeservice.setTestValue(newValue.tests);
@@ -73,15 +82,31 @@ export class Runner {
 
     }
 
-// run the tests on code wars docker image
-    runTests() {
+/*
+.alert-success, .alert-info, .alert-warning or .alert-danger
 
+*/
+    // run the tests on code wars docker image
+    runTests() {
+        this.resultStyle = 'alert-success';
         var solution = this.codeservice.getSolutionValue();
         var tests = this.codeservice.getTestValue();
-
+        this.hasError = false;
         this.codeservice.getTestResults(solution, tests).then(result => {
-           this.codeservice.setTestValue(result);
-        });
+            this.result = result.text;
+             if (result.hasError) {
+                this.resultStyle = 'alert-danger';
+            }
+            else {
+                if (result.includes('<FAILED::>')) {
+                    this.resultStyle = 'alert-warning';
+                }
+             }       
+        })
+        .catch(error => {
+            this.resultStyle = 'alert-danger';
+            this.result  = 'Executing code! Error :' +  error;
+        });;
     }
 
 }
