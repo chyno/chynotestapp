@@ -36,8 +36,7 @@ export class Runner {
     }
 
     activate() {
-
-        console.log('Runner activate');
+     console.log('Runner activate');
         this.kataService.getKatas().then((doc, error) => {
             this.katas = doc.rows.map(x => {
                 return x.doc
@@ -86,6 +85,7 @@ export class Runner {
 */
     // run the tests on code wars docker image
     runTests() {
+        this.result = null;
         this.resultStyle = 'alert-success';
         var solution = this.codeservice.getSolutionValue();
         var tests = this.codeservice.getTestValue();

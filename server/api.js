@@ -56,10 +56,11 @@ router.post('/api/executeCode', function (req, res)
 
      exec(cmd, function(error, stdout, stderr) {
              console.log('Executing docker code....');
-
+             console.log('error: ' + error);
              if (stderr)
              {
                  console.log('Error! Message: ' + stderr);
+                  res.status(500).send(stderr);
              }
              else
              {
