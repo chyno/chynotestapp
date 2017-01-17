@@ -1,0 +1,22 @@
+<template>
+    <table class="table table-condensed" style="width: 90%">
+        <thead>
+            <tr>
+                <th style="width: 10%"></th>
+                <th style="width: 10%"></th>
+                <th style="width: 40%">Name</th>
+                <th style="width: 40%">Solution</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="kata of katas" model.bind="kata">
+                <td><button class="btn btn-primary" click.trigger="edit(kata)">Edit </button></td>
+                <td><button class="btn btn-waring" click.trigger="delete(kata)">Delete </button></td>
+                <td>${kata.name}</td>
+                <td>${kata.defaultSolution}</td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" click.trigger="add()">Add</button>
+    
+</template>
