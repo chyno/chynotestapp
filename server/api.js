@@ -46,17 +46,18 @@ router.post('/api/executeCode', function (req, res)
 
     var solution = body.solution;
     var tests = body.tests;
+    var framework = body.framework;
     console.log('Code: ' + solution);
     console.log('Test: ' + tests);
    // var code = 'var a = 1';
     //var test = 'Test.assertEquals(a, 1)';
 
-    var cmd  = 'docker run --rm codewars/node-runner run -l javascript -c "' + solution + '" -t cw -f "' + tests + '"';
+    var cmd  = 'docker run --rm codewars/node-runner run -l javascript -c "' + solution + '" -t ' + framework  + ' -f "' + tests + '"';
 
 
      exec(cmd, function(error, stdout, stderr) {
              console.log('Executing docker code....');
-             console.log('error: ' + error);
+             console.log('error: ' + stderr);
              if (stderr)
              {
                  console.log('Error! Message: ' + stderr);

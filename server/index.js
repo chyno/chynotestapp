@@ -52,7 +52,4 @@ console.log(' Environment: '  + app.get('env'));
 expressws.target = {};
  var ws = expressws(app, server);
 
-
-
-
  module.exports = app;

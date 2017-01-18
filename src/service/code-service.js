@@ -71,6 +71,7 @@ export class CodeService {
         var data = {};
         data.solution = solution;
         data.tests = tests;
+        data.framework = "cw-2";
 
         //  when not able to ru docker need to call dumm resutls
        // return this.FakeTestResult(data);
