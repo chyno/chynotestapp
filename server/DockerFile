@@ -1,0 +1,5 @@
+FROM codewars/node-runner
+## docker build -t my-codewar:latest
+
+ADD . /chynotest 
+CMD ["nginx", "-g", "daemon off;"]
