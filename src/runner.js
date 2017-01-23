@@ -76,7 +76,6 @@ export class Runner {
             this.codeservice.setSolutionValue(newValue.solution);
             this.codeservice.setTestValue(newValue.tests);
         }
-
     }
 
 /*

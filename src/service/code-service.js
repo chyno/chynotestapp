@@ -2,40 +2,40 @@ import {
     inject
 } from "aurelia-framework";
 import CodeMirror from 'codemirror';
-import { HttpClient, json} from "aurelia-fetch-client";
+import {
+    HttpClient,
+    json
+} from "aurelia-fetch-client";
 
 @inject(HttpClient)
 export class CodeService {
 
     constructor(httpClient) {
-        this.httpClient = httpClient;
-        this.codeeditor = null;
-        this.testeditor = null;     
-    }
- //Method needs to be called after view model can get reference to DOM object
+            this.httpClient = httpClient;
+            this.codeeditor = null;
+            this.testeditor = null;
+        }
+        //Method needs to be called after view model can get reference to DOM object
     setControls(cntls) {
 
         //var cm = new CodeMirror();
 
         this.codeeditor = CodeMirror.fromTextArea(cntls[0], {
-           mode: "javascript",
-           lineNumbers: true,
-          lineWrapping: true,
-           theme: 'blackboard',
-           
+            mode: "javascript",
+            lineNumbers: true,
+            lineWrapping: true,
+            theme: 'blackboard',
+
         });
-         this.codeeditor.refresh();
+        this.codeeditor.refresh();
 
         this.testeditor = CodeMirror.fromTextArea(cntls[1], {
             mode: "javascript",
-           lineNumbers: true,
-          lineWrapping: true,
-           theme: 'blackboard',
+            lineNumbers: true,
+            lineWrapping: true,
+            theme: 'blackboard',
         });
-
-         this.testeditor.refresh();
-    
-
+        this.testeditor.refresh();
     }
 
     setSolutionValue(solution) {
@@ -71,18 +71,18 @@ export class CodeService {
         var data = {};
         data.solution = solution;
         data.tests = tests;
-        data.framework = "cw-2";
+        data.framework = "cw";
+        //data.framework = "cw-2";
 
         //  when not able to ru docker need to call dumm resutls
-       // return this.FakeTestResult(data);
-      return this.ApiTestResult(data)
+   //  return this.FakeTestResult(data);
+       return this.ApiTestResult(data)
 
     }
 
-    FakeTestResult(data)
-    {
-        var promise = new Promise(function(resolve, reject) {
-           // do a thing, possibly async, then…
+    FakeTestResult(data) {
+        var promise = new Promise(function (resolve, reject) {
+            // do a thing, possibly async, then…
             resolve("2 Of 2 test passed");
         });
 
@@ -92,20 +92,24 @@ export class CodeService {
     ApiTestResult(data) {
         var hasError = false;
         return this.httpClient.fetch('/api/executeCode', {
-          headers: {'Content-Type' : 'application/json'},
-           method: 'post',
-           body: json(data)
-        })
-        .then(response => 
-        {
-            if (!response.ok)
-            {
-                hasError = true;
-            }
-            return response.text();
-        }
-        )
-        .then(executeResult => { return  { hasError : hasError, text : executeResult}});
-        
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'post',
+                body: json(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    hasError = true;
+                }
+                return response.text();
+            })
+            .then(executeResult => {
+                return {
+                    hasError: hasError,
+                    text: executeResult
+                }
+            });
+
     }
 }

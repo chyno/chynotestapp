@@ -16,7 +16,7 @@
 						<p>${kataChosen.instruction}</p>
 					</div>
 				</div>
-				<div style="max-height: 130 px">
+				<div>
 					<h5>Result:</h5>
 					<div class="markdown" show.bind="result">
 						<p     class="alert ${resultStyle}">${result}</p>
@@ -24,13 +24,13 @@
 				</div>
 			</div>
 			<div class="col-md-8" show.bind="kataChosen">
-				<h5>Solution:</h5>
+				
 				<form>
 					<div style="height: 100px; margin-bottom:1em">
 						<textarea id="solution" name="solution " ref="solutionArea"></textarea>
 					</div>
 				</form>
-				<h5>Example Tests: </h5>
+				
 				<form>
 					<div>
 						<textarea id="tests " name="tests " ref="testsArea"></textarea>
