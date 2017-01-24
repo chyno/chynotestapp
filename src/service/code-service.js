@@ -75,8 +75,8 @@ export class CodeService {
         //data.framework = "cw-2";
 
         //  when not able to ru docker need to call dumm resutls
-   //  return this.FakeTestResult(data);
-       return this.ApiTestResult(data)
+     return this.FakeTestResult(data);
+      // return this.ApiTestResult(data)
 
     }
 
