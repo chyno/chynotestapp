@@ -666,6 +666,40 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
+define('Tests/assertions',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Assertions = exports.Assertions = function Assertions() {
+    _classCallCheck(this, Assertions);
+  };
+});
+define('Tests/run_result',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var RunResult = exports.RunResult = function RunResult() {
+    _classCallCheck(this, RunResult);
+  };
+});
 define('service/code-service',["exports", "aurelia-framework", "codemirror", "aurelia-fetch-client"], function (exports, _aureliaFramework, _codemirror, _aureliaFetchClient) {
     "use strict";
 
@@ -856,40 +890,6 @@ define('service/kata-service',['exports', 'pouchdb'], function (exports, PouchDB
 
         return KataService;
     }();
-});
-define('Tests/assertions',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Assertions = exports.Assertions = function Assertions() {
-    _classCallCheck(this, Assertions);
-  };
-});
-define('Tests/run_result',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var RunResult = exports.RunResult = function RunResult() {
-    _classCallCheck(this, RunResult);
-  };
 });
 define('aurelia-dialog/ai-dialog-header',['exports', 'aurelia-templating', './dialog-controller'], function (exports, _aureliaTemplating, _dialogController) {
   'use strict';
@@ -3156,7 +3156,7 @@ define('text!katas-manage.html', ['module'], function(module) { module.exports =
 define('text!katas.html', ['module'], function(module) { module.exports = "<template>\n    <table class=\"table table-condensed\" style=\"width: 90%\">\n        <thead>\n            <tr>\n                <th style=\"width: 10%\"></th>\n                <th style=\"width: 10%\"></th>\n                <th style=\"width: 40%\">Name</th>\n                <th style=\"width: 40%\">Solution</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr repeat.for=\"kata of katas\" model.bind=\"kata\">\n                <td><button class=\"btn btn-primary\" click.trigger=\"edit(kata)\">Edit </button></td>\n                <td><button class=\"btn btn-waring\" click.trigger=\"delete(kata)\">Delete </button></td>\n                <td>${kata.name}</td>\n                <td>${kata.solution}</td>\n            </tr>\n        </tbody>\n    </table>\n    <button class=\"btn btn-primary\" click.trigger=\"add()\">Add</button>\n    \n</template>"; });
 define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n<ai-dialog>\r\n\t\t<ai-dialog-body>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"row\">\r\n\t\t\t\t\t<div class=\"col-md-offset-4 col-md-4\">\r\n\t\t\t\t\t\t<div class=\"form-login\">\r\n\t\t\t\t\t\t\t<h4>Welcome back to Project Chyno.</h4>\r\n\t\t\t\t\t\t\t<input type=\"text\" id=\"userName\" class=\"form-control input-sm chat-input\" placeholder=\"username\" value.bind=\"data.userName\" />\r\n\t\t\t\t\t\t\t</br>\r\n\t\t\t\t\t\t\t<input type=\"password\" id=\"userPassword\" class=\"form-control input-sm chat-input\" placeholder=\"password\" value.bind=\"data.password\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</br>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</ai-dialog-body>\r\n\r\n\t\t<ai-dialog-footer>\r\n\t\t\t<button click.trigger=\"controller.ok(data)\">Login</button>\r\n\t\t\t<button click.trigger=\"controller.cancel()\">Cancel</button>\r\n\r\n\t\t</ai-dialog-footer>\r\n\t</ai-dialog>\r\n</template>"; });
 define('text!nav-bar.html', ['module'], function(module) { module.exports = "<template bindable=\"router\">\n  <!-- Fixed navbar -->\n  <nav class=\"navbar navbar-default navbar-fixed-top\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <div class=\"col-md-6\">\n          <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\"\n              aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n            <a class=\"navbar-brand\" href=\"#\">Project Chyno</a>\n          </div>\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\n            <ul class=\"nav navbar-nav\">\n              <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li>\n            </ul>\n          </div>\n          <!--/.nav-collapse -->\n        </div>\n        <div class=\"col-md-3\">\n          <button style=\"padding-top:1em\" class=\"pull-right btn-link text-warning\" click.trigger=\"login()\"> ${buttonName}</button>\n        </div>\n        <div class=\"col-md-3\" style=\"padding-top:1.2em\">\n          <span> ${user.userName}</span>\n        </div>\n      </div>\n    </div>\n  </nav>\n</template>"; });
-define('text!runner.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\n\t<hr/>\n\t<div class=\"container\">\n\t\t<label for=\"availKatas\">Available Katas: </label>\n\t\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\n      <option model.bind=\"null\">Choose...</option>\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\n    </select>\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-4\" show.bind=\"kataChosen\">\n\t\t\t\t<div style=\"max-height: 130 px\">\n\t\t\t\t\t<h5>Instructions:</h5>\n\t\t\t\t\t<div class=\"markdown\">\n\t\t\t\t\t\t<p>${kataChosen.instruction}</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div>\n\t\t\t\t\t<h5>Result:</h5>\n\t\t\t\t\t<div class=\"markdown\" show.bind=\"result\">\n\t\t\t\t\t\t<p     class=\"alert ${resultStyle}\">${result}</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-8\" show.bind=\"kataChosen\">\n\t\t\t\t\n\t\t\t\t<form>\n\t\t\t\t\t<div style=\"height: 100px; margin-bottom:1em\">\n\t\t\t\t\t\t<textarea id=\"solution\" name=\"solution \" ref=\"solutionArea\"></textarea>\n\t\t\t\t\t</div>\n\t\t\t\t</form>\n\t\t\t\t\n\t\t\t\t<form>\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<textarea id=\"tests \" name=\"tests \" ref=\"testsArea\"></textarea>\n\t\t\t\t\t</div>\n\t\t\t\t</form>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"row \" style=\"padding-top:1em\" show.bind=\"kataChosen\">\n\t\t\t<div class=\"col-md12 \">\n\t\t\t\t<button class=\"btn btn-primary \" click.trigger=\"saveKata() \">Save</button>\n\t\t\t\t<button class=\"btn btn-primary \" click.trigger=\"runTests() \">Run Tests</button>\n\t\t\t\t</div>\n\t\t</div>\n\t</div>\n</template>"; });
+define('text!runner.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"codemirror/lib/codemirror.css\"></require>\n\t<require from=\"codemirror/theme/blackboard.css\"></require>\n\n\t<div class=\"container\">\n\t\t<label for=\"availKatas\">Available Katas: </label>\n\t\t<select value.bind=\"kataChosen\" class=\"selectpicker\" id=\"availKatas\">\n      <option model.bind=\"null\">Choose...</option>\n      <option repeat.for=\"kata of katas\" model.bind=\"kata\">  ${kata.name} </option>\n    </select>\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-md-4 col-lg-3\" show.bind=\"kataChosen\">\n\n\t\t\t\t<div style=\"max-height: 130 px\">\n\t\t\t\t\t<h5>Instructions:</h5>\n\t\t\t\t\t<div class=\"markdown\">\n\t\t\t\t\t\t<p>${kataChosen.instruction}</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div>\n\t\t\t\t\t<h5>Result:</h5>\n\t\t\t\t\t<div class=\"markdown\" show.bind=\"result\">\n\t\t\t\t\t\t<p     class=\"alert ${resultStyle}\">${result}</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-8 col-lg-9\" show.bind=\"kataChosen\">\n                 <div class=\"row\"> <div class=\"col-sm-12\" style=\"padding-bottom:4em\" >\n\t\t\t\t<form >\n\t\t\t\t\t<div style=\"height: 100px; margin-bottom:1em\">\n\t\t\t\t\t\t<textarea id=\"solution\" name=\"solution \" ref=\"solutionArea\"></textarea>\n\t\t\t\t\t</div>\n\t\t\t\t</form>\n                   </div></div>\n\t\t\t\t   <div class=\"row\"> <div class=\"col-sm-12\">\n\t\t\t\t<form>\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<textarea id=\"tests \" name=\"tests \" ref=\"testsArea\"></textarea>\n\t\t\t\t\t</div>\n\t\t\t\t</form>\n\t\t\t\t<div class=\"row\"> <div class=\"col-sm-12\">\n\t\t\t</div>\n\t</div>\n\t\t<div class=\"row \" style=\"padding-top:1em\" show.bind=\"kataChosen\">\n\t\t\t<div class=\"col-md12 \">\n\t\t\t\t<button class=\"btn btn-primary \" click.trigger=\"saveKata() \">Save</button>\n\t\t\t\t<button class=\"btn btn-primary \" click.trigger=\"runTests() \">Run Tests</button>\n\t\t\t\t</div>\n\t\t</div>\n\t</div>\n</template>"; });
 define('text!welcome.html', ['module'], function(module) { module.exports = "<template>\r\n\t<header>Project Chyno</header>\r\n\t <ariticle>\r\n\t\t <p>\r\n\t\t This is a testing application based on <a href=\"https://www.codewars.com/dashboard\" > Code Wars site.</a>  This is for simple tests and to make it collaborative. .\r\n\t\t <p>\r\n\t\t Please log in to start learning!\r\n\t\t </p>\r\n\r\n\t </ariticle>\r\n\r\n</template>"; });
 define('text!Tests/assertions.html', ['module'], function(module) { module.exports = "<template>\r\n    <p>these are list of assertions</p>\r\n</template>"; });
 define('text!Tests/run_result.html', ['module'], function(module) { module.exports = "<template>\r\n    <p>run result</p>\r\n</template>"; });
