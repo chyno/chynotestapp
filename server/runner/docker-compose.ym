@@ -1,0 +1,12 @@
+version: '2'
+services:
+  
+
+  node-runner:
+    image: codewars/node-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+      - ./tsconfig.json:/runner/tsconfig.json
