@@ -1,12 +1,10 @@
 version: '2'
 services:
- 
-  node-runner:
+ javascript:
     image: codewars/node-runner
     volumes:
       - ./lib:/runner/lib
- 
     entrypoint: ''
     user: root
     command: bash 
-    ##command: /bin/echo 'Hello world from chyno test'
+    
