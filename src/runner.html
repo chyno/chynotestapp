@@ -1,7 +1,7 @@
 <template>
 	<require from="codemirror/lib/codemirror.css"></require>
 	<require from="codemirror/theme/blackboard.css"></require>
-	<hr/>
+
 	<div class="container">
 		<label for="availKatas">Available Katas: </label>
 		<select value.bind="kataChosen" class="selectpicker" id="availKatas">
@@ -9,7 +9,8 @@
       <option repeat.for="kata of katas" model.bind="kata">  ${kata.name} </option>
     </select>
 		<div class="row">
-			<div class="col-md-4" show.bind="kataChosen">
+			<div class="col-md-4 col-lg-3" show.bind="kataChosen">
+
 				<div style="max-height: 130 px">
 					<h5>Instructions:</h5>
 					<div class="markdown">
@@ -23,21 +24,23 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-8" show.bind="kataChosen">
-				
-				<form>
+			<div class="col-md-8 col-lg-9" show.bind="kataChosen">
+                 <div class="row"> <div class="col-sm-12" style="padding-bottom:4em" >
+				<form >
 					<div style="height: 100px; margin-bottom:1em">
 						<textarea id="solution" name="solution " ref="solutionArea"></textarea>
 					</div>
 				</form>
-				
+                   </div></div>
+				   <div class="row"> <div class="col-sm-12">
 				<form>
 					<div>
 						<textarea id="tests " name="tests " ref="testsArea"></textarea>
 					</div>
 				</form>
+				<div class="row"> <div class="col-sm-12">
 			</div>
-		</div>
+	</div>
 		<div class="row " style="padding-top:1em" show.bind="kataChosen">
 			<div class="col-md12 ">
 				<button class="btn btn-primary " click.trigger="saveKata() ">Save</button>
