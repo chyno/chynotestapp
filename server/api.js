@@ -52,7 +52,8 @@ router.post('/api/executeCode', function (req, res)
    // var code = 'var a = 1';
     //var test = 'Test.assertEquals(a, 1)';
 
-    var cmd  = 'docker run --rm codewars/node-runner run -l javascript -c "' + solution + '" -t ' + framework  + ' -f "' + tests + '"';
+    //var cmd  = 'docker run --rm codewars/node-runner run -l javascript -c "' + solution + '" -t ' + framework  + ' -f "' + tests + '"';
+    var cmd  = 'docker-compose run javascript';
 
 
      exec(cmd, function(error, stdout, stderr) {

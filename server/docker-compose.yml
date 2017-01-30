@@ -1,10 +1,10 @@
 version: '2'
 services:
- javascript:
+  javascript:
     image: codewars/node-runner
     volumes:
-      - ./lib:/runner/lib
+      - ./lib:/runner/chynotest
     entrypoint: ''
     user: root
-    command: bash 
-    
+    entrypoint: 'mocha -t 5000 /runner/chynotest/samplerunner_spec.js'
+    ##entrypoint: 'node run -l javascript' 

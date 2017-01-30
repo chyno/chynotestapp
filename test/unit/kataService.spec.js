@@ -1,20 +1,21 @@
-import { KataService } from '../../src/service/kata-service';
+var expect = require('chai').expect,
+    runner = require('../runner');
 
-xdescribe('the kata service', () => {
+describe( 'javascript runner', function(){
+    describe( '.run', function(){
+        runner.assertCodeExamples('javascript');
+        
+        //----------------------------------------------------------------------------------------
+        // Basics
+        //----------------------------------------------------------------------------------------
 
-  var sut;
-
-  beforeEach(function () {
-    sut = new KataService();
-  });
-
-  it('the service should not be null', () => {
-    // expect(kataService.addDefaultData()).toNotThrow("Can not call add Default data");
-    expect(sut).toBeDefined();
-  });
-
-   it('No Kata should be shosen', () => {
-    // expect(kataService.addDefaultData()).toNotThrow("Can not call add Default data");
-    expect(sut).toBeDefined();
-  });
-});
+        describe( 'basics', function() {
+            it('should handle basic code evaluation', function (done) {
+                runner.run({language: 'javascript', code: 'console.log(42)'}, function (buffer) {
+                    expect(buffer.stdout).to.equal('42\n');
+                    done();
+                });
+            });
+        );
+    );
+);
