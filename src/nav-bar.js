@@ -1,29 +1,21 @@
-import { inject } from "aurelia-framework";
-import { Behavior } from 'aurelia-framework';
+import { inject } from 'aurelia-framework';
 import { bindable } from 'aurelia-framework';
 import { DialogService } from 'aurelia-dialog';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import { Login } from './login';
-import { User } from "./user";
 
-
-@inject(DialogService, User, EventAggregator)
+@inject(DialogService, EventAggregator)
 export class NavBar {
     @bindable router;
-
-    constructor(DialogService, User, EventAggregator) {
-        this.LoginText = "Log In";
-        this.LogoutText = "Log Out";
-        this.dialogService = DialogService;
+    constructor(Dialgosrv, EvntAgg) {
+        this.LoginText = 'Log In';
+        this.LogoutText = 'Log Out';
+        this.dialogService = Dialgosrv;
         this.buttonName =  this.LoginText;
-        this.eventAggregator = EventAggregator;
-        this.user = User
+        this.eventAggregator = EvntAgg;
     }
-
-
     login() {
-        var self = this;
-         
+        let self = this;
         if (this.user.userName)
         {
             this.user.userName = null;
@@ -36,10 +28,9 @@ export class NavBar {
             if (!response.wasCancelled && response.output.userName) {
                 self.user.userName = response.output.userName;
                 self.user.password = response.output.password;
-                self.eventAggregator.publish('Login',self.user);
+                self.eventAggregator.publish('Login', self.user);
                 this.buttonName = this.LogoutText;
             }
-             console.log(response.output);
         });
         }
     }

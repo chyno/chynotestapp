@@ -2,8 +2,6 @@
 import 'bootstrap';
 import environment from './environment';
 
-
-
 Promise.config({
   warnings: {
     wForgottenReturn: false

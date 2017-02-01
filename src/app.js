@@ -63,19 +63,19 @@ export class App {
 @inject(EventAggregator, Router)
 class AuthorizeStep {
 
-  constructor(EventAggregator, Router) {
+  constructor(EventAgg, Rtr) {
     this.user = {};
-
-    EventAggregator.subscribe('Login', usr => {
+    this.ea = EventAgg;
+    this.router = Rtr;
+    this.ea.subscribe('Login', usr => {
       if (usr) {
         this.user = usr;
       }
       else {
-        return Router.navigateToRoute('welcome');
+        return this.router.navigateToRoute('welcome');
       }
     });
   }
-
   run(navigationInstruction, next) {
     if (navigationInstruction.config.requireLogin && !this.user.userName) {
       //this.user.userName = 'chyno';

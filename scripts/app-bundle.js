@@ -1,5 +1,5 @@
-define('app',["exports", "aurelia-framework", "./service/kata-service", "./user", "aurelia-router", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _kataService, _user, _aureliaRouter, _aureliaEventAggregator) {
-  "use strict";
+define('app',['exports', 'aurelia-framework', 'aurelia-router', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaRouter, _aureliaEventAggregator) {
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -14,12 +14,11 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "./user"
 
   var _dec, _class, _dec2, _class2;
 
-  var App = exports.App = (_dec = (0, _aureliaFramework.inject)(_kataService.KataService), _dec(_class = function () {
+  var App = exports.App = (_dec = (0, _aureliaFramework.inject)(), _dec(_class = function () {
     function App(KataService) {
       _classCallCheck(this, App);
 
       this.userName = null;
-      this.kataService = KataService;
     }
 
     App.prototype.activate = function activate() {};
@@ -64,23 +63,21 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "./user"
         title: 'Manage Test',
         requireLogin: false
       }]);
-
       this.router = router;
     };
 
     return App;
   }()) || _class);
   var AuthorizeStep = (_dec2 = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _aureliaRouter.Router), _dec2(_class2 = function () {
-    function AuthorizeStep(EventAggregator, Router) {
+    function AuthorizeStep(EventAgg, Rtr) {
       var _this = this;
 
       _classCallCheck(this, AuthorizeStep);
 
-      this.router = Router;
       this.user = {};
-      this.eventAggregator = EventAggregator;
-
-      this.eventAggregator.subscribe('Login', function (usr) {
+      this.ea = EventAgg;
+      this.router = Rtr;
+      this.ea.subscribe('Login', function (usr) {
         if (usr) {
           _this.user = usr;
         } else {
@@ -94,7 +91,6 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "./user"
       if (navigationInstruction.config.requireLogin && !this.user.userName) {
         return next.cancel(new _aureliaRouter.RedirectToRoute('welcome'));
       }
-
       return next();
     };
 
@@ -617,49 +613,58 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
     }()) || _class);
 });
 define('user',["exports"], function (exports) {
-    "use strict";
+  "use strict";
 
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
     }
+  }
 
-    var User = exports.User = function User() {
-        _classCallCheck(this, User);
+  var User = exports.User = function User() {
+    _classCallCheck(this, User);
 
-        this.userName = null;
-        this.password = null;
-    };
+    this.userName = null;
+    this.password = null;
+  };
 });
-define('welcome',["exports", "aurelia-framework", "./user"], function (exports, _aureliaFramework, _user) {
-    "use strict";
+define('welcome',['exports', 'aurelia-framework', './user'], function (exports, _aureliaFramework, _user) {
+  'use strict';
 
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.Welcome = undefined;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Welcome = undefined;
 
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
     }
+  }
 
-    var _dec, _class;
+  var _dec, _class;
 
-    var Welcome = exports.Welcome = (_dec = (0, _aureliaFramework.inject)(_user.User), _dec(_class = function Welcome(User) {
-        _classCallCheck(this, Welcome);
+  var Welcome = exports.Welcome = (_dec = (0, _aureliaFramework.inject)(_user.User), _dec(_class = function Welcome(User) {
+    _classCallCheck(this, Welcome);
 
-        this.user = User;
-    }) || _class);
+    this.user = User;
+  }) || _class);
 });
-define('service/code-service',["exports", "aurelia-framework", "codemirror", "aurelia-fetch-client"], function (exports, _aureliaFramework, _codemirror, _aureliaFetchClient) {
-    "use strict";
+define('resources/index',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {}
+});
+define('service/code-service',['exports', 'aurelia-framework', 'codemirror', 'aurelia-fetch-client'], function (exports, _aureliaFramework, _codemirror, _aureliaFetchClient) {
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -882,15 +887,6 @@ define('Tests/run_result',["exports"], function (exports) {
   var RunResult = exports.RunResult = function RunResult() {
     _classCallCheck(this, RunResult);
   };
-});
-define('resources/index',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {}
 });
 define('aurelia-dialog/ai-dialog-header',['exports', 'aurelia-templating', './dialog-controller'], function (exports, _aureliaTemplating, _dialogController) {
   'use strict';
