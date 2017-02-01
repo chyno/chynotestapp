@@ -1,9 +1,9 @@
 var expect = require('chai').expect,
-    runner = require('../runner');
+    runner = require('../test/runner');
 
 describe( 'javascript runner', function(){
-    describe( '.run', function(){
-        runner.assertCodeExamples('javascript');
+   
+       // runner.assertCodeExamples('javascript');
         
         //----------------------------------------------------------------------------------------
         // Basics
@@ -15,7 +15,7 @@ describe( 'javascript runner', function(){
                     expect(buffer.stdout).to.equal('42\n');
                     done();
                 });
-            });
-        );
-    );
+        }); }
+    ); }
+    
 );

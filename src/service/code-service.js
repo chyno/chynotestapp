@@ -78,7 +78,7 @@ export class CodeService {
 
     FakeTestResult(data) {
         var promise = new Promise(function (resolve, reject) {
-            // do a thing, possibly async, then…
+            // do a thing, possibly async, then…con
             resolve("2 Of 2 test passed");
         });
 
