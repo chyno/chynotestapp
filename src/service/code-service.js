@@ -1,11 +1,7 @@
-import {
-    inject
-} from "aurelia-framework";
+import { inject } from 'aurelia-framework';
+
 import CodeMirror from 'codemirror';
-import {
-    HttpClient,
-    json
-} from "aurelia-fetch-client";
+import {  HttpClient, json } from 'aurelia-fetch-client';
 
 @inject(HttpClient)
 export class CodeService {

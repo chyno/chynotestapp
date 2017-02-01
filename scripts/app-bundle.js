@@ -41,7 +41,7 @@ define('app',["exports", "aurelia-framework", "./service/kata-service", "./user"
         moduleId: './runner',
         nav: true,
         title: 'Run Katas',
-        requireLogin: false
+        requireLogin: true
       }, {
         route: ['katas'],
         name: 'katas',
@@ -573,7 +573,8 @@ define('runner',["exports", "aurelia-framework", "./service/kata-service", "./se
 
         Runner.prototype.saveKata = function saveKata() {
             if (this.kataChosen) {
-                this.kataChosen.solution = this.codeservice.getSolutionValue();
+
+                if (this.kataChosen.users) this.kataChosen.solution = this.codeservice.getSolutionValue();
                 this.kataChosen.tests = this.codeservice.getTestValue();
 
                 this.kataService.addKata(this.kataChosen);
@@ -656,49 +657,6 @@ define('welcome',["exports", "aurelia-framework", "./user"], function (exports, 
 
         this.user = User;
     }) || _class);
-});
-define('resources/index',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {}
-});
-define('Tests/assertions',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Assertions = exports.Assertions = function Assertions() {
-    _classCallCheck(this, Assertions);
-  };
-});
-define('Tests/run_result',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var RunResult = exports.RunResult = function RunResult() {
-    _classCallCheck(this, RunResult);
-  };
 });
 define('service/code-service',["exports", "aurelia-framework", "codemirror", "aurelia-fetch-client"], function (exports, _aureliaFramework, _codemirror, _aureliaFetchClient) {
     "use strict";
@@ -890,6 +848,49 @@ define('service/kata-service',['exports', 'pouchdb'], function (exports, PouchDB
 
         return KataService;
     }();
+});
+define('Tests/assertions',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Assertions = exports.Assertions = function Assertions() {
+    _classCallCheck(this, Assertions);
+  };
+});
+define('Tests/run_result',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var RunResult = exports.RunResult = function RunResult() {
+    _classCallCheck(this, RunResult);
+  };
+});
+define('resources/index',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {}
 });
 define('aurelia-dialog/ai-dialog-header',['exports', 'aurelia-templating', './dialog-controller'], function (exports, _aureliaTemplating, _dialogController) {
   'use strict';

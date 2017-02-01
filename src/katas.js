@@ -30,23 +30,23 @@ export class Katas {
     }
 
     add() {
-         console.log('Adding');
-          return this.router.navigateToRoute('kata', null);
+        console.log('Adding');
+        return this.router.navigateToRoute('kata', null);
     }
 
     edit(selKata) {
-         console.log('Editting');
-         return this.router.navigateToRoute('kata', selKata);
+        console.log('Editting');
+        return this.router.navigateToRoute('kata', selKata);
     }
 
     delete(selKata) {
         var self = this;
         console.log('Delete Katas');
         console.log(selKata);
-       return this.kataService.removeKata(selKata).then( () => {
-           self.katas = self.katas.filter( (x) =>  x._id !== selKata._id);
-       });
-       
+        return this.kataService.removeKata(selKata).then(() => {
+            self.katas = self.katas.filter((x) => x._id !== selKata._id);
+        });
+
 
     }
 }

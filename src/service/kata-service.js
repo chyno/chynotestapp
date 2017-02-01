@@ -1,5 +1,5 @@
 //import { PouchDB } from "pouchdb-browser";
-var PouchDB = require('pouchdb');
+let PouchDB = require('pouchdb');
 
 export class KataService {
 
@@ -23,8 +23,8 @@ export class KataService {
     }
 
     saveSolution(id, solution, tests) {
-        var self = this;
-         console.log('Id : ' + id);
+        let self = this;
+        console.log('Id : ' + id);
         //Reading the contents of a Document
         this.db.get(id, function (err, doc) {
             if (err) {
@@ -57,6 +57,5 @@ export class KataService {
         }).catch(function (err) {
             console.log(err);
         });
-
     }
 }

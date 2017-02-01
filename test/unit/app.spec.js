@@ -1,6 +1,6 @@
 
-import {App} from '../../src/app';
-import {EventAggregator} from 'aurelia-event-aggregator'
+import { App } from '../../src/app';
+import { EventAggregator } from 'aurelia-event-aggregator'
 import { Router } from 'aurelia-router';
 
 class RouterStub {
@@ -13,7 +13,7 @@ class RouterStub {
   }
 
   addPipelineStep(stepname, stepClass) {
-      this.stepClass = stepClass
+    this.stepClass = stepClass
   }
 
 
@@ -39,45 +39,45 @@ xdescribe('the App module', () => {
 
   it('should have a welcome route', () => {
     expect(sut.router.routes).toContain({
-        route: ['', 'welcome'],
-        name: 'welcome',
-        moduleId: './welcome',
-        nav: true,
-        title: 'Welcome',
-        requireLogin : false
-      });
+      route: ['', 'welcome'],
+      name: 'welcome',
+      moduleId: './welcome',
+      nav: true,
+      title: 'Welcome',
+      requireLogin: false
+    });
   });
 
   it('should have a runner route', () => {
-    expect(sut.router.routes).toContain( {
-        route: ['runner'],
-        name: 'runner',
-        moduleId: './runner',
-        nav: true,
-        title: 'Run Katas',
-        requireLogin : true
-      });
+    expect(sut.router.routes).toContain({
+      route: ['runner'],
+      name: 'runner',
+      moduleId: './runner',
+      nav: true,
+      title: 'Run Katas',
+      requireLogin: true
+    });
   });
 
-  it('should have a manage route',() => {
-   expect(sut.router.routes).toContain({
-        route: ['kata'],
-        name: 'kata',
-        moduleId: './kata',
-        nav: true,
-        title: 'Manage Tests',
-        requireLogin : true
-   });
+  it('should have a manage route', () => {
+    expect(sut.router.routes).toContain({
+      route: ['kata'],
+      name: 'kata',
+      moduleId: './kata',
+      nav: true,
+      title: 'Manage Tests',
+      requireLogin: true
+    });
   });
 
   it('should have a login route', () => {
-    expect(sut.router.routes).toContain( {
-        route: ['login'],
-        name: 'login',
-        moduleId: './login',
-        nav: false,
-        title: 'Login',
-        requireLogin : true
-      });
+    expect(sut.router.routes).toContain({
+      route: ['login'],
+      name: 'login',
+      moduleId: './login',
+      nav: false,
+      title: 'Login',
+      requireLogin: true
+    });
   });
 });

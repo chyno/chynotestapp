@@ -32,7 +32,7 @@ export class Runner {
         this.user = User;
         this.result = null;
         this.resultStyle = 'alert-success';
-        
+
     }
 
     activate() {
@@ -61,12 +61,15 @@ export class Runner {
     }
 
     saveKata() {
-     if (this.kataChosen) {
+        if (this.kataChosen) {
+
+            if (this.kataChosen.users)
+                
          this.kataChosen.solution = this.codeservice.getSolutionValue();
          this.kataChosen.tests = this.codeservice.getTestValue();
         // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
         this.kataService.addKata(this.kataChosen);
-     }  
+     }
     }
 
     onChange(newValue, oldValue) {
@@ -98,7 +101,7 @@ export class Runner {
                 if (this.result.includes('<FAILED::>')) {
                     this.resultStyle = 'alert-warning';
                 }
-             }       
+             }
         })
         .catch(error => {
             this.resultStyle = 'alert-danger';
