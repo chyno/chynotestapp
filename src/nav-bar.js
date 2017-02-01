@@ -3,16 +3,18 @@ import { bindable } from 'aurelia-framework';
 import { DialogService } from 'aurelia-dialog';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import { Login } from './login';
+import { User } from './user';
 
-@inject(DialogService, EventAggregator)
+@inject(DialogService, EventAggregator, User)
 export class NavBar {
     @bindable router;
-    constructor(Dialgosrv, EvntAgg) {
+    constructor(Dialgosrv, EvntAgg, Usr) {
         this.LoginText = 'Log In';
         this.LogoutText = 'Log Out';
         this.dialogService = Dialgosrv;
         this.buttonName =  this.LoginText;
         this.eventAggregator = EvntAgg;
+        this.user = Usr;
     }
     login() {
         let self = this;
