@@ -53,7 +53,7 @@ export class Runner {
             this.kataChosen.solution = this.codeservice.getSolutionValue();
             this.kataChosen.tests = this.codeservice.getTestValue();
             // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-            this.kataService.addKata(this.kataChosen);
+            this.kataService.addUserKata(this.kataChosen, this.user.userName);
         }
     }
     onChange(newValue, oldValue) {
@@ -87,5 +87,10 @@ export class Runner {
             this.resultStyle = 'alert-danger';
             this.result  = 'Executing code! Error :' +  error;
         });
+    }
+
+    undoChanges() {
+      this.codeservice.setSolutionValue(this.kataChosen.solution);
+      this.codeservice.setTestValue(this.kataChosen.tests);
     }
 }

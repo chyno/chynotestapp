@@ -42,10 +42,15 @@
 			</div>
 	</div>
 		<div class="row " style="padding-top:1em" show.bind="kataChosen">
-			<div class="col-md12 ">
-				<button class="btn btn-primary " click.trigger="saveKata() ">Save</button>
+			<div class="col-md-4 ">
+
 				<button class="btn btn-primary " click.trigger="runTests() ">Run Tests</button>
+				<button class="btn btn-secondary" click.trigger="undoChanges() ">Undo</button>
 				</div>
+				<div class="col-md-8 ">
+            <button class="btn btn-primary  pull-right" click.trigger="saveKata() ">Save Code And Tests</button>
+				</div>
+
 		</div>
 	</div>
 </template>

@@ -12,35 +12,57 @@ export class KataService {
     }
 
     addKata(data) {
+        data._id = data.name;
         return this.db.put(data, function callback(err, result) {
             if (!err) {   // console.log('Successfully posted a kata!');
             }
         });
     }
 
-    saveSolution(id, solution, tests) {
-        let self = this;
-        //Reading the contents of a Document
-        this.db.get(id, function(err, doc) {
-            if (err) {
-                return err;
-            }
-            doc.solution = solution;
-            doc.tests = tests;
-            self.db.put(doc);
-        });
-    }
+
     removeKata(doc) {
         doc._deleted = true;
-        return this.db.put(doc).then(function(result) {
-        }).catch(function(err) {
+        return this.db.put(doc).then(function (result) {
+        }).catch(function (err) {
         });
     }
     editKata(doc) {
         doc._deleted = false;
-        return db.put(doc).then(function(result) {
-        }).catch(function(err) {
+        return db.put(doc).then(function (result) {
+        }).catch(function (err) {
             return err;
         });
+    }
+
+    addUserKata(udoc, userName) {
+        return db.get(udoc.name).then(function (doc) {
+            doc._deleted = false;
+            var userCode = { userName: userName, code: udoc.code, tests: udoc.tests };
+            if (doc.users) {
+                var cuc = doc.userCode.filter(uc => uc.userName === userName);
+
+                if (cuc)
+                {
+                    cuc.code = udoc.code;
+                    cuc.tests = udoc.tests;
+                }
+                else {
+                    doc.users.add(userCode);
+                }
+            }
+            else {
+                doc.users = [userCode];
+            }
+            return db.put(doc).then(function (result) {
+            }).catch(function (err) {
+                return err;
+            });
+
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+
+
     }
 }

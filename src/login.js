@@ -1,6 +1,6 @@
 import { inject} from 'aurelia-framework';
 import { DialogController } from 'aurelia-dialog';
-import {AuthService} from 'aurelia-auth'
+import { AuthService } from 'aurelia-auth';
 
 @inject(DialogController, AuthService )
 export class Login {

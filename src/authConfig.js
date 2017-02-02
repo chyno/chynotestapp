@@ -1,3 +1,4 @@
+/*
 var configForDevelopment = {
     providers: {
         google: {
@@ -38,3 +39,4 @@ else{
 
 
 export default config;
+*/
