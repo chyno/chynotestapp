@@ -1,12 +1,6 @@
-import { inject } from "aurelia-framework";
 
-
-import { User } from './user';
-
-@inject(User)
 export class Welcome {
+  constructor() {
 
-    constructor(User) {
-        this.user = User;
     }
 }

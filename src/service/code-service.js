@@ -1,15 +1,9 @@
-import {
-    inject
-} from "aurelia-framework";
+import { inject } from 'aurelia-framework';
 import CodeMirror from 'codemirror';
-import {
-    HttpClient,
-    json
-} from "aurelia-fetch-client";
+import {  HttpClient, json } from 'aurelia-fetch-client';
 
 @inject(HttpClient)
 export class CodeService {
-
     constructor(httpClient) {
             this.httpClient = httpClient;
             this.codeeditor = null;
@@ -17,30 +11,25 @@ export class CodeService {
         }
         //Method needs to be called after view model can get reference to DOM object
     setControls(cntls) {
-
-        //var cm = new CodeMirror();
-
         this.codeeditor = CodeMirror.fromTextArea(cntls[0], {
-            mode: "javascript",
+            mode: 'javascript',
             lineNumbers: true,
             lineWrapping: true,
-            theme: 'blackboard',
+            theme: 'blackboard'
 
         });
         this.codeeditor.refresh();
 
         this.testeditor = CodeMirror.fromTextArea(cntls[1], {
-            mode: "javascript",
+            mode: 'javascript',
             lineNumbers: true,
             lineWrapping: true,
-            theme: 'blackboard',
+            theme: 'blackboard'
         });
         this.testeditor.refresh();
     }
-
     setSolutionValue(solution) {
-
-        if (typeof solution === "undefined") {
+        if (typeof solution === 'undefined') {
             code = '';
         }
 
@@ -48,7 +37,7 @@ export class CodeService {
     }
 
     setTestValue(tcode) {
-        if (typeof tcode === "undefined") {
+        if (typeof tcode === 'undefined') {
             tcode = '';
         }
 
@@ -56,41 +45,32 @@ export class CodeService {
     }
 
     getSolutionValue() {
-        var doc = this.codeeditor.getDoc();
+        let doc = this.codeeditor.getDoc();
         return doc.getValue();
     }
 
     getTestValue(tcode) {
-        var doc = this.testeditor.getDoc();
+        let doc = this.testeditor.getDoc();
         return doc.getValue();
     }
 
     getTestResults(solution, tests) {
-
-        var testResult = 'this is the test results';
-        var data = {};
+        let data = {};
         data.solution = solution;
         data.tests = tests;
-        data.framework = "cw";
-        //data.framework = "cw-2";
-
-        //  when not able to ru docker need to call dumm resutls
-     return this.FakeTestResult(data);
+        data.framework = 'cw';
+        return this.fakeTestResult(data);
       // return this.ApiTestResult(data)
-
     }
-
-    FakeTestResult(data) {
-        var promise = new Promise(function (resolve, reject) {
-            // do a thing, possibly async, then…con
-            resolve("2 Of 2 test passed");
+    fakeTestResult(data) {
+        let promise = new Promise(function(resolve, reject) {
+            resolve('2 Of 2 test passed');
         });
-
         return promise;
     }
 
     ApiTestResult(data) {
-        var hasError = false;
+        let hasError = false;
         return this.httpClient.fetch('/api/executeCode', {
                 headers: {
                     'Content-Type': 'application/json'
@@ -108,8 +88,7 @@ export class CodeService {
                 return {
                     hasError: hasError,
                     text: executeResult
-                }
+                };
             });
-
     }
 }

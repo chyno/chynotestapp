@@ -1,21 +1,16 @@
-import { inject} from "aurelia-framework";
-import { KataService } from "./service/kata-service";
-import { User } from "./user";
+import { inject } from 'aurelia-framework';
 import { RedirectToRoute } from 'aurelia-router';
-import {EventAggregator} from 'aurelia-event-aggregator'
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { Router } from 'aurelia-router';
 
-@inject(KataService)
+@inject()
 export class App {
-
 
   constructor(KataService) {
     this.userName = null;
-    this.kataService = KataService;
-  }
+ }
 
   activate() {
-
   }
 
   configureRouter(config, router) {
@@ -23,80 +18,69 @@ export class App {
     config.user = this.user;
     config.addPipelineStep('authorize', AuthorizeStep);
     config.map([{
-        route: ['', 'welcome'],
-        name: 'welcome',
-        moduleId: './welcome',
-        nav: true,
-        title: 'Welcome',
-        requireLogin : false
-      }, {
-        route: ['runner'],
-        name: 'runner',
-        moduleId: './runner',
-        nav: true,
-        title: 'Run Katas',
-        requireLogin : false
-      }, { 
-        route: ['katas'],
-        name: 'katas',
-        moduleId: './katas',
-        nav: true,
-        title: 'Manage',
-        requireLogin : false
-      }, {
-        route: ['login'],
-        name: 'login',
-        moduleId: './login',
-        nav: false,
-        title: 'Login',
-        requireLogin : true
-      },
-      {  
-        route: ['kata'],
-        name: 'kata',
-        moduleId: './kata',
-        nav: false,
-        title: 'Manage Test',
-        requireLogin : false
-      }
+      route: ['', 'welcome'],
+      name: 'welcome',
+      moduleId: './welcome',
+      nav: true,
+      title: 'Welcome',
+      requireLogin: false
+    }, {
+      route: ['runner'],
+      name: 'runner',
+      moduleId: './runner',
+      nav: true,
+      title: 'Run Katas',
+      requireLogin: true
+    }, {
+      route: ['katas'],
+      name: 'katas',
+      moduleId: './katas',
+      nav: true,
+      title: 'Manage',
+      requireLogin: false
+    }, {
+      route: ['login'],
+      name: 'login',
+      moduleId: './login',
+      nav: false,
+      title: 'Login',
+      requireLogin: true
+    },
+    {
+      route: ['kata'],
+      name: 'kata',
+      moduleId: './kata',
+      nav: false,
+      title: 'Manage Test',
+      requireLogin: false
+    }
 
     ]);
-
     this.router = router;
-
   }
 }
 
 @inject(EventAggregator, Router)
 class AuthorizeStep {
 
-  constructor(EventAggregator, Router) {
-    this.router =  Router;
+  constructor(EventAgg, Rtr) {
     this.user = {};
-    this.eventAggregator = EventAggregator;
-
-    this.eventAggregator.subscribe('Login', usr => {
-       if (usr)
-       {
-         this.user = usr;
-
-       }
-       else
-       {
-          return this.router.navigateToRoute('welcome');
-       }
-
+    this.ea = EventAgg;
+    this.router = Rtr;
+    this.ea.subscribe('Login', usr => {
+      if (usr) {
+        this.user = usr;
+      }
+      else {
+        return this.router.navigateToRoute('welcome');
+      }
     });
   }
-
   run(navigationInstruction, next) {
-
     if (navigationInstruction.config.requireLogin && !this.user.userName) {
       //this.user.userName = 'chyno';
       return next.cancel(new RedirectToRoute('welcome'));
     }
-
     return next();
   }
-
 }
