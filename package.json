@@ -11,11 +11,12 @@
     "devserver": "nodemon ./server/index.js -watch ./server",
     "devclient": "au run -w",
     "xxxdevclient": "node ./server/index.js",
-    "lint" : "eslint src"
+    "lint": "eslint src"
   },
   "license": "MIT",
   "dependencies": {
     "aurelia-animator-css": "^1.0.0",
+    "aurelia-auth": "^3.0.5",
     "aurelia-bootstrapper": "^1.0.0",
     "aurelia-dialog": "^1.0.0-beta.3.0.1",
     "aurelia-fetch-client": "^1.0.0",
