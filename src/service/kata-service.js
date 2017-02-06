@@ -1,4 +1,6 @@
 let PouchDB = require('pouchdb');
+import { Utils } from '../utils';
+import { addUserArray, addUs } from 'utils';
 
 export class KataService {
     constructor() {
@@ -38,22 +40,9 @@ export class KataService {
         return db.get(udoc.name).then(function (doc) {
             doc._deleted = false;
             var userCode = { userName: userName, code: udoc.code, tests: udoc.tests };
-            if (doc.users) {
-                var cuc = doc.userCode.filter(uc => uc.userName === userName);
 
-                if (cuc)
-                {
-                    cuc.code = udoc.code;
-                    cuc.tests = udoc.tests;
-                }
-                else {
-                    doc.users.add(userCode);
-                }
-            }
-            else {
-                doc.users = [userCode];
-            }
-            return db.put(doc).then(function (result) {
+            let wdoc =  R.compose(addUser(userCode),addUserArray)(doc)
+            return db.put(wdoc).then(function (result) {
             }).catch(function (err) {
                 return err;
             });
