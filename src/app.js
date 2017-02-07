@@ -9,9 +9,6 @@ export class App {
   constructor(KataService) {
     this.userName = null;
 
-    var greet = R.replace('{name}', R.__, 'Hello, {name}!');
-    console.log(greet('Alice')); //=> 'Hello, Alice!'
-
  }
 au
   activate() {

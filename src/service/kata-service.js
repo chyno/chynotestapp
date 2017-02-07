@@ -1,12 +1,13 @@
 let PouchDB = require('pouchdb');
-import { Utils } from '../utils';
-import { addUserArray, addUs } from 'utils';
+import * as utils from '../utils';
 
 export class KataService {
     constructor() {
         this.db = new PouchDB('chynokata');
     }
     getKatas() {
+
+
         return this.db.allDocs({
             include_docs: true,
             descending: true
@@ -37,12 +38,12 @@ export class KataService {
     }
 
     addUserKata(udoc, userName) {
-        return db.get(udoc.name).then(function (doc) {
+        return this.db.get(udoc.name).then(function (doc) {
             doc._deleted = false;
             var userCode = { userName: userName, code: udoc.code, tests: udoc.tests };
 
-            let wdoc =  R.compose(addUser(userCode),addUserArray)(doc)
-            return db.put(wdoc).then(function (result) {
+            let wdoc =  R.compose(utils.addUser(userCode), R.tap(utils.log('addUserArray')), utils.addUserArray)(doc)
+            return this.db.put(wdoc).then(function (result) {
             }).catch(function (err) {
                 return err;
             });

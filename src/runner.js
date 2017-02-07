@@ -30,7 +30,7 @@ export class Runner {
         this.resultStyle = 'alert-success';
     }
     activate() {
-        this.kataService.getKatas().then((doc, error) => {
+         return this.kataService.getKatas().then((doc, error) => {
             this.katas = doc.rows.map(x => {
                 return x.doc;
             });
