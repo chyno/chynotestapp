@@ -6,7 +6,7 @@ import { User } from './user';
 
 
 @inject(KataService, CodeService, ObserverLocator, User)
-export class Runner {
+export class RunnerUser {
 
     constructor(KataSrv, CodeSrv, ObserveLoc, Usr) {
         this.kataService = KataSrv;
@@ -43,6 +43,7 @@ export class Runner {
             return this.kataService.addUserKata(this.kataChosen, this.user.userName).then(res => { alert(res) });
         }
     }
+
     onChange(newValue, oldValue) {
         this.result = null;
          this.resultStyle = 'alert-success';

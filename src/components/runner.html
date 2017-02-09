@@ -1,0 +1,36 @@
+<template>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<form>
+					<div style="height: 100px; margin-bottom:1em">
+						<textarea id="solution" name="solution " ref="solutionArea"></textarea>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<form>
+					<div>
+						<textarea id="tests " name="tests " ref="testsArea"></textarea>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-4">
+
+				<button class="btn btn-primary " click.trigger="runTests() ">Run Tests</button>
+				<button class="btn btn-secondary" click.trigger="undoChanges() ">Undo</button>
+			</div>
+			<div class="col-md-8 ">
+				<button class="btn btn-primary  pull-right" click.trigger="saveKata() ">Save Code And Tests</button>
+			</div>
+		</div>
+
+	</div>
+</template>
