@@ -8,6 +8,7 @@ export class App {
 
   constructor(KataService) {
     this.userName = null;
+    this.test = false;
  }
 
   activate() {

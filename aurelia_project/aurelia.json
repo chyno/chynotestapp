@@ -113,6 +113,14 @@
             "main" : "ai-dialog"
 
           },
+           {
+            "name": "nprogress",
+            "path": "../node_modules/nprogress",
+            "main": "nprogress",
+            "resources": [
+              "nprogress.css"
+            ]
+          },
           "aurelia-event-aggregator",
           "aurelia-framework",
           "aurelia-history",

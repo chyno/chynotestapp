@@ -11,7 +11,7 @@
     "devserver": "nodemon ./server/index.js -watch ./server",
     "devclient": "au run -w",
     "xxxdevclient": "node ./server/index.js",
-    "lint" : "eslint src"
+    "lint": "eslint src"
   },
   "license": "MIT",
   "dependencies": {
@@ -24,6 +24,7 @@
     "codemirror": "^5.20.2",
     "gun": "^0.3.999",
     "jquery": "^3.1.1",
+    "nprogress": "^0.2.0",
     "pouchdb": "^6.1.0"
   },
   "peerDependencies": {},

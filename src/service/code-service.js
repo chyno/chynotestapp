@@ -59,8 +59,8 @@ export class CodeService {
         data.solution = solution;
         data.tests = tests;
         data.framework = 'cw';
-        return this.fakeTestResult(data);
-      // return this.ApiTestResult(data)
+   // return this.fakeTestResult(data);
+       return this.ApiTestResult(data)
     }
     fakeTestResult(data) {
         let promise = new Promise(function(resolve, reject) {

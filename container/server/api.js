@@ -12,7 +12,7 @@ var exec = require('child_process').exec;
  //For testing
 router.get('/api/isAlive', function (req, res)
 {
-    res.send('I am alive!!!!');
+    res.send('I am alive!');
 });
 
 router.get('/api/foo', function (req, res)

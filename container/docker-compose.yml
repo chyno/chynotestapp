@@ -2,9 +2,11 @@ version: '2'
 services:
   javascript:
     image: codewars/node-runner
+    context: .
+    dockerfile: DockerFile
     volumes:
-      - ./lib:/runner/chynotest
-    entrypoint: ''
+      - ./server:/runner/chynotest/src
     user: root
+    
     entrypoint: 'mocha -t 5000 /runner/chynotest/samplerunner_spec.js'
     ##entrypoint: 'node run -l javascript' 
