@@ -3,6 +3,7 @@ import 'bootstrap';
 import environment from './environment';
 import config from './authConfig';
 
+
 Promise.config({
   warnings: {
     wForgottenReturn: false

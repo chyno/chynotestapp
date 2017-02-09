@@ -8,9 +8,8 @@ export class App {
 
   constructor(KataService) {
     this.userName = null;
-
  }
-au
+
   activate() {
   }
 
@@ -77,6 +76,7 @@ class AuthorizeStep {
       }
     });
   }
+
   run(navigationInstruction, next) {
     if (navigationInstruction.config.requireLogin && !this.user.userName) {
       //this.user.userName = 'chyno';

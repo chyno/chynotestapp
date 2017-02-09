@@ -12,18 +12,18 @@ export class Katas {
     }
     activate() {
         let self = this;
-        return this.kataService.getKatas().then((doc, error) => {
-            self.katas = doc.rows.map(x => {
-                return x.doc;
-            });
+        return this.kataService.getKatas().then(docs => {
+            self.katas = docs;
         });
     }
+    
     add() {
         return this.router.navigateToRoute('kata', null);
     }
     edit(selKata) {
         return this.router.navigateToRoute('kata', selKata);
     }
+
     delete(selKata) {
         let self = this;
         return this.kataService.removeKata(selKata).then(() => {
