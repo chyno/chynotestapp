@@ -26,11 +26,11 @@ export class App {
       title: 'Welcome',
       requireLogin: false
     }, {
-      route: ['runner'],
-      name: 'runner',
-      moduleId: './runner',
+      route: ['runner-user'],
+      name: 'runner-user',
+      moduleId: './runner-user',
       nav: true,
-      title: 'Run Katas',
+      title: 'Run User Katas',
       requireLogin: true
     }, {
       route: ['katas'],
@@ -77,6 +77,7 @@ class AuthorizeStep {
       }
     });
   }
+
   run(navigationInstruction, next) {
     if (navigationInstruction.config.requireLogin && !this.user.userName) {
       //this.user.userName = 'chyno';

@@ -96,6 +96,12 @@
         ],
         "dependencies": [
 
+          {
+            "name": "aurelia-auth",
+            "path": "../node_modules/aurelia-auth/dist/amd",
+            "main" : "aurelia-auth"
+
+          },
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",

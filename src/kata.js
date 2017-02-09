@@ -41,7 +41,7 @@ export class Kata {
         this.name = null;
         this.instruction = null;
         this.tests = null;
-        this.solution = null;
+        this.code = null;
     }
     save() {
         this.errorMessage = null;
@@ -50,7 +50,7 @@ export class Kata {
             this.doc.name = this.name;
             this.doc.instruction = this.instruction;
             this.doc.tests = this.tests;
-            this.doc.solution = this.solution;
+            this.doc.code = this.code;
             this.kataService.addKata(this.doc).then(() => {
                 return this.router.navigateToRoute('katas');
             });

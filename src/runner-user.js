@@ -1,22 +1,12 @@
-import {
-    inject
-} from 'aurelia-framework';
-import {
-    KataService
-} from './service/kata-service';
-import {
-    CodeService
-} from './service/code-service';
-import {
-    ObserverLocator
-} from 'aurelia-binding';
-import {
-    User
-} from './user';
+import { inject } from 'aurelia-framework';
+import { KataService } from './service/kata-service';
+import { CodeService } from './service/code-service';
+import { ObserverLocator } from 'aurelia-binding';
+import { User } from './user';
 
 
 @inject(KataService, CodeService, ObserverLocator, User)
-export class Runner {
+export class RunnerUser {
 
     constructor(KataSrv, CodeSrv, ObserveLoc, Usr) {
         this.kataService = KataSrv;
@@ -30,18 +20,15 @@ export class Runner {
         this.resultStyle = 'alert-success';
     }
     activate() {
-        this.kataService.getKatas().then((doc, error) => {
-            this.katas = doc.rows.map(x => {
-                return x.doc;
-            });
+        return this.kataService.getUserKatas().then(docs => {
+            this.katas = docs;
+            this.kataChosen = null;
         });
-
-        this.kataChosen = null;
     }
     attached() {
         this.codeservice.setControls([this.solutionArea, this.testsArea]);
         if (this.kataChosen) {
-            this.codeservice.setSolutionValue(this.kataChosen.solution);
+            this.codeservice.setSolutionValue(this.kataChosen.code);
             this.codeservice.setTestValue(this.kataChosen.tests);
         }
         this.subscription = this.observerlocator
@@ -50,17 +37,18 @@ export class Runner {
     }
     saveKata() {
         if (this.kataChosen) {
-            this.kataChosen.solution = this.codeservice.getSolutionValue();
+            this.kataChosen.code = this.codeservice.getSolutionValue();
             this.kataChosen.tests = this.codeservice.getTestValue();
             // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-            this.kataService.addKata(this.kataChosen);
+            return this.kataService.addUserKata(this.kataChosen, this.user.userName).then(res => { alert(res) });
         }
     }
+
     onChange(newValue, oldValue) {
         this.result = null;
          this.resultStyle = 'alert-success';
         if (newValue) {
-            this.codeservice.setSolutionValue(newValue.solution);
+            this.codeservice.setSolutionValue(newValue.code);
             this.codeservice.setTestValue(newValue.tests);
         }
     }
@@ -87,5 +75,10 @@ export class Runner {
             this.resultStyle = 'alert-danger';
             this.result  = 'Executing code! Error :' +  error;
         });
+    }
+
+    undoChanges() {
+      this.codeservice.setSolutionValue(this.kataChosen.code);
+      this.codeservice.setTestValue(this.kataChosen.tests);
     }
 }

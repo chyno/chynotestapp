@@ -10,4 +10,6 @@ bin
 .editorconfig
 ### VisualStudioCode  ###
 .vscode
+npm-debug.log
+
 
