@@ -10,47 +10,18 @@
     </select>
 		<div class="row">
 			<div class="col-md-4 col-lg-3" show.bind="kataChosen">
-
-				<div style="max-height: 130 px">
+				<div style="max-height: 330 px">
 					<h5>Instructions:</h5>
 					<div class="markdown">
 						<p>${kataChosen.instruction}</p>
 					</div>
 				</div>
-				<div>
-					<h5>Result:</h5>
-					<div class="markdown" show.bind="result">
-						<p     class="alert ${resultStyle}">${result}</p>
-					</div>
-				</div>
+				
 			</div>
 			<div class="col-md-8 col-lg-9" show.bind="kataChosen">
-                 <div class="row"> <div class="col-sm-12" style="padding-bottom:4em" >
-				<form>
-					<div style="height: 100px; margin-bottom:1em">
-						<textarea id="solution" name="solution " ref="solutionArea"></textarea>
-					</div>
-				</form>
-                   </div></div>
-				   <div class="row"> <div class="col-sm-12">
-				<form>
-					<div>
-						<textarea id="tests " name="tests " ref="testsArea"></textarea>
-					</div>
-				</form>
-				<div class="row"> <div class="col-sm-12">
-			</div>
+                <compose view-model="./components/runner" view.bind="./components/runner.html"  model.bind="model" ></compose>
+		   </div>
 	</div>
-		<div class="row " style="padding-top:1em" show.bind="kataChosen">
-			<div class="col-md-4">
-
-				<button class="btn btn-primary " click.trigger="runTests() ">Run Tests</button>
-				<button class="btn btn-secondary" click.trigger="undoChanges() ">Undo</button>
-				</div>
-				<div class="col-md-8 ">
-            <button class="btn btn-primary  pull-right" click.trigger="saveKata() ">Save Code And Tests</button>
-				</div>
-
-		</div>
+		 
 	</div>
 </template>
