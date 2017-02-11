@@ -18,30 +18,14 @@ export class RunnerUser {
         this.user = Usr;
         this.result = null;
         this.resultStyle = 'alert-success';
+        this.model = {};
     }
+
     activate() {
         return this.kataService.getUserKatas().then(docs => {
             this.katas = docs;
             this.kataChosen = null;
         });
-    }
-    attached() {
-        this.codeservice.setControls([this.solutionArea, this.testsArea]);
-        if (this.kataChosen) {
-            this.codeservice.setSolutionValue(this.kataChosen.code);
-            this.codeservice.setTestValue(this.kataChosen.tests);
-        }
-        this.subscription = this.observerlocator
-            .getObserver(this, 'kataChosen')
-            .subscribe(this.onChange.bind(this));
-    }
-    saveKata() {
-        if (this.kataChosen) {
-            this.kataChosen.code = this.codeservice.getSolutionValue();
-            this.kataChosen.tests = this.codeservice.getTestValue();
-            // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-            return this.kataService.addUserKata(this.kataChosen, this.user.userName).then(res => { alert(res) });
-        }
     }
 
     onChange(newValue, oldValue) {
@@ -75,10 +59,5 @@ export class RunnerUser {
             this.resultStyle = 'alert-danger';
             this.result  = 'Executing code! Error :' +  error;
         });
-    }
-
-    undoChanges() {
-      this.codeservice.setSolutionValue(this.kataChosen.code);
-      this.codeservice.setTestValue(this.kataChosen.tests);
-    }
+    }     
 }

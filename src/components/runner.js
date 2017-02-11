@@ -1,25 +1,37 @@
-import { inject } from 'aurelia-framework';
-import { CodeService } from '../service/code-service';
-import { ObserverLocator } from 'aurelia-binding';
+//import { inject } from 'aurelia-framework';
+//import { CodeService } from '../service/code-service';
+//import { ObserverLocator } from 'aurelia-binding';
 
 
 
-@inject( CodeService, ObserverLocator)
+//@inject( CodeService, ObserverLocator)
 export class Runner {
 
-    constructor( CodeSrv, ObserveLoc) {
-
+    constructor() { //CodeSrv, ObserveLoc) {
+/*
         this.cb = null;
         this.codeservice = CodeSrv;
         this.kataChosen = null;
         this.observerlocator = ObserveLoc;
         this.result = null;
         this.resultStyle = 'alert-success';
+        */
     }
 
     activate(data) {
-        this.cb = data.cd;
-        this.kataChosen = data.kataChosen;
+       // this.cb = data.cd;
+       // this.kataChosen = data.kataChosen;
+    }
+/*
+     attached() {
+        this.codeservice.setControls([this.solutionArea, this.testsArea]);
+        if (this.kataChosen) {
+            this.codeservice.setSolutionValue(this.kataChosen.code);
+            this.codeservice.setTestValue(this.kataChosen.tests);
+        }
+        this.subscription = this.observerlocator
+            .getObserver(this, 'kataChosen')
+            .subscribe(this.onChange.bind(this));
     }
     onChange(newValue, oldValue) {
         this.result = null;
@@ -59,7 +71,13 @@ export class Runner {
         this.codeservice.setTestValue(this.kataChosen.tests);
     }
     saveKata() {
-        this.data.cb()
+        if (this.kataChosen) {
+            this.kataChosen.code = this.codeservice.getSolutionValue();
+            this.kataChosen.tests = this.codeservice.getTestValue();
+            // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
+            return this.kataService.addUserKata(this.kataChosen, this.user.userName).then(res => { alert(res) });
+        }
+        
     }
-
+*/
 }
