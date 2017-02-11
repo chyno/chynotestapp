@@ -1,28 +1,25 @@
-//import { inject } from 'aurelia-framework';
-//import { CodeService } from '../service/code-service';
-//import { ObserverLocator } from 'aurelia-binding';
+import { inject } from 'aurelia-framework';
+import { CodeService } from '../service/code-service';
+import { ObserverLocator } from 'aurelia-binding';
 
 
 
-//@inject( CodeService, ObserverLocator)
+@inject( CodeService, ObserverLocator)
 export class Runner {
 
-    constructor() { //CodeSrv, ObserveLoc) {
-/*
-        this.cb = null;
+    constructor(CodeSrv, ObserveLoc) {
         this.codeservice = CodeSrv;
         this.kataChosen = null;
         this.observerlocator = ObserveLoc;
         this.result = null;
         this.resultStyle = 'alert-success';
-        */
+        
     }
 
     activate(data) {
-       // this.cb = data.cd;
-       // this.kataChosen = data.kataChosen;
+        this.kataChosen = data;
     }
-/*
+
      attached() {
         this.codeservice.setControls([this.solutionArea, this.testsArea]);
         if (this.kataChosen) {
@@ -79,5 +76,5 @@ export class Runner {
         }
         
     }
-*/
+
 }
