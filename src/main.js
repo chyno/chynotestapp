@@ -3,6 +3,7 @@ import 'bootstrap';
 import environment from './environment';
 import config from './authConfig';
 
+const runStates = {success :  0, warning : 1, error : 2};
 
 Promise.config({
   warnings: {

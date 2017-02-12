@@ -2,8 +2,6 @@ import { inject } from 'aurelia-framework';
 import { CodeService } from '../service/code-service';
 import { ObserverLocator } from 'aurelia-binding';
 
-
-
 @inject( CodeService, ObserverLocator)
 export class Runner {
 
@@ -18,11 +16,8 @@ export class Runner {
 
     activate(data) {
         this.kataChosen = data;
-    }
 
-     attached() {
-        this.codeservice.setControls([this.solutionArea, this.testsArea]);
-        if (this.kataChosen) {
+         if (this.kataChosen) {
             this.codeservice.setSolutionValue(this.kataChosen.code);
             this.codeservice.setTestValue(this.kataChosen.tests);
         }
@@ -30,6 +25,11 @@ export class Runner {
             .getObserver(this, 'kataChosen')
             .subscribe(this.onChange.bind(this));
     }
+
+     attached() {
+        this.codeservice.setControls([this.solutionArea, this.testsArea]);   
+    }
+
     onChange(newValue, oldValue) {
         this.result = null;
         this.resultStyle = 'alert-success';
@@ -43,23 +43,15 @@ export class Runner {
     runTests() {
         let code = this.codeservice.getSolutionValue();
         let tests = this.codeservice.getTestValue();
-        this.result = null;
-        this.resultStyle = 'alert-success';
-        this.hasError = false;
+        
         this.codeservice.getTestResults(code, tests).then(result => {
-            this.result = result.text;
-            if (result.hasError) {
-                this.resultStyle = 'alert-danger';
-            }
-            else {
-                if (this.result.includes('<FAILED::>')) {
-                    this.resultStyle = 'alert-warning';
-                }
-            }
+              self.eventAggregator.publish('Run', result);
         })
             .catch(error => {
-                this.resultStyle = 'alert-danger';
-                this.result = 'Executing code! Error :' + error;
+                let errRes = {};
+                errRes.status = runStates.error;
+                errRes.text = 'Executing code! Error :' + error;
+                self.eventAggregator.publish('Run', errRes);
             });
     }
 

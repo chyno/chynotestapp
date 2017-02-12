@@ -32,8 +32,7 @@ export class CodeService {
         if (typeof solution === 'undefined') {
             code = '';
         }
-
-        this.codeeditor.getDoc().setValue(solution);
+         this.codeeditor.getDoc().setValue(solution);
     }
 
     setTestValue(tcode) {
@@ -59,18 +58,20 @@ export class CodeService {
         data.solution = solution;
         data.tests = tests;
         data.framework = 'cw';
-   // return this.fakeTestResult(data);
-       return this.ApiTestResult(data)
+        return this.fakeTestResult(data);
+      // return this.ApiTestResult(data)
     }
     fakeTestResult(data) {
         let promise = new Promise(function(resolve, reject) {
-            resolve('2 Of 2 test passed');
+            var res = {};
+            res.text = text;
+            res.status =  runStates.success;
+            resolve(res);
         });
         return promise;
     }
 
     ApiTestResult(data) {
-        let hasError = false;
         return this.httpClient.fetch('/api/executeCode', {
                 headers: {
                     'Content-Type': 'application/json'
@@ -79,16 +80,15 @@ export class CodeService {
                 body: json(data)
             })
             .then(response => {
+                let res = {
+                    status : runStates.error,
+                    text:  response.text()
+                    };
+
                 if (!response.ok) {
-                    hasError = true;
+                    res.status =  runStates.success;
                 }
-                return response.text();
-            })
-            .then(executeResult => {
-                return {
-                    hasError: hasError,
-                    text: executeResult
-                };
-            });
+                return res;   
+            });           
     }
 }
