@@ -9,7 +9,7 @@ export class RunnerUser {
 
     constructor(KataSrv, Usr, EvntAgg) {
         this.SuccessStyle = 'alert-success';
-        this.WarnStyle = "alert-warn";
+        this.WarnStyle = "alert-warning";
         this.ErrorStyle = "alert-danger";
 
         this.kataService = KataSrv;

@@ -69,7 +69,7 @@ export class CodeService {
         var self = this;
         let promise = new Promise(function(resolve, reject) {
             let res = {};
-            res.text = "Test Passed.";
+            res.text = "<FAILED::>. a should be 1";
             res.status =  self.rs.success;
             resolve(res);
         });
