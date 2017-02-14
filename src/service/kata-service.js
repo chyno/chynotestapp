@@ -4,7 +4,6 @@ import { User } from '../user';
 import * as utils from '../utils';
 
 
-
 @inject(User)
 export class KataService {
     constructor(Usr) {

@@ -1,6 +1,8 @@
 import { inject } from 'aurelia-framework';
 import CodeMirror from 'codemirror';
-import {  HttpClient, json } from 'aurelia-fetch-client';
+import { HttpClient, json } from 'aurelia-fetch-client';
+import { RunStates } from '../run-states';
+
 
 @inject(HttpClient)
 export class CodeService {
@@ -8,6 +10,8 @@ export class CodeService {
             this.httpClient = httpClient;
             this.codeeditor = null;
             this.testeditor = null;
+           this.rs = new RunStates();
+
         }
         //Method needs to be called after view model can get reference to DOM object
     setControls(cntls) {
@@ -65,7 +69,7 @@ export class CodeService {
         let promise = new Promise(function(resolve, reject) {
             var res = {};
             res.text = text;
-            res.status =  runStates.success;
+            res.status =  this.rs.success;
             resolve(res);
         });
         return promise;
@@ -81,14 +85,14 @@ export class CodeService {
             })
             .then(response => {
                 let res = {
-                    status : runStates.error,
+                    status : this.rs.error,
                     text:  response.text()
                     };
 
                 if (!response.ok) {
-                    res.status =  runStates.success;
+                    res.status =  this.rs.success;
                 }
-                return res;   
-            });           
+                return res;
+            });
     }
 }

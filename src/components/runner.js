@@ -1,17 +1,19 @@
 import { inject } from 'aurelia-framework';
 import { CodeService } from '../service/code-service';
 import { ObserverLocator } from 'aurelia-binding';
+import { EventAggregator } from 'aurelia-event-aggregator';
 
-@inject( CodeService, ObserverLocator)
+@inject( CodeService, ObserverLocator, EventAggregator)
 export class Runner {
 
-    constructor(CodeSrv, ObserveLoc) {
+    constructor(CodeSrv, ObserveLoc, EventAggr) {
         this.codeservice = CodeSrv;
         this.kataChosen = null;
         this.observerlocator = ObserveLoc;
         this.result = null;
         this.resultStyle = 'alert-success';
-        
+        this.ea = EventAggr;
+
     }
 
     activate(data) {
@@ -27,7 +29,7 @@ export class Runner {
     }
 
      attached() {
-        this.codeservice.setControls([this.solutionArea, this.testsArea]);   
+        this.codeservice.setControls([this.solutionArea, this.testsArea]);
     }
 
     onChange(newValue, oldValue) {
@@ -41,17 +43,19 @@ export class Runner {
 
     // run the tests on code wars docker image
     runTests() {
+        var self = this;
         let code = this.codeservice.getSolutionValue();
         let tests = this.codeservice.getTestValue();
-        
-        this.codeservice.getTestResults(code, tests).then(result => {
+
+
+      return this.codeservice.getTestResults(code, tests).then(result => {
               self.eventAggregator.publish('Run', result);
         })
             .catch(error => {
                 let errRes = {};
-                errRes.status = runStates.error;
+                errRes.status = 3;
                 errRes.text = 'Executing code! Error :' + error;
-                self.eventAggregator.publish('Run', errRes);
+                self.ea.publish('Run', errRes);
             });
     }
 
@@ -66,7 +70,7 @@ export class Runner {
             // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
             return this.kataService.addUserKata(this.kataChosen, this.user.userName).then(res => { alert(res) });
         }
-        
+
     }
 
 }

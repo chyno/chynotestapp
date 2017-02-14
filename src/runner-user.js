@@ -1,43 +1,52 @@
 import { inject } from 'aurelia-framework';
 import { KataService } from './service/kata-service';
-import { CodeService } from './service/code-service';
-import { ObserverLocator } from 'aurelia-binding';
 import { User } from './user';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { RunStates } from './run-states';
 
-
-@inject(KataService, CodeService, ObserverLocator, User)
+@inject(KataService, User, EventAggregator)
 export class RunnerUser {
 
-    constructor(KataSrv, CodeSrv, ObserveLoc, Usr) {
+    constructor(KataSrv, Usr, EvntAgg) {
+        this.SuccessStyle = 'alert-success';
+        this.WarnStyle = "alert-warn";
+        this.ErrorStyle = "alert-danger";
+
         this.kataService = KataSrv;
         this.katas = [];
-        this.codeservice = CodeSrv;
-        this.cntl = null;
         this.kataChosen = null;
-        this.observerlocator = ObserveLoc;
+        this.ea = EvntAgg;
         this.user = Usr;
         this.result = null;
-        this.resultStyle = 'alert-success';
-        this.ea.subscribe('Run', this.runTest);
-     }
+        this.resultStyle = this.SuccessStyle;
+        this.ea.subscribe('Run', this.runTest.bind(this));
+        this.rs = new RunStates();
+
+    }
 
     activate() {
+        var self = this;
         return this.kataService.getUserKatas().then(docs => {
-            this.katas = docs;
-            this.kataChosen = null;
+            self.katas = docs;
+            self.kataChosen = null;
+        }).catch(e => {
+            this.result = e;
+            this.resultStyle = this.ErrorStyle;
         });
     }
-   
-  runTest(result) {
-       this.resultStyle = 'alert-success';
-       this.result = result.text;
-             if (result.status === runStates.error) {
-                this.resultStyle = 'alert-danger';
+
+    runTest(result) {
+        this.resultStyle = this.SuccessStyle;
+        this.result = result.text;
+        if (result.status === this.rs.error) {
+            this.resultStyle = this.ErrorStyle;
+        }
+        else {
+            if (this.result.includes('<FAILED::>')) {
+                this.resultStyle = this.WarnStyle;
             }
-            else {
-                if (this.result.includes('<FAILED::>')) {
-                    this.resultStyle = 'alert-warning';
-                }  
+        }
     }
-  }
+
 }
+
