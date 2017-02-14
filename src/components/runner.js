@@ -49,7 +49,7 @@ export class Runner {
 
 
       return this.codeservice.getTestResults(code, tests).then(result => {
-              self.eventAggregator.publish('Run', result);
+              self.ea.publish('Run', result);
         })
             .catch(error => {
                 let errRes = {};

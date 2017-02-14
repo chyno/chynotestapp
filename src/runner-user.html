@@ -1,38 +1,54 @@
 <template>
 
 	<div class="container">
-		<label for="availKatas">Available Katas: </label>
+
+<div class="row">
+   <div class="col-md-12">
+      	<label for="availKatas">Available Katas: </label>
 		<select value.bind="kataChosen" class="selectpicker" id="availKatas">
       <option model.bind="null">Choose...</option>
       <option repeat.for="kata of katas" model.bind="kata">  ${kata.name} </option>
     </select>
-		<div class="row" show.bind="kataChosen">
+
+	 </div>
+</div>
+
+
+<div class="row" show.bind="kataChosen">
 			<div class="col-md-4 col-lg-3">
 				<ul class="nav nav-tabs" id="myTab">
-					<li class="active"><a href="#home">Instructions</a></li>
-					<li><a href="#results">Results</a></li>
+					<li class="active">
+	          	<a href="#instructions" data-toggle="tab">Instructions</a>
+					</li>
+					<li>
+						<a href="#results" data-toggle="tab">Results</a>
+					</li>
 				</ul>
+
 				<div class="tab-content">
-					<div class="tab-pane active" id="home">
-						<div style="max-height: 330 px">
-							<h5>Instructions:</h5>
-							<div class="markdown">
-								<p>${kataChosen.instruction}</p>
-							</div>
-						</div>
-						<div class="tab-pane active" id="results">
-							<h5>Result:</h5>
-							<div class="markdown" show.bind="result">
-								<p class="alert ${resultStyle}">${result}</p>
-							</div>
-						</div>
-					</div>
+				<div id="instructions" style="max-height: 330 px" class="tab-pane fade in active">
+					<h5>Instructions:</h5>
+					<div class="markdown"> ${kataChosen.instruction} </div>
 				</div>
+
+				<div class="tab-pane fade" id="results">
+					<h5>Result:</h5>
+					<div class="markdown" show.bind="result">
+						<p class="alert ${resultStyle}">${result}</p>
+		    	</div>
+				</div>
+
+				</div>
+
+	<!-- End Left Col -->
 			</div>
-			<div class="col-md-8 col-lg-9">
-			<compose view-model="./components/runner"  model.bind="kataChosen"></compose>
-			</div>
-		</div>
-	</div>
+<!-- End left col -->
+
+<!-- Right Col -->
+	<div class="col-md-8 col-lg-9"><compose view-model="./components/runner"  model.bind="kataChosen"></compose></div>
+
+	<!-- ? -->
+</div>
+<!-- End Row -->
 
 </template>

@@ -66,10 +66,11 @@ export class CodeService {
       // return this.ApiTestResult(data)
     }
     fakeTestResult(data) {
+        var self = this;
         let promise = new Promise(function(resolve, reject) {
-            var res = {};
-            res.text = text;
-            res.status =  this.rs.success;
+            let res = {};
+            res.text = "Test Passed.";
+            res.status =  self.rs.success;
             resolve(res);
         });
         return promise;
