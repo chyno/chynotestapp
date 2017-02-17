@@ -2,7 +2,7 @@
 
 	<div class="container">
 
-<div class="row">
+<div class="row" style="margin-botton:2em">
    <div class="col-md-12">
       	<label for="availKatas">Available Katas: </label>
 		<select value.bind="kataChosen" class="selectpicker" id="availKatas">
@@ -18,21 +18,21 @@
 			<div class="col-md-4 col-lg-3">
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="active">
-	          	<a href="#instructions" data-toggle="tab">Instructions</a>
+	          	<a href="#instructions" data-toggle="tab" ref="anchorInstructions" >Instructions</a>
 					</li>
 					<li>
-						<a href="#results" data-toggle="tab">Results</a>
+						<a href="#results" data-toggle="tab" ref="anchorOutput">Output</a>
 					</li>
 				</ul>
 
 				<div class="tab-content">
-				<div id="instructions" style="max-height: 330 px" class="tab-pane fade in active">
-					<h5>Instructions:</h5>
+				<div id="instructions" style="max-height: 330 px" class="tab-pane faade in active' : ''}">
+					<h5>Kata Instructions:</h5>
 					<div class="markdown"> ${kataChosen.instruction} </div>
 				</div>
 
-				<div class="tab-pane fade" id="results">
-					<h5>Result:</h5>
+				<div class="tab-pane" id="results">
+					<h5>Test Result:</h5>
 					<div class="markdown" show.bind="result">
 						<p class="alert ${resultStyle}">${result}</p>
 		    	</div>
@@ -45,7 +45,10 @@
 <!-- End left col -->
 
 <!-- Right Col -->
-	<div class="col-md-8 col-lg-9"><compose view-model="./components/runner"  model.bind="kataChosen"></compose></div>
+	<div class="col-md-8 col-lg-9">
+		<compose view-model="./components/runner"  model.bind="kataChosen" ref="katarunner"></compose>
+		<button class="btn btn-primary  pull-right" click.trigger="saveKata() ">Save Code And Tests</button>
+		</div>
 
 	<!-- ? -->
 </div>

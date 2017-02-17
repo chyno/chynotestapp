@@ -63,14 +63,15 @@ export class Runner {
         this.codeservice.setSolutionValue(this.kataChosen.code);
         this.codeservice.setTestValue(this.kataChosen.tests);
     }
-    saveKata() {
-        if (this.kataChosen) {
-            this.kataChosen.code = this.codeservice.getSolutionValue();
-            this.kataChosen.tests = this.codeservice.getTestValue();
-            // alert(this.kataChosen.name + ' . username : ' + this.user.userName + 'code vlue: ' + cd)
-            return this.kataService.addUserKata(this.kataChosen, this.user.userName).then(res => { alert(res) });
-        }
+  
 
+    getCurrentKata() {
+         let code = this.codeservice.getSolutionValue();
+         let tests = this.codeservice.getTestValue();
+         let rs = {}
+         rs.code = code;
+         rs.tests = tests;
+         return rs;
     }
 
 }

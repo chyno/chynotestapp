@@ -30,3 +30,23 @@ export function configure(aurelia) {
 
   aurelia.start().then(() => aurelia.setRoot());
 }
+
+/*
+if (window.Worker) { // Check if Browser supports the Worker api.
+	// Requires script name as input
+  var myWorker = new Worker("worker.js", { type: "module" });
+   worker.onmessage = receiveFromWorker;
+
+// onkeyup could be used instead of onchange if you wanted to update the answer every time
+// an entered value is changed, and you don't want to have to unfocus the field to update its .value
+
+	function sendToWorker() {
+      //worker.postMessage({ imageData, filter: filter.value });
+  }
+
+  function receiveFromWorker(e) {
+    //context.putImageData(e.data, 0, 0);
+  }
+
+}
+*/
