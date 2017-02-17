@@ -1,56 +1,44 @@
 import { inject } from 'aurelia-framework';
 import { KataService } from './service/kata-service';
 import {Router } from 'aurelia-router';
+import { Runner } from './components/runner';
 
-
-@inject(KataService, Router)
+@inject(KataService, Router, Runner)
 export class Kata {
 
-    constructor(kataSrv, Rtr) {
+    constructor(kataSrv, Rtr, Runr) {
         this.kataService = kataSrv;
         this.router = Rtr;
         this.errorMessage = null;
-        this.doc = null;
-        this.name = null;
-        this.instruction = null;
-        this.tests = null;
-        this.solution = null;
+        this.doc = {name : null, instructions : null, tests : null, code: null};
+        this.runner = Runr;
     }
 
-    activate(doc) {
-    if (doc && doc._id) {
-        this.name = doc.name;
-        this.instruction = doc.instruction;
-        this.tests = doc.tests;
-        this.solution = doc.solution;
-        this.doc = doc;
+    activate(d) {
+
+        if (d._id) {
+            //Edit existing
+            this.doc._id = d._id;
+            this.doc.name = d.name;
+            this.doc.instruction = d.instructions;
+            this.doc.tests = d.tests;
+            this.doc.code = d.code;
         } else {
-        this.cleearControls();
-        this.doc = {
-         _id: new Date().toISOString(),
-         name: null,
-         instruction: null,
-         tests: null,
-         solution: null
-        };
+            this.doc._id = new Date().toISOString();
+            this.doc.name = null;
+            this.doc.instruction = null;
+            this.doc.tests = null;
+            this.doc.code = null;
+        }
     }
-    }
-    cleearControls() {
-        this.errorMessage = null;
-        this.doc = null;
-        this.name = null;
-        this.instruction = null;
-        this.tests = null;
-        this.code = null;
-    }
+
     save() {
         this.errorMessage = null;
+        let ck = this.runner.getCurrentKata();
 
-        if (this.name && this.instruction && this.tests) {
-            this.doc.name = this.name;
-            this.doc.instruction = this.instruction;
-            this.doc.tests = this.tests;
-            this.doc.code = this.code;
+        if (this.doc && this.doc.name && his.doc.instruction &&  ck && ck.code && ck.tests) {
+            this.doc.tests = ck.tests;
+            this.doc.code = ck.code;
             this.kataService.addKata(this.doc).then(() => {
                 return this.router.navigateToRoute('katas');
             });
@@ -58,6 +46,7 @@ export class Kata {
             this.errorMessage = 'Please make sure required fields are entereed';
         }
     }
+
     cancel() {
         return this.router.navigateToRoute('katas');
     }

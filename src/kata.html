@@ -1,20 +1,15 @@
 <template>
   <div class="form-group">
     <label for="name">Name:</label>
-    <input type="text" class="form-control" id="name" value.bind="name">
+    <input type="text" class="form-control" id="name" value.bind="doc.name">
   </div>
   <div class="form-group">
     <label for="desc">Instruction:</label>
-    <textarea class="form-control" rows="3" id="instructions" value.bind="instruction" ></textarea>
+    <textarea class="form-control" rows="3" id="instructions" value.bind="doc.instruction" ></textarea>
   </div>
-   <div class="form-group">
-    <label for="tsts">Soltion:</label>
-    <textarea class="form-control" rows="2" id="tsts" value.bind="code"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="tsts">Default Tests:</label>
-    <textarea class="form-control" rows="2" id="tsts" value.bind="tests"></textarea>
-  </div>
+
+ 	<compose view-model="./components/runner"  model.bind="doc" ref="katarunner"></compose>
+
   <div class="container">
     <button class="btn btn-primary" click.trigger="save()">Save</button>
     <button class="btn btn-secondary" click.trigger="cancel()">Cancel</button>
