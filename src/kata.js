@@ -12,6 +12,8 @@ export class Kata {
         this.errorMessage = null;
         this.doc = {name : null, instructions : null, tests : null, code: null};
         this.runner = Runr;
+        this.code = "var z = 2 ;";
+        this.tests = "Assert.equal(x = 1)";
     }
 
     activate(d) {

@@ -1,5 +1,20 @@
 <template bindable="code, tests">
-   <p>
-     Hello, ${code} ${tests}!
-   </p>
+   <require from="codemirror/lib/codemirror.css"></require>
+	<require from="codemirror/theme/blackboard.css"></require>
+
+<div style="padding-bottom:.5em">
+	<form >
+		<textarea id="solution" name="solution " ref="solutionArea"></textarea>
+</form>
+</div>
+
+	<form>
+	<div>
+	<textarea id="tests " name="tests " ref="testsArea"></textarea>
+	</div>
+	</form>
+
+	<button class="btn btn-primary " click.trigger="runTests() ">Run Tests</button>
+	<button class="btn btn-secondary" click.trigger="undoChanges() ">Undo</button>
+	
 </template>
