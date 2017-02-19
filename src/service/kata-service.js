@@ -32,7 +32,7 @@ export class KataService {
     }
 
     addKata(data) {
-        data._id = data.name;
+        data._deleted = false;
         return this.db.put(data, function callback(err, result) {
             if (!err) {
                 return "succussfully added";
@@ -48,7 +48,27 @@ export class KataService {
         });
     }
 
-    editKata(doc) {
+    editKata(udoc) {
+         let self = this;
+        return this.db.get(udoc._id).then(function (doc) {
+            doc._deleted = false;
+            doc.name = udoc.name;
+            doc.code = udoc.code;
+            doc.tests = udoc.tests;
+            doc.instructions - udoc.instructions;
+          
+            return self.db.put(doc).then(function (result) {
+                return result.name + ' updated.';
+            }).catch(function (err) {
+                return err;
+            });
+
+        }).catch(function (err) {
+            return err;
+        });
+
+
+
         doc._deleted = false;
         return db.put(doc).then(function (result) {
             return result;

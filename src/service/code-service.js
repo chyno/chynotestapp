@@ -34,7 +34,7 @@ export class CodeService {
     }
     setSolutionValue(solution) {
         if (typeof solution === 'undefined') {
-            code = '';
+            solution = '';
         }
          this.codeeditor.getDoc().setValue(solution);
     }
