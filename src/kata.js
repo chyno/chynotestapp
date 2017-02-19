@@ -2,18 +2,29 @@ import { inject } from 'aurelia-framework';
 import { KataService } from './service/kata-service';
 import {Router } from 'aurelia-router';
  import { CodeService} from './service/code-service';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { RunStates } from './run-states';
 
-@inject(KataService, Router, CodeService)
+@inject(KataService, Router, CodeService, EventAggregator, RunStates)
 export class Kata {
+      
 
-    constructor(kataSrv, Rtr, CodeSrv) {
+    constructor(kataSrv, Rtr, CodeSrv, EventAgg, RunSts) {
+        this.SuccessStyle = 'alert-success';
+        this.WarnStyle = "alert-warning";
+        this.ErrorStyle = "alert-danger";
+        
+        this.resultStyle = null;
         this.kataService = kataSrv;
         this.router = Rtr;
-        this.errorMessage = null;
+        this.result = null;
         this.doc = {name : null, instructions : null, tests : 'null', code: null};
         this.tests = null;
         this.code = null;
         this.codeService = CodeSrv;
+        this.ea = EventAgg;
+        this.ea.subscribe('Run', this.runTest.bind(this));
+        this.rs = RunSts;
     }
 
     activate(d) {
@@ -40,6 +51,7 @@ export class Kata {
         if (this.doc && this.doc.name && this.doc.instructions) {
             this.doc.tests = this.tests;
             this.doc.code = this.code;
+           
             if (this.doc._id)
             {
                 this.kataService.editKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });
@@ -48,13 +60,33 @@ export class Kata {
                 this.doc._id = new Date().toISOString();
                 this.kataService.addKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });    
             }
+            this.resultStyle = null;
+            return this.router.navigateToRoute('katas');
          
         } else {
-            this.errorMessage = 'Please make sure required fields are entereed';
+             this.resultStyle = this.ErrorStyle;
+             this.result = 'Please make sure required fields are entereed';
         }
     }
 
     cancel() {
         return this.router.navigateToRoute('katas');
+    }
+
+     runTest(result) {
+
+        this.resultStyle = this.SuccessStyle;
+
+        this.result = result.text;
+        if (result.status === this.rs.error) {
+            this.resultStyle = this.ErrorStyle;
+        }
+        else {
+            if (this.result.includes('<FAILED::>')) {
+                this.resultStyle = this.WarnStyle;
+            }
+        }
+        
+
     }
 }

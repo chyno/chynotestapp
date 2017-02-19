@@ -2,7 +2,7 @@ import { inject } from 'aurelia-framework';
 import CodeMirror from 'codemirror';
 import { HttpClient, json } from 'aurelia-fetch-client';
 import { RunStates } from '../run-states';
-
+import { ObserverLocator } from 'aurelia-binding';
 
 @inject(HttpClient)
 export class CodeService {

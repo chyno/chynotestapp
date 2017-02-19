@@ -40,8 +40,6 @@ export class RunnerUser {
 
     runTest(result) {
 
-
-
         this.resultStyle = this.SuccessStyle;
 
         this.result = result.text;
@@ -53,6 +51,8 @@ export class RunnerUser {
                 this.resultStyle = this.WarnStyle;
             }
         }
+        
+        //Set results tab active
         this.anchorOutput.click();
 
     }

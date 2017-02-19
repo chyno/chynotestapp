@@ -1,20 +1,15 @@
 <template>
   <require from="./components/kata-runner"></require>
-
   <div class="form-group">
     <label for="name">Name:</label>
     <input type="text" class="form-control" id="name" value.bind="doc.name">
   </div>
   <div class="form-group">
     <label for="desc">Instruction:</label>
-    <textarea class="form-control" rows="3" id="instructions" value.bind="doc.instructions" ></textarea>
+    <textarea class="form-control" rows="3" id="instructions" value.bind="doc.instructions"></textarea>
   </div>
-
- 	<kata-runner code.bind="code" tests.bind="tests" ></kata-runner>
-
-  <div class="container">
-    <button class="btn btn-primary" click.trigger="save()">Save</button>
-    <button class="btn btn-secondary" click.trigger="cancel()">Cancel</button>
-  </div>
-  <div style="margin-top: 12px" class="alert alert-danger"   show.bind="errorMessage">${errorMessage}</div>
+  <kata-runner code.bind="code" tests.bind="tests"></kata-runner>
+  <button class="btn btn-primary" click.trigger="save()">Save</button>
+  <button class="btn btn-secondary" click.trigger="cancel()">Cancel</button>
+  <div style="margin-top: 12px" class="alert ${resultStyle}"  show.bind="resultStyle">${result}</div>
 </template>

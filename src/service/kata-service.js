@@ -55,7 +55,7 @@ export class KataService {
             doc.name = udoc.name;
             doc.code = udoc.code;
             doc.tests = udoc.tests;
-            doc.instructions - udoc.instructions;
+            doc.instructions = udoc.instructions;
           
             return self.db.put(doc).then(function (result) {
                 return result.name + ' updated.';

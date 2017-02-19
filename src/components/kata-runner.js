@@ -36,33 +36,9 @@ export class KataRunnerCustomElement {
     this.codeservice.setControls([this.solutionArea, this.testsArea]);  
      this.codeservice.setTestValue(this.tests);
     this.codeservice.setSolutionValue(this.code);
-    /*
-    this.subscription1 = this.observerlocator
-      .getObserver(this, 'code')
-      .subscribe(this.onChangeCode.bind(this));
-
-
-    this.subscription2 = this.observerlocator
-      .getObserver(this, 'tests')
-      .subscribe(this.onChangeTests.bind(this)); 
-      */
+   
   }
 
-
-  onChangeTests(newValue) {
-    if (newValue) {
-      // this.tests =  this.codeservice.getSolutionValue();
-     // this.codeservice.setTestValue(newValue.tests);
-     // this.tests = newValue;
-    }
-  }
-
-  onChangeCode(newValue) {
-    if (newValue) {
-    // this.code =  this.codeservice.getCodeValue();
-     // this.codeservice.setSolutionValue(newValue.code);
-    }
-  }
 
 
 
