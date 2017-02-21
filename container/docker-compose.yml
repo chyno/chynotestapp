@@ -1,12 +1,14 @@
 version: '2'
 services:
   javascript:
+    container_name: chyno-runner
+    build: .
+    ports:
+      - "9002:9002"
     image: codewars/node-runner
-    context: .
-    dockerfile: DockerFile
     volumes:
       - ./server:/runner/chynotest/src
     user: root
-    
-    entrypoint: 'mocha -t 5000 /runner/chynotest/samplerunner_spec.js'
-    ##entrypoint: 'node run -l javascript' 
+    workdir: /runner/chynotest/src
+    entrypoint: 'node index.js'
+    ##entrypoint: 'node run -l javascript'

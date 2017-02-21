@@ -1,7 +1,0 @@
-##FROM codewars/node-runner
-## docker build -t my-codewar:latest
-## docker run --rm -it --entrypoint bash codewars/node-runner   
- 
-WORKDIR ./server
-PORT 9002 : 8080
-CMD ["node",  "npm start"]
