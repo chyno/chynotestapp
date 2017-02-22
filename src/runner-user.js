@@ -3,13 +3,13 @@ import { KataService } from './service/kata-service';
 import { User } from './user';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { RunStates } from './run-states';
-import { Runner } from './components/runner';
+import { CodeService} from './service/code-service';
 
 
-@inject(KataService, User, EventAggregator, Runner)
+@inject(KataService, User, EventAggregator,CodeService)
 export class RunnerUser {
 
-    constructor(KataSrv, Usr, EvntAgg, Runr) {
+    constructor(KataSrv, Usr, EvntAgg, CodeServ) {
         this.SuccessStyle = 'alert-success';
         this.WarnStyle = "alert-warning";
         this.ErrorStyle = "alert-danger";
@@ -23,7 +23,7 @@ export class RunnerUser {
         this.ea.subscribe('Run', this.runTest.bind(this));
         this.rs = new RunStates();
         this.isActiveInstruction = true;
-        this.runner = Runr;
+        this.codeService = CodeServ;
 
     }
 
@@ -51,12 +51,38 @@ export class RunnerUser {
                 this.resultStyle = this.WarnStyle;
             }
         }
-        
+
         //Set results tab active
         this.anchorOutput.click();
 
     }
 
+   save() {
+        this.errorMessage = null;
+         this.code = this.codeService.getSolutionValue();
+        this.tests = this.codeService.getTestValue();
+        if (this.doc && this.doc.name && this.doc.instructions) {
+            this.doc.tests = this.tests;
+            this.doc.code = this.code;
+           
+            if (this.doc._id)
+            {
+                this.kataService.editKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });
+            }
+            else {
+                this.doc._id = new Date().toISOString();
+                this.kataService.addKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });    
+            }
+            this.resultStyle = null;
+            return this.router.navigateToRoute('katas');
+         
+        } else {
+             this.resultStyle = this.ErrorStyle;
+             this.result = 'Please make sure required fields are entereed';
+        }
+    }
+
+/*
     saveKata() {
 
         let ck = this.runner.getCurrentKata();
@@ -68,6 +94,6 @@ export class RunnerUser {
                 .catch(err => { alert(err); });
         }
     }
-
+*/
 }
 

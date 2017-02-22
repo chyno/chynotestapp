@@ -1,4 +1,4 @@
-##FROM codewars/node-runner
+FROM codewars/node-runner
 ## docker build -t my-codewar:latest
 ## docker run --rm -it --entrypoint bash codewars/node-runner   
  
