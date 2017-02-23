@@ -7,13 +7,13 @@ import { RunStates } from './run-states';
 
 @inject(KataService, Router, CodeService, EventAggregator, RunStates)
 export class Kata {
-      
+
 
     constructor(kataSrv, Rtr, CodeSrv, EventAgg, RunSts) {
         this.SuccessStyle = 'alert-success';
         this.WarnStyle = "alert-warning";
         this.ErrorStyle = "alert-danger";
-        
+
         this.resultStyle = null;
         this.kataService = kataSrv;
         this.router = Rtr;
@@ -51,18 +51,18 @@ export class Kata {
         if (this.doc && this.doc.name && this.doc.instructions) {
             this.doc.tests = this.tests;
             this.doc.code = this.code;
-           
+
             if (this.doc._id)
             {
-                this.kataService.editKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });
+                this.kataService.editKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); }).then(() => { return this.router.navigateToRoute('katas');});
             }
             else {
                 this.doc._id = new Date().toISOString();
-                this.kataService.addKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });    
+                this.kataService.addKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); }).then(() => { return this.router.navigateToRoute('katas');});
             }
             this.resultStyle = null;
-            return this.router.navigateToRoute('katas');
-         
+
+
         } else {
              this.resultStyle = this.ErrorStyle;
              this.result = 'Please make sure required fields are entereed';
@@ -86,7 +86,7 @@ export class Kata {
                 this.resultStyle = this.WarnStyle;
             }
         }
-        
+
 
     }
 }

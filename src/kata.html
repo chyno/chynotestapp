@@ -9,7 +9,7 @@
     <textarea class="form-control" rows="3" id="instructions" value.bind="doc.instructions"></textarea>
   </div>
   <kata-runner code.bind="code" tests.bind="tests"></kata-runner>
-  <button class="btn btn-primary" click.trigger="save()">Save</button>
+  <button style="margin-left:2em" class="btn btn-primary" click.trigger="save()">Save</button>
   <button class="btn btn-secondary" click.trigger="cancel()">Cancel</button>
   <div style="margin-top: 12px" class="alert ${resultStyle}"  show.bind="resultStyle">${result}</div>
 </template>

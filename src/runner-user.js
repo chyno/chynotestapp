@@ -51,7 +51,7 @@ export class RunnerUser {
                 this.resultStyle = this.WarnStyle;
             }
         }
-        
+
         //Set results tab active
         this.anchorOutput.click();
 
@@ -70,4 +70,3 @@ export class RunnerUser {
     }
 
 }
-
