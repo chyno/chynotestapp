@@ -94,6 +94,11 @@ export class RunnerUser {
                 .catch(err => { alert(err); });
         }
     }
+<<<<<<< HEAD
 */
 }
 
+=======
+
+}
+>>>>>>> b3cbb2641a0c01d3a16234ea64030a0ddec8b012
