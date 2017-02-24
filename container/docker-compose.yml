@@ -1,18 +1,13 @@
 version: '2'
 services:
   javascript:
-    build: 
+    container_name: chyno-runner
+    build:
       context: .
-      dockerfile: Dockerfile
-    ports: 
-      - "9001:3000"
-    image: codewars/node-runner
+      dockerfile: DockerFile
+    ports:
+    - "9002:9002"
     volumes:
-      - ./server:/runner/chynotest/src
-    user: root
-    entrypoint: 'node run /runner/chynotest/index.js'
-    
-
-
-    ##entrypoint: 'node run -l javascript' 
+    - ./server:/var/www/code
+   
     
