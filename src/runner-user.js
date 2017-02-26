@@ -10,20 +10,31 @@ import { CodeService} from './service/code-service';
 export class RunnerUser {
 
     constructor(KataSrv, Usr, EvntAgg, CodeServ) {
+       //Warning messages
         this.SuccessStyle = 'alert-success';
         this.WarnStyle = "alert-warning";
         this.ErrorStyle = "alert-danger";
+
+        //Service objects
         this.kataService = KataSrv;
+        this.codeService = CodeServ;
+        this.ea = EvntAgg;
+
+        //View Model objects
         this.katas = [];
         this.kataChosen = null;
-        this.ea = EvntAgg;
-        this.user = Usr;
         this.result = null;
         this.resultStyle = this.SuccessStyle;
-        this.ea.subscribe('Run', this.runTest.bind(this));
+
+        //Global states
+        this.user = Usr;
         this.rs = new RunStates();
-        this.isActiveInstruction = true;
-        this.codeService = CodeServ;
+        
+        this.ea.subscribe('Run', this.runTest.bind(this));
+        
+        //Testing
+        this.tests = null;
+        this.code = "null";
 
     }
 
@@ -36,8 +47,13 @@ export class RunnerUser {
             this.result = e;
             this.resultStyle = this.ErrorStyle;
         });
+     
     }
 
+    ChangedKata() {
+       this.tests = this.kataChosen.tests;
+       this.code = this.kataChosen.code;
+    }
     runTest(result) {
 
         this.resultStyle = this.SuccessStyle;

@@ -1,11 +1,12 @@
 <template>
 	<require from="./components/kata-runner"></require>
+	<require from="./CustomAttributes/coder"></require>
 	<div class="container">
 
 		<div class="row" style="margin-bottom:2em">
 <div class="col-md-12">
 	<label for="availKatas">Available Katas: </label>
-	<select value.bind="kataChosen" class="selectpicker" id="availKatas">
+	<select value.bind="kataChosen"  class="selectpicker" id="availKatas" change.delegate="ChangedKata()" >
       <option model.bind="null">Choose...</option>
       <option repeat.for="kata of katas" model.bind="kata">  ${kata.name} </option>
     </select>
@@ -26,9 +27,9 @@
 		</ul>
 
 		<div class="tab-content">
-			<div id="instructions" style="max-height: 330 px" class="tab-pane faade in active' : ''}">
+			<div id="instructions" style="max-height: 330 px" class="tab-pane fade in active">
 <h5>Kata Instructions:</h5>
-<div class="markdown"> ${kataChosen.instruction} </div>
+<div class="markdown"> ${kataChosen.instructions} </div>
 </div>
 
 <div class="tab-pane" id="results">
@@ -46,8 +47,8 @@
 
 <!-- Right Col -->
 <div class="col-md-8 col-lg-9">
-	<kata-runner code.bind="code" tests.bind="tests"></kata-runner>
-	<button class="btn btn-primary  pull-right" click.trigger="save() ">Save Code And Tests</button>
+	<kata-runner Coder="code.bind: code; tests.bind: tests" ></kata-runner>
+	<button click.trigger="save() ">Save Code And Tests</button>
 </div>
 
 <!-- ? -->

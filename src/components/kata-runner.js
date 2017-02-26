@@ -34,8 +34,8 @@ export class KataRunnerCustomElement {
  
   attached() {
     this.codeservice.setControls([this.solutionArea, this.testsArea]);  
-     this.codeservice.setTestValue(this.tests);
-    this.codeservice.setSolutionValue(this.code);
+  //   this.codeservice.setTestValue(this.tests);
+  //  this.codeservice.setSolutionValue(this.code);
    
   }
 

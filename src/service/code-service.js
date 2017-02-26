@@ -1,8 +1,17 @@
-import { inject } from 'aurelia-framework';
+import {
+    inject
+} from 'aurelia-framework';
 import CodeMirror from 'codemirror';
-import { HttpClient, json } from 'aurelia-fetch-client';
-import { RunStates } from '../run-states';
-import { ObserverLocator } from 'aurelia-binding';
+import {
+    HttpClient,
+    json
+} from 'aurelia-fetch-client';
+import {
+    RunStates
+} from '../run-states';
+import {
+    ObserverLocator
+} from 'aurelia-binding';
 
 @inject(HttpClient)
 export class CodeService {
@@ -10,7 +19,7 @@ export class CodeService {
             this.httpClient = httpClient;
             this.codeeditor = null;
             this.testeditor = null;
-           this.rs = new RunStates();
+            this.rs = new RunStates();
 
         }
         //Method needs to be called after view model can get reference to DOM object
@@ -33,18 +42,25 @@ export class CodeService {
         this.testeditor.refresh();
     }
     setSolutionValue(solution) {
-        if (typeof solution === 'undefined') {
-            solution = '';
+        if (this.codeeditor) {
+
+            if (typeof solution === 'undefined') {
+                solution = '';
+            }
+            this.codeeditor.getDoc().setValue(solution);
         }
-         this.codeeditor.getDoc().setValue(solution);
     }
 
     setTestValue(tcode) {
-        if (typeof tcode === 'undefined') {
-            tcode = '';
-        }
+        if (this.testeditor) {
 
-        this.testeditor.getDoc().setValue(tcode);
+
+            if (typeof tcode === 'undefined') {
+                tcode = '';
+            }
+
+            this.testeditor.getDoc().setValue(tcode);
+        }
     }
 
     getSolutionValue() {
@@ -62,15 +78,15 @@ export class CodeService {
         data.solution = solution;
         data.tests = tests;
         data.framework = 'cw';
-       // return this.fakeTestResult(data);
-     return this.ApiTestResult(data)
+        // return this.fakeTestResult(data);
+        return this.ApiTestResult(data)
     }
     fakeTestResult(data) {
         var self = this;
-        let promise = new Promise(function(resolve, reject) {
+        let promise = new Promise(function (resolve, reject) {
             let res = {};
             res.text = "<FAILED::>. a should be 1";
-            res.status =  self.rs.success;
+            res.status = self.rs.success;
             resolve(res);
         });
         return promise;
@@ -86,12 +102,12 @@ export class CodeService {
             })
             .then(response => {
                 let res = {
-                    status : this.rs.error,
-                    text:  response.text()
-                    };
+                    status: this.rs.error,
+                    text: response.text()
+                };
 
                 if (!response.ok) {
-                    res.status =  this.rs.success;
+                    res.status = this.rs.success;
                 }
                 return res;
             });
