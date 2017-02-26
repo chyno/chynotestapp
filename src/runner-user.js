@@ -81,24 +81,4 @@ export class RunnerUser {
              this.result = 'Please make sure required fields are entereed';
         }
     }
-
-/*
-    saveKata() {
-
-        let ck = this.runner.getCurrentKata();
-        if (ck) {
-            this.kataChosen.code = ck.code;
-            this.kataChosen.tests = ck.tests;
-            return this.kataService.addUserKata(this.kataChosen, this.user.userName)
-                .then(res => { alert('success! message: ' + res); })
-                .catch(err => { alert(err); });
-        }
-    }
-<<<<<<< HEAD
-*/
 }
-
-=======
-
-}
->>>>>>> b3cbb2641a0c01d3a16234ea64030a0ddec8b012

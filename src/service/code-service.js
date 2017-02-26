@@ -62,8 +62,8 @@ export class CodeService {
         data.solution = solution;
         data.tests = tests;
         data.framework = 'cw';
-        return this.fakeTestResult(data);
-      // return this.ApiTestResult(data)
+       // return this.fakeTestResult(data);
+     return this.ApiTestResult(data)
     }
     fakeTestResult(data) {
         var self = this;

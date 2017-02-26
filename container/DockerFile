@@ -2,8 +2,8 @@ FROM codewars/node-runner
  
 USER root
 
-#VOLUME ./server:/var/www/code
-#WORKDIR /var/www/code
+VOLUME ./server:/var/www/code
+WORKDIR /var/www/code
 ## docker build -f DockerFile -tag chynorun .
 ##RUN npm install -g pm2
 

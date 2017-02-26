@@ -6,9 +6,6 @@ var exec = require('child_process').exec;
 
 //var http = require('requestify');
 
-
-
-
  //For testing
 router.get('/api/isAlive', function (req, res)
 {

@@ -7,7 +7,9 @@ import * as utils from '../utils';
 @inject(User)
 export class KataService {
     constructor(Usr) {
-        this.db = new PouchDB('chynokata');
+        //http://45.79.89.144:5984/chynodb
+         this.db = new PouchDB('http://li1188-144.members.linode.com:5984/chyno');
+      //  this.db = new PouchDB('chynokata');
         this.user = Usr;
     }
 
