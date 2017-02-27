@@ -8,8 +8,8 @@ import * as utils from '../utils';
 export class KataService {
     constructor(Usr) {
         //http://45.79.89.144:5984/chynodb
-         this.db = new PouchDB('http://li1188-144.members.linode.com:5984/chyno');
-      //  this.db = new PouchDB('chynokata');
+       //  this.db = new PouchDB('http://li1188-144.members.linode.com:5984/chyno');
+        this.db = new PouchDB('chynokata');
         this.user = Usr;
     }
 
@@ -58,7 +58,7 @@ export class KataService {
             doc.code = udoc.code;
             doc.tests = udoc.tests;
             doc.instructions = udoc.instructions;
-          
+
             return self.db.put(doc).then(function (result) {
                 return result.name + ' updated.';
             }).catch(function (err) {

@@ -3,14 +3,14 @@ import { KataService } from './service/kata-service';
 import { User } from './user';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { RunStates } from './run-states';
-import { CodeService} from './service/code-service';
+import { CodeService } from './service/code-service';
 
 
-@inject(KataService, User, EventAggregator,CodeService)
+@inject(KataService, User, EventAggregator, CodeService)
 export class RunnerUser {
 
     constructor(KataSrv, Usr, EvntAgg, CodeServ) {
-       //Warning messages
+        //Warning messages
         this.SuccessStyle = 'alert-success';
         this.WarnStyle = "alert-warning";
         this.ErrorStyle = "alert-danger";
@@ -29,12 +29,8 @@ export class RunnerUser {
         //Global states
         this.user = Usr;
         this.rs = new RunStates();
-        
+
         this.ea.subscribe('Run', this.runTest.bind(this));
-        
-        //Testing
-        this.tests = null;
-        this.code = "null";
 
     }
 
@@ -47,12 +43,20 @@ export class RunnerUser {
             this.result = e;
             this.resultStyle = this.ErrorStyle;
         });
-     
+
     }
 
     ChangedKata() {
-       this.tests = this.kataChosen.tests;
-       this.code = this.kataChosen.code;
+
+
+        if (this.kataChosen) {
+            this.codeService.setTestValue(this.kataChosen.tests);
+            this.codeService.setSolutionValue(this.kataChosen.code);
+        }
+        else {
+            this.codeService.setTestValue("");
+            this.codeService.setSolutionValue("");
+        }
     }
     runTest(result) {
 
@@ -73,28 +77,27 @@ export class RunnerUser {
 
     }
 
-   save() {
+    save() {
         this.errorMessage = null;
-         this.code = this.codeService.getSolutionValue();
+        this.code = this.codeService.getSolutionValue();
         this.tests = this.codeService.getTestValue();
         if (this.doc && this.doc.name && this.doc.instructions) {
             this.doc.tests = this.tests;
             this.doc.code = this.code;
-           
-            if (this.doc._id)
-            {
+
+            if (this.doc._id) {
                 this.kataService.editKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });
             }
             else {
                 this.doc._id = new Date().toISOString();
-                this.kataService.addKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });    
+                this.kataService.addKata(this.doc).then(() => { return this.router.navigateToRoute('katas'); });
             }
             this.resultStyle = null;
             return this.router.navigateToRoute('katas');
-         
+
         } else {
-             this.resultStyle = this.ErrorStyle;
-             this.result = 'Please make sure required fields are entereed';
+            this.resultStyle = this.ErrorStyle;
+            this.result = 'Please make sure required fields are entereed';
         }
     }
 }

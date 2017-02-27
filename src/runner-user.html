@@ -1,6 +1,7 @@
 <template>
 	<require from="./components/kata-runner"></require>
-	<require from="./CustomAttributes/coder"></require>
+
+
 	<div class="container">
 
 		<div class="row" style="margin-bottom:2em">
@@ -15,7 +16,7 @@
 </div>
 
 
-<div class="row" show.bind="kataChosen">
+<div class="row" >
 	<div class="col-md-4 col-lg-3">
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active">
@@ -47,8 +48,8 @@
 
 <!-- Right Col -->
 <div class="col-md-8 col-lg-9">
-	<kata-runner Coder="code.bind: code; tests.bind: tests" ></kata-runner>
-	<button click.trigger="save() ">Save Code And Tests</button>
+	<kata-runner  ></kata-runner>
+	<button style="margin-left: 2em" click.trigger="save() ">Save Code And Tests</button>
 </div>
 
 <!-- ? -->

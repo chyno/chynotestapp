@@ -19,12 +19,14 @@ export class Kata {
         this.router = Rtr;
         this.result = null;
         this.doc = {name : null, instructions : null, tests : 'null', code: null};
-        this.tests = null;
-        this.code = null;
+
         this.codeService = CodeSrv;
         this.ea = EventAgg;
         this.ea.subscribe('Run', this.runTest.bind(this));
         this.rs = RunSts;
+
+        this.tests = "";
+        this.code = "";
     }
 
     activate(d) {
@@ -35,22 +37,26 @@ export class Kata {
             this.doc.name = d.name;
             this.doc.instructions = d.instructions;
             this.tests = d.tests;
-            this.code = d.code;
+            this.code =  d.code;
+          //   this.codeService.setTestValue(d.tests);
+            // this.codeService.setSolutionValue(d.code);
+
         } else {
             this.doc.name = null;
             this.doc.instructions = null;
-            this.tests = null;
-            this.code = null;
+            this.codeService.setTestValue("");
+            this.codeService.setSolutionValue("");
         }
     }
 
+
     save() {
         this.errorMessage = null;
-         this.code = this.codeService.getSolutionValue();
-        this.tests = this.codeService.getTestValue();
+         let code = this.codeService.getSolutionValue();
+         let tests = this.codeService.getTestValue();
         if (this.doc && this.doc.name && this.doc.instructions) {
-            this.doc.tests = this.tests;
-            this.doc.code = this.code;
+            this.doc.tests =  tests;
+            this.doc.code =  code;
 
             if (this.doc._id)
             {
@@ -70,7 +76,9 @@ export class Kata {
     }
 
     cancel() {
-        return this.router.navigateToRoute('katas');
+      return this.router.navigateToRoute('katas');
+
+
     }
 
      runTest(result) {

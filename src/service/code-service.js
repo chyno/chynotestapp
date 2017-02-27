@@ -47,7 +47,15 @@ export class CodeService {
             if (typeof solution === 'undefined') {
                 solution = '';
             }
-            this.codeeditor.getDoc().setValue(solution);
+
+            let doc = this.codeeditor.getDoc();
+            if (doc)
+            {
+                doc.setValue(solution);
+               
+
+            }
+            //this.codeeditor.getDoc().setValue(solution);
         }
     }
 
