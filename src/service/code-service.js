@@ -93,6 +93,12 @@ export class CodeService {
     }
 
     ApiTestResult(data) {
+        data.testFramework = 'mocha_tdd';
+        let res = {
+            status: this.rs.error,
+            text: ''
+        };
+
         return this.httpClient.fetch('/api/executeCode', {
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,15 +107,22 @@ export class CodeService {
                 body: json(data)
             })
             .then(response => {
-                let res = {
-                    status: this.rs.error,
-                    text: response.text()
-                };
-
-                if (!response.ok) {
+                if (response.ok) {
                     res.status = this.rs.success;
                 }
+                var jsn = response.text();
+                return jsn;
+
+            })
+            .then(data => {
+                res.text = data;
                 return res;
-            });
+            })
+            .catch(ex => {
+            return {
+                status: this.rs.error,
+                text: ex.toString()
+            }
+        });
     }
 }
