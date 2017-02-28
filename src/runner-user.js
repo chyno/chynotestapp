@@ -34,7 +34,7 @@ export class RunnerUser {
         
         //Testing
         this.tests = null;
-        this.code = "null";
+        this.code = null;
 
     }
 
