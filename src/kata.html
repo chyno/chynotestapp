@@ -1,5 +1,6 @@
 <template>
   <require from="./components/kata-runner"></require>
+  <require from="./CustomAttributes/coder"></require>
   <div class="form-group">
     <label for="name">Name:</label>
     <input type="text" class="form-control" id="name" value.bind="doc.name">
@@ -8,7 +9,7 @@
     <label for="desc">Instruction:</label>
     <textarea class="form-control" rows="3" id="instructions" value.bind="doc.instructions"></textarea>
   </div>
-  <kata-runner code.bind="code" tests.bind="tests"></kata-runner>
+  <kata-runner   Coder="code.bind: code; tests.bind: tests" ></kata-runner>
 
   <button style="margin-left:2em" class="btn btn-primary" click.trigger="save()">Save</button>
   <button class="btn btn-secondary" click.trigger="cancel()">Cancel</button>

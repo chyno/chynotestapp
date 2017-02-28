@@ -31,6 +31,7 @@ export class RunnerUser {
         this.rs = new RunStates();
 
         this.ea.subscribe('Run', this.runTest.bind(this));
+ 
 
     }
 
