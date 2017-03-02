@@ -85,8 +85,10 @@ export class RunnerUser {
 
         let id = this.kataChosen._id;
         this.kataService.addUserKata(id, this.code, this.tests, this.user.userName).then(x => {
-            this.result = x;
-             this.anchorOutput.click();
+            if (x) {
+                this.result = x.trim();
+                this.anchorOutput.click();
+            }
         });
 
 /*

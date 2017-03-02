@@ -16,8 +16,8 @@
 		</div>
 
 
-		<div class="row" >
-			<div class="col-md-4 col-lg-3">
+		<div class="row" style="${kataChosen ? '' : 'visibility: hidden'}" >
+			<div class="col-md-4 col-lg-4">
 
 				<div class="panel with-nav-tabs panel-default">
 					<div class="panel-heading">
@@ -52,9 +52,9 @@
 			<!-- End left col -->
 
 			<!-- Right Col -->
-			<div class="col-md-8 col-lg-9">
+			<div class="col-md-8 col-lg-8">
 				<kata-runner></kata-runner>
-				<button class="btn btn-primary" style="margin-left: 3em" click.trigger="save() ">Save Your Code And Tests</button>
+				<button class="btn btn-primary" style="margin-left: 3em" show.bind="user.userName" click.trigger="save() ">Save Your Code And Tests</button>
 			</div>
 
 			<!-- ? -->
