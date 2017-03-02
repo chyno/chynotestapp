@@ -42,8 +42,6 @@ export class KataRunnerCustomElement {
   }
 
 
-
-
   // run the tests on code wars docker image
   runTests() {
     var self = this;

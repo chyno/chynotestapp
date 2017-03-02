@@ -67,9 +67,7 @@ export class KataService {
 
         }).catch(function (err) {
             return err;
-        });
-
-
+             });
 
         doc._deleted = false;
         return db.put(doc).then(function (result) {
@@ -79,15 +77,15 @@ export class KataService {
         });
     }
 
-    addUserKata(udoc, userName) {
+    addUserKata(id, code, tests, userName) {
         let self = this;
-        return this.db.get(udoc.name).then(function (doc) {
+        return this.db.get(id).then(function (doc) {
             doc._deleted = false;
-            let userCode = { userName: userName, code: udoc.code, tests: udoc.tests };
+            let userCode = { userName: userName, code: code, tests: tests };
 
             let wdoc = R.compose(utils.addUser(userCode), utils.addUserArray)(doc);
             return self.db.put(wdoc).then(function (result) {
-                return result.id + ' updated.';
+                return doc.name + ' updated.';
             }).catch(function (err) {
                 return err;
             });

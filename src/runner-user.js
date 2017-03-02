@@ -31,7 +31,7 @@ export class RunnerUser {
         this.rs = new RunStates();
 
         this.ea.subscribe('Run', this.runTest.bind(this));
- 
+
 
     }
 
@@ -82,6 +82,15 @@ export class RunnerUser {
         this.errorMessage = null;
         this.code = this.codeService.getSolutionValue();
         this.tests = this.codeService.getTestValue();
+
+        let id = this.kataChosen._id;
+        this.kataService.addUserKata(id, this.code, this.tests, this.user.userName).then(x => {
+            this.result = x;
+             this.anchorOutput.click();
+        });
+
+/*
+
         if (this.doc && this.doc.name && this.doc.instructions) {
             this.doc.tests = this.tests;
             this.doc.code = this.code;
@@ -100,5 +109,6 @@ export class RunnerUser {
             this.resultStyle = this.ErrorStyle;
             this.result = 'Please make sure required fields are entereed';
         }
+        */
     }
 }

@@ -5,55 +5,60 @@
 	<div class="container">
 
 		<div class="row" style="margin-bottom:2em">
-<div class="col-md-12">
-	<label for="availKatas">Available Katas: </label>
-	<select value.bind="kataChosen"  class="selectpicker" id="availKatas" change.delegate="ChangedKata()" >
+			<div class="col-md-12">
+				<label for="availKatas">Available Katas: </label>
+				<select value.bind="kataChosen" class="selectpicker" id="availKatas" change.delegate="ChangedKata()">
       <option model.bind="null">Choose...</option>
       <option repeat.for="kata of katas" model.bind="kata">  ${kata.name} </option>
     </select>
 
-</div>
-</div>
+			</div>
+		</div>
 
 
-<div class="row" >
-	<div class="col-md-4 col-lg-3">
-		<ul class="nav nav-tabs" id="myTab">
-			<li class="active">
-				<a href="#instructions" data-toggle="tab" ref="anchorInstructions">Instructions</a>
-			</li>
-			<li>
-				<a href="#results" data-toggle="tab" ref="anchorOutput">Output</a>
-			</li>
-		</ul>
+		<div class="row" >
+			<div class="col-md-4 col-lg-3">
 
-		<div class="tab-content">
-			<div id="instructions" style="max-height: 330 px" class="tab-pane fade in active">
-<h5>Kata Instructions:</h5>
-<div class="markdown"> ${kataChosen.instructions} </div>
-</div>
+				<div class="panel with-nav-tabs panel-default">
+					<div class="panel-heading">
+						<ul class="nav nav-tabs">
+							<li class="active"><a href="#instructions" data-toggle="tab" ref="anchorInstructions">Instructions</a></li>
+							<li> <a href="#results" data-toggle="tab" ref="anchorOutput">Output</a>
+								</li>
 
-<div class="tab-pane" id="results">
-	<h5>Test Result:</h5>
-	<div class="markdown" show.bind="result">
-		<p class="alert ${resultStyle}">${result}</p>
-	</div>
-</div>
 
-</div>
+						</ul>
+					</div>
+					<div class="panel-body">
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="instructions" style="max-height: 330 px">
 
-<!-- End Left Col -->
-</div>
-<!-- End left col -->
+								<div class="markdown"> ${kataChosen.instructions} </div>
+							</div>
+							<div class="tab-pane fade" id="results">
+								<h5>Test Result:</h5>
+								<div class="markdown alert ${resultStyle}" show.bind="result">
+								${result}
+								</div>
 
-<!-- Right Col -->
-<div class="col-md-8 col-lg-9">
-	<kata-runner  ></kata-runner>
-	<button style="margin-left: 2em" click.trigger="save() ">Save Code And Tests</button>
-</div>
+							</div>
 
-<!-- ? -->
-</div>
-<!-- End Row -->
+						</div>
+					</div>
+				</div>
+
+				<!-- End Left Col -->
+			</div>
+			<!-- End left col -->
+
+			<!-- Right Col -->
+			<div class="col-md-8 col-lg-9">
+				<kata-runner></kata-runner>
+				<button class="btn btn-primary" style="margin-left: 3em" click.trigger="save() ">Save Your Code And Tests</button>
+			</div>
+
+			<!-- ? -->
+		</div>
+		<!-- End Row -->
 
 </template>

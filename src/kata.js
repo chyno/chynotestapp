@@ -38,8 +38,7 @@ export class Kata {
             this.doc.instructions = d.instructions;
             this.tests = d.tests;
             this.code =  d.code;
-          //   this.codeService.setTestValue(d.tests);
-            // this.codeService.setSolutionValue(d.code);
+
 
         } else {
             this.doc.name = null;
@@ -49,6 +48,10 @@ export class Kata {
         }
     }
 
+    bind() {
+        this.codeService.setTestValue(this.tests);
+        this.codeService.setSolutionValue(this.code);
+    }
 
     save() {
         this.errorMessage = null;

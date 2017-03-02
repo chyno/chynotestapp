@@ -1,17 +1,8 @@
-import {
-    inject
-} from 'aurelia-framework';
+import { inject } from 'aurelia-framework';
 import CodeMirror from 'codemirror';
-import {
-    HttpClient,
-    json
-} from 'aurelia-fetch-client';
-import {
-    RunStates
-} from '../run-states';
-import {
-    ObserverLocator
-} from 'aurelia-binding';
+import { HttpClient, json } from 'aurelia-fetch-client';
+import { RunStates } from '../run-states';
+import { ObserverLocator } from 'aurelia-binding';
 
 @inject(HttpClient)
 export class CodeService {
@@ -20,7 +11,6 @@ export class CodeService {
             this.codeeditor = null;
             this.testeditor = null;
             this.rs = new RunStates();
-
         }
         //Method needs to be called after view model can get reference to DOM object
     setControls(cntls) {
@@ -29,7 +19,6 @@ export class CodeService {
             lineNumbers: true,
             lineWrapping: true,
             theme: 'blackboard'
-
         });
         this.codeeditor.refresh();
 
@@ -52,8 +41,6 @@ export class CodeService {
             if (doc)
             {
                 doc.setValue(solution);
-               
-
             }
             //this.codeeditor.getDoc().setValue(solution);
         }
@@ -61,12 +48,9 @@ export class CodeService {
 
     setTestValue(tcode) {
         if (this.testeditor) {
-
-
             if (typeof tcode === 'undefined') {
                 tcode = '';
             }
-
             this.testeditor.getDoc().setValue(tcode);
         }
     }
