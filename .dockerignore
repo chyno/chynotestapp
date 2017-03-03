@@ -1,0 +1,10 @@
+/tmp
+.vscode
+/aurelia_project
+/src
+/scripts
+/test
+/karma.conf.js
+/README.md
+node_modules/*
+docker/*

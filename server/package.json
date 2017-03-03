@@ -1,0 +1,30 @@
+{
+  "name": "coderunner",
+  "version": "1.0.0",
+  "description": "cun code in docker container",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docstart": "docker-compose run javascript",
+    "start": "node index.js"
+  },
+  "author": "John Chynoweth",
+  "license": "ISC",
+  "dependencies": {
+    "aurelia-fetch-client": "^1.1.0",
+    "body-parser": "^1.15.2",
+    "child_process": "^1.0.2",
+    "cookie-parser": "^1.4.3",
+    "dockernode": "^0.1.0",
+    "express": "^4.14.0",
+    "express-ws": "^2.0.0",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "requestify": "^0.2.5",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.2",
+    "connect-browser-sync": "^2.0.1"
+  }
+}
