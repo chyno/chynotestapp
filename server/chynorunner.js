@@ -3,13 +3,13 @@ var fs = require('fs'),
     yaml = require('js-yaml');
 //  runner = require('../lib/runner');
 
-var runTest = function (cd) {
+var runTest = function (cb) {
 
     var stdoutResult = 'code was not run';
     var code = 'var a = {b: 2};console.log(this);';
      var fixture = ''; 
-      /*
-      //var assert = require("chai").assert;suite("test", function(){test("should be 2", function(){assert.equal(2, a.b);})});',
+      
+      var assert = 'require(\"chai\").assert;suite(\"test\", function(){test(\"should be 2\", function(){assert.equal(2, a.b);})});';
        
             try {
                 runner.run({
@@ -20,15 +20,12 @@ var runTest = function (cd) {
                     testFramework: 'mocha_tdd'
                 }, function (buffer) {
                     console.log(buffer.stderr);
-                    stdoutResult = buffer.stdout;
-                    // expect(buffer.stdout).to.contain('{"a":1}');
-                    // done();
+                    cb(buffer.stdout);
+                     
                 });
             }
     catch (excep) {
-        stdoutResult = excep;
+        cb(excep);
     }
-*/
-    return stdoutResult;
 }
 module.exports = runTest
