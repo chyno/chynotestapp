@@ -3,13 +3,18 @@
 var express = require('express');
 var router = express.Router();
 var exec = require('child_process').exec;
-
+var runner = require('./chynorunner.js');
 //var http = require('requestify');
 
  //For testing
 router.get('/api/isAlive', function (req, res)
 {
     res.send('I am alive!');
+});
+
+router.get('/api/run', function (req, res)
+{
+    res.send(runner('var a = 12;'));
 });
 
 router.get('/api/foo', function (req, res)

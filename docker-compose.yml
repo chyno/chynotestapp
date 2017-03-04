@@ -1,17 +1,24 @@
-version: '2'
+version: '3'
 services:
-  node-runner:
-    image: chynorunner
+  runner:
+    image: codewars/node-runner
     volumes:
       - c:/dev/chynotestapp/server:/runner/www
-    ports : 
+    ports: 
       - "9002:9002"
     entrypoint: bash
     stdin_open: true
     tty: true
-   #docker run -it -p 9002:9002  --rm --entrypoint  bash -v c:/dev/chynotestapp/server:/var/www chynorun
+    
+    #entrypoint : ["npm", "start", "index.js"]
+
+   #docker run -it -p 9002:9002  --rm --entrypoint  bash -v c:/dev/chynotestapp/server:/runner/www chynorun
 #ENTRYPOINT ["npm", "start", "index.js"]
  #   - ./lib:/runner/lib
    #   - ./examples:/runner/examples
    #   - ./frameworks:/runner/frameworks
    #   - ./test:/runner/test
+
+    #entrypoint: bash
+   # stdin_open: true
+   # tty: true

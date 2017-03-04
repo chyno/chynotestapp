@@ -13,6 +13,7 @@
   "dependencies": {
     "aurelia-fetch-client": "^1.1.0",
     "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
     "child_process": "^1.0.2",
     "cookie-parser": "^1.4.3",
     "dockernode": "^0.1.0",
