@@ -37,7 +37,7 @@ xdescribe('the App module', () => {
     expect(sut.router.title).toEqual('Project Chyno');
   });
 
-  it('should have a welcome route', () => {
+  xit('should have a welcome route', () => {
     expect(sut.router.routes).toContain({
       route: ['', 'welcome'],
       name: 'welcome',
@@ -48,36 +48,5 @@ xdescribe('the App module', () => {
     });
   });
 
-  it('should have a runner route', () => {
-    expect(sut.router.routes).toContain({
-      route: ['runner'],
-      name: 'runner',
-      moduleId: './runner',
-      nav: true,
-      title: 'Run Katas',
-      requireLogin: true
-    });
-  });
-
-  it('should have a manage route', () => {
-    expect(sut.router.routes).toContain({
-      route: ['kata'],
-      name: 'kata',
-      moduleId: './kata',
-      nav: true,
-      title: 'Manage Tests',
-      requireLogin: true
-    });
-  });
-
-  it('should have a login route', () => {
-    expect(sut.router.routes).toContain({
-      route: ['login'],
-      name: 'login',
-      moduleId: './login',
-      nav: false,
-      title: 'Login',
-      requireLogin: true
-    });
-  });
+ 
 });

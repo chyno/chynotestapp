@@ -194,6 +194,11 @@
             "name": "pouchdb",
             "path": "../node_modules/pouchdb/dist",
             "main" : "pouchdb.min"
+            },
+             {
+            "name": "ramda",
+            "path": "../node_modules/ramda/dist",
+            "main" : "ramda.js"
             }
         ]
       }

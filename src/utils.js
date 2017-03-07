@@ -1,3 +1,6 @@
+ 
+ import R from 'ramda';
+
  const getKata = (name) =>  R.find(x => x.name === name);
 
 const addUserArray = R.unless(R.propIs(Array, 'users'), R.assoc('users', []));

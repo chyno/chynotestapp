@@ -13,8 +13,14 @@ router.get('/api/isAlive', function (req, res)
 });
 
 router.get('/api/run', function (req, res)
-{
-    res.send(runner('var a = 12;'));
+{ 
+    var i= 0;
+    runner(function(data)
+     {
+         console.log('********************** callback - ' + i++);
+         res.send(data);      
+     });
+    
 });
 
 router.get('/api/foo', function (req, res)
